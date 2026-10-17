@@ -149,7 +149,9 @@ async def db_ok() -> bool:
 
 
 async def pdf_ok(application: FastAPI) -> bool:
-    """True once the shared Playwright browser is alive; started by T-08's lifespan."""
+    """True once the shared Playwright browser is alive (or, on a small host, will start per PDF)."""
+    if getattr(application.state, "browser_on_demand", False):
+        return True
     browser = getattr(application.state, "browser", None)
     return bool(browser is not None and browser.is_connected())
 

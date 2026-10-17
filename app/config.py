@@ -64,10 +64,15 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _public_url_from_space(self) -> Settings:
-        """On a Hugging Face Space the public address is `https://$SPACE_HOST` unless set explicitly."""
-        host = os.getenv("SPACE_HOST")
-        if host and self.PUBLIC_BASE_URL.startswith("http://localhost"):
+        """The public address comes from the host (`SPACE_HOST` or Render's `RENDER_EXTERNAL_URL`) unless set explicitly."""
+        if not self.PUBLIC_BASE_URL.startswith("http://localhost"):
+            return self
+        if host := os.getenv("SPACE_HOST"):
             self.PUBLIC_BASE_URL = f"https://{host}"
+        elif url := os.getenv(
+            "RENDER_EXTERNAL_URL"
+        ):  # Render sets this to the service address
+            self.PUBLIC_BASE_URL = url
         return self
 
     def production_problems(self) -> tuple[list[str], list[str]]:

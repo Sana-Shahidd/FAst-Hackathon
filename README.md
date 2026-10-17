@@ -1,13 +1,3 @@
----
-title: Subah
-emoji: ☀️
-colorFrom: blue
-colorTo: red
-sdk: docker
-app_port: 7860
-pinned: false
----
-
 # Subah — your personal morning paper
 
 Subah (صبح, "morning") gathers the articles that matter to **you** from across the web and

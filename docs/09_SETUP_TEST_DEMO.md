@@ -82,16 +82,17 @@ Run locally: `pytest -m unit -q` and `pytest -m integration -q` (needs `TEST_SUP
 - `/health` version: `GIT_SHA` env, else `RAILWAY_GIT_COMMIT_SHA`, else the `app/VERSION` file written by
   `scripts/deploy.sh`, else `dev` (`main.version()`).
 
-## 2.2 Live host: Hugging Face Space (current)
-1. huggingface.co → New Space → name `subah` → SDK **Docker** → Blank → Public (or Private) → Create.
-2. Space → Settings → Variables and secrets → add each line of `space_secrets.txt` as a **secret** (run
-   `bash scripts/space_env.sh` once to create it from your `.env`; delete the file afterwards).
-3. Deploy: create a write token (huggingface.co/settings/tokens), then
-   `HF_TOKEN=hf_xxx HF_SPACE=<your-hf-user>/subah bash scripts/deploy_hf.sh`
-   (first build takes about 10 minutes; progress is on the Space's **Logs** tab).
-4. Open `https://<user>-subah.hf.space` (the direct address, not the huggingface.co page), then
-   `bash scripts/smoke.sh https://<user>-subah.hf.space`.
-5. For CI deploys add the GitHub secrets `HF_TOKEN` and `HF_SPACE`.
+## 2.2 Live host: Render free web service (current)
+Render's free plan has 512 MB RAM, so the app starts Chromium only while a PDF prints (`pdf.low_memory()`),
+and the service sleeps after 15 minutes idle (the first request after that takes about a minute: open the
+app before the demo).
+1. render.com → New → **Blueprint** → connect the GitHub repo → pick the branch → it reads `render.yaml`.
+2. Fill the 5 secrets it asks for (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+   `GEMINI_API_KEY`, `GROQ_API_KEY`); `SECRET_KEY` is generated. `bash scripts/space_env.sh` writes these
+   from your `.env` into the gitignored `space_secrets.txt` (delete it afterwards).
+3. Everything else has a default: the Dockerfile sets `APP_ENV`, cookies and the model ids, and the public
+   URL comes from Render's `RENDER_EXTERNAL_URL`.
+4. When the deploy is live: `bash scripts/smoke.sh https://<service>.onrender.com`.
 
 ## 3. Demo data
 `scripts/seed_demo.py --email demo@subah.app` creates a user (EN edition + Urdu source

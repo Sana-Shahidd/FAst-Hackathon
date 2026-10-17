@@ -30,6 +30,7 @@ _playwright: Any = None
 _browser: Any = None
 _loop: asyncio.AbstractEventLoop | None = None
 _renders: asyncio.Semaphore | None = None
+_active_renders = 0
 _edition_locks: dict[str, asyncio.Lock] = {}
 
 
@@ -75,8 +76,43 @@ async def stop_browser() -> None:
                 logger.debug("shared browser shutdown failed", exc_info=True)
 
 
+CGROUP_LIMIT_FILES = (
+    "/sys/fs/cgroup/memory.max",  # cgroup v2
+    "/sys/fs/cgroup/memory/memory.limit_in_bytes",  # cgroup v1
+)
+LOW_MEMORY_BYTES = (
+    1024**3
+)  # under 1 GiB the browser is started per PDF instead of kept running
+
+
+def memory_limit_bytes(paths: tuple[str, ...] = CGROUP_LIMIT_FILES) -> int | None:
+    """The container's memory limit, or None when there is none (or it cannot be read)."""
+    for path in paths:
+        try:
+            text = open(path, encoding="utf-8").read().strip()  # noqa: SIM115
+        except OSError:
+            continue
+        if text.isdigit():
+            return int(text)
+    return None
+
+
+def low_memory() -> bool:
+    """True on small hosts (e.g. a 512 MB free plan) where an idle Chromium would eat the budget."""
+    limit = memory_limit_bytes()
+    return limit is not None and limit < LOW_MEMORY_BYTES
+
+
 async def start_on_startup(application: Any) -> None:
-    """Lifespan hook: launch the shared browser and expose it to `/health`; never stops the app."""
+    """Lifespan hook: launch the shared browser and expose it to `/health`; never stops the app.
+
+    On a low-memory host nothing is started here: `print_html` launches Chromium for one PDF and
+    stops it afterwards, and `/health` counts the PDF engine as ready.
+    """
+    if low_memory():
+        application.state.browser_on_demand = True
+        logger.info("low-memory host: Chromium will start on demand for PDFs")
+        return
     try:
         await start_browser()
         application.state.browser = _browser
@@ -176,29 +212,36 @@ async def print_html(html: str, day: str) -> bytes:
     """Print an HTML document to an A3 PDF with the shared browser."""
     from playwright.async_api import TimeoutError as PlaywrightTimeout
 
+    global _active_renders
     await start_browser()
     assert _browser is not None and _renders is not None
-    async with _renders:
-        page = await _browser.new_page()
-        try:
+    _active_renders += 1
+    try:
+        async with _renders:
+            page = await _browser.new_page()
             try:
-                await page.set_content(
-                    html, wait_until="networkidle", timeout=PAGE_LOAD_TIMEOUT_MS
+                try:
+                    await page.set_content(
+                        html, wait_until="networkidle", timeout=PAGE_LOAD_TIMEOUT_MS
+                    )
+                except PlaywrightTimeout:
+                    logger.warning("pdf page did not go idle in time; printing anyway")
+                await page.emulate_media(media="print")
+                await page.evaluate("document.fonts.ready.then(() => true)")
+                return await page.pdf(
+                    format="A3",
+                    print_background=True,
+                    margin=MARGIN,
+                    display_header_footer=True,
+                    header_template="<span></span>",
+                    footer_template=footer_template(day),
                 )
-            except PlaywrightTimeout:
-                logger.warning("pdf page did not go idle in time; printing anyway")
-            await page.emulate_media(media="print")
-            await page.evaluate("document.fonts.ready.then(() => true)")
-            return await page.pdf(
-                format="A3",
-                print_background=True,
-                margin=MARGIN,
-                display_header_footer=True,
-                header_template="<span></span>",
-                footer_template=footer_template(day),
-            )
-        finally:
-            await page.close()
+            finally:
+                await page.close()
+    finally:
+        _active_renders -= 1
+        if _active_renders == 0 and low_memory():
+            await stop_browser()  # hand the memory back until the next PDF
 
 
 async def _edition_row(edition_id: str) -> dict:
