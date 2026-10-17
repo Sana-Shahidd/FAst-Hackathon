@@ -1,0 +1,128 @@
+{
+ "en": [
+  {
+   "name": "BBC News",
+   "url": "https://feeds.bbci.co.uk/news/rss.xml",
+   "topic_key": "world"
+  },
+  {
+   "name": "Dawn",
+   "url": "https://www.dawn.com/feeds/home",
+   "topic_key": "world"
+  },
+  {
+   "name": "NPR",
+   "url": "https://feeds.npr.org/1001/rss.xml",
+   "topic_key": "world"
+  },
+  {
+   "name": "Google News · Top stories",
+   "url": "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en",
+   "topic_key": "world"
+  }
+ ],
+ "ur": [
+  {
+   "name": "BBC اردو",
+   "url": "https://feeds.bbci.co.uk/urdu/rss.xml",
+   "topic_key": "world"
+  },
+  {
+   "name": "Express Urdu",
+   "url": "https://www.express.pk/feed/",
+   "topic_key": "world"
+  },
+  {
+   "name": "Jang",
+   "url": "https://jang.com.pk/rss/1/1",
+   "topic_key": "world"
+  },
+  {
+   "name": "Google News · Top stories",
+   "url": "https://news.google.com/rss?hl=ur&gl=PK&ceid=PK:ur",
+   "topic_key": "world"
+  }
+ ],
+ "ar": [
+  {
+   "name": "BBC عربي",
+   "url": "https://feeds.bbci.co.uk/arabic/rss.xml",
+   "topic_key": "world"
+  },
+  {
+   "name": "Al Jazeera Net",
+   "url": "https://www.aljazeera.net/aljazeerarss/a7c186be-1baa-4bd4-9d80-a84db769f779/73d0e1b4-532f-45ef-b135-bfdff8b8cab9",
+   "topic_key": "world"
+  },
+  {
+   "name": "Google News · Top stories",
+   "url": "https://news.google.com/rss?hl=ar&gl=EG&ceid=EG:ar",
+   "topic_key": "world"
+  }
+ ],
+ "hi": [
+  {
+   "name": "BBC हिंदी",
+   "url": "https://feeds.bbci.co.uk/hindi/rss.xml",
+   "topic_key": "world"
+  },
+  {
+   "name": "Google News · Top stories",
+   "url": "https://news.google.com/rss?hl=hi&gl=IN&ceid=IN:hi",
+   "topic_key": "world"
+  }
+ ],
+ "bn": [
+  {
+   "name": "BBC বাংলা",
+   "url": "https://feeds.bbci.co.uk/bengali/rss.xml",
+   "topic_key": "world"
+  },
+  {
+   "name": "Google News · Top stories",
+   "url": "https://news.google.com/rss?hl=bn&gl=BD&ceid=BD:bn",
+   "topic_key": "world"
+  }
+ ],
+ "es": [
+  {
+   "name": "BBC Mundo",
+   "url": "https://feeds.bbci.co.uk/mundo/rss.xml",
+   "topic_key": "world"
+  },
+  {
+   "name": "Google News · Top stories",
+   "url": "https://news.google.com/rss?hl=es-419&gl=MX&ceid=MX:es-419",
+   "topic_key": "world"
+  }
+ ],
+ "fr": [
+  {
+   "name": "France 24",
+   "url": "https://www.france24.com/fr/rss",
+   "topic_key": "world"
+  },
+  {
+   "name": "Le Monde",
+   "url": "https://www.lemonde.fr/rss/une.xml",
+   "topic_key": "world"
+  },
+  {
+   "name": "Google News · Top stories",
+   "url": "https://news.google.com/rss?hl=fr&gl=FR&ceid=FR:fr",
+   "topic_key": "world"
+  }
+ ],
+ "zh": [
+  {
+   "name": "BBC 中文",
+   "url": "https://feeds.bbci.co.uk/zhongwen/simp/rss.xml",
+   "topic_key": "world"
+  },
+  {
+   "name": "Google News · Top stories",
+   "url": "https://news.google.com/rss?hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
+   "topic_key": "world"
+  }
+ ]
+}

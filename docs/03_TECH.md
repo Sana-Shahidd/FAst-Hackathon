@@ -186,9 +186,13 @@ subah/
 
 ```python
 # services/feeds.py
-def build_feed_urls(profile: Profile, interests: list[Interest]) -> list[FeedUrl]      # ≤ MAX_FEED_URLS
+def build_feed_urls(profile: Profile, interests: list[Interest],
+                    favorites: Sequence[FavoriteSource] = ()) -> list[FeedUrl]   # ≤ MAX_FEED_URLS; favorites first
 async def fetch_all(urls: list[FeedUrl]) -> list[Candidate]                             # parallel, timeouts
 def dedupe(cands: list[Candidate], recent_titles: list[str]) -> list[Candidate]
+def filter_fresh(cands: list[Candidate], hours: int, now: datetime | None = None) -> list[Candidate]
+async def fetch_all_with_stats(urls) -> tuple[list[Candidate], int, int]               # (cands, feeds ok, feeds failed)
+def english_fallback_urls(interests: list[Interest]) -> list[FeedUrl]                 # thin-edition widening (§7)
 
 # services/edition.py
 async def generate_edition(user_id: str, local_date: date, *, lang: str | None = None,

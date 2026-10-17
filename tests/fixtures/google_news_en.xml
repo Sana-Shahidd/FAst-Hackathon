@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>"artificial intelligence" - Google News</title>
+    <item>
+      <title>OpenAI launches new reasoning model for developers - Reuters</title>
+      <link>https://news.google.com/rss/articles/CBMi-aaa</link>
+      <pubDate>Sat, 17 Oct 2026 05:00:00 GMT</pubDate>
+      <description>&lt;a href="https://news.google.com/rss/articles/CBMi-aaa"&gt;OpenAI launches new reasoning model for developers&lt;/a&gt;&amp;nbsp;&amp;nbsp;&lt;font color="#6f6f6f"&gt;Reuters&lt;/font&gt;</description>
+      <source url="https://www.reuters.com">Reuters</source>
+    </item>
+    <item>
+      <title>OpenAI launches new reasoning model for developers - The Verge</title>
+      <link>https://news.google.com/rss/articles/CBMi-bbb</link>
+      <pubDate>Sat, 17 Oct 2026 05:30:00 GMT</pubDate>
+      <description>&lt;a href="https://news.google.com/rss/articles/CBMi-bbb"&gt;OpenAI launches new reasoning model for developers&lt;/a&gt;&amp;nbsp;&amp;nbsp;&lt;font color="#6f6f6f"&gt;The Verge&lt;/font&gt;</description>
+      <source url="https://www.theverge.com">The Verge</source>
+    </item>
+    <item>
+      <title>Pakistan startup raises $20 million to expand in the Gulf - Dawn</title>
+      <link>https://news.google.com/rss/articles/CBMi-ccc</link>
+      <pubDate>Fri, 16 Oct 2026 20:00:00 GMT</pubDate>
+      <description>&lt;a href="https://news.google.com/rss/articles/CBMi-ccc"&gt;Pakistan startup raises $20 million to expand in the Gulf&lt;/a&gt;&amp;nbsp;&amp;nbsp;&lt;font color="#6f6f6f"&gt;Dawn&lt;/font&gt;</description>
+      <source url="https://www.dawn.com">Dawn</source>
+    </item>
+    <item>
+      <title>OpenAI launches new reasoning model for developers - Reuters</title>
+      <link>https://news.google.com/rss/articles/CBMi-aaa</link>
+      <pubDate>Sat, 17 Oct 2026 05:00:00 GMT</pubDate>
+      <description>same story, same link</description>
+      <source url="https://www.reuters.com">Reuters</source>
+    </item>
+    <item>
+      <title>An older story from last week - BBC News</title>
+      <link>https://news.google.com/rss/articles/CBMi-ddd</link>
+      <pubDate>Sat, 10 Oct 2026 08:00:00 GMT</pubDate>
+      <description>Old.</description>
+      <source url="https://www.bbc.com">BBC News</source>
+    </item>
+    <item>
+      <title>Item with an unusable link</title>
+      <link>javascript:alert(1)</link>
+      <pubDate>Sat, 17 Oct 2026 05:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

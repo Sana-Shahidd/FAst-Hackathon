@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>BBC Urdu</title>
+    <item>
+      <title>پاکستان میں نئی سٹارٹ اپ پالیسی کا اعلان</title>
+      <link>https://www.bbc.com/urdu/articles/c1</link>
+      <description>&lt;p&gt;حکومت نے &lt;b&gt;نئی&lt;/b&gt; پالیسی کا اعلان کیا ہے۔&lt;/p&gt;&lt;script&gt;alert(1)&lt;/script&gt;</description>
+      <pubDate>Sat, 17 Oct 2026 04:00:00 GMT</pubDate>
+      <media:thumbnail url="https://ichef.bbci.co.uk/news/240/c1.jpg" width="240" height="135"/>
+    </item>
+    <item>
+      <title>Cricket: Pakistan beat Australia &amp; take series lead</title>
+      <link>https://www.bbc.com/urdu/articles/c2</link>
+      <description>Pakistan won by 5 wickets in Lahore.</description>
+      <pubDate>Sat, 17 Oct 2026 03:00:00 GMT</pubDate>
+      <enclosure url="https://ichef.bbci.co.uk/news/640/c2.png" type="image/png" length="0"/>
+    </item>
+  </channel>
+</rss>
