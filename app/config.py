@@ -59,6 +59,33 @@ class Settings(BaseSettings):
     TEST_SUPABASE_ANON_KEY: str = ""
     TEST_SUPABASE_SERVICE_ROLE_KEY: str = ""
 
+    def production_problems(self) -> tuple[list[str], list[str]]:
+        """(errors, warnings) for `APP_ENV=production`: errors stop the app from starting."""
+        errors = [
+            f"{name} is not set"
+            for name in (
+                "SECRET_KEY",
+                "SUPABASE_URL",
+                "SUPABASE_ANON_KEY",
+                "SUPABASE_SERVICE_ROLE_KEY",
+            )
+            if not getattr(self, name)
+        ]
+        warnings = []
+        if not self.SESSION_COOKIE_SECURE:
+            warnings.append(
+                "SESSION_COOKIE_SECURE is false: session cookies are not marked Secure"
+            )
+        if self.PUBLIC_BASE_URL.startswith("http://localhost"):
+            warnings.append(
+                "PUBLIC_BASE_URL still points at localhost: PDF links will be wrong"
+            )
+        if not (self.GEMINI_API_KEY or self.GROQ_API_KEY):
+            warnings.append(
+                "no LLM key is set: every edition will use the code fallbacks"
+            )
+        return errors, warnings
+
     def model_for(self, key: str) -> str:
         """Primary `provider:model_id` spec for agent `key` (profiler, curator, ...)."""
         specs = {

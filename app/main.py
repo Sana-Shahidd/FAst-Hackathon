@@ -57,6 +57,12 @@ async def lifespan(application: FastAPI):
 def create_app() -> FastAPI:
     """Build the application; a factory so tests can build a production-mode instance."""
     production = settings.APP_ENV == "production"
+    if production:
+        errors, warnings = settings.production_problems()
+        for warning in warnings:
+            logger.warning("production check: %s", warning)
+        if errors:
+            raise RuntimeError("production check failed: " + "; ".join(errors))
     application = FastAPI(
         title="Subah",
         lifespan=lifespan,
