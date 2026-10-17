@@ -10,14 +10,14 @@ from app.config import Settings
 pytestmark = pytest.mark.unit
 
 GOOD = {
-    "APP_ENV": "production",,
-    "SECRET_KEY": "s3cret",,
-    "SUPABASE_URL": "https://x.supabase.co",,
-    "SUPABASE_ANON_KEY": "anon",,
-    "SUPABASE_SERVICE_ROLE_KEY": "service",,
-    "SESSION_COOKIE_SECURE": True,,
-    "PUBLIC_BASE_URL": "https://subah.up.railway.app",,
-    "GEMINI_API_KEY": "g",,
+    "APP_ENV": "production",
+    "SECRET_KEY": "s3cret",
+    "SUPABASE_URL": "https://x.supabase.co",
+    "SUPABASE_ANON_KEY": "anon",
+    "SUPABASE_SERVICE_ROLE_KEY": "service",
+    "SESSION_COOKIE_SECURE": True,
+    "PUBLIC_BASE_URL": "https://subah.up.railway.app",
+    "GEMINI_API_KEY": "g",
 }
 
 
