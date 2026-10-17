@@ -115,6 +115,16 @@
     {% endif %}
     <p class="card muted" id="no-results" hidden>{{ t('home.no_results') }}</p>
 
+    {% if puzzle_card %}
+    <a class="puzzle-card" href="/puzzle/{{ 'today' if nav_active == 'home' else day }}">
+      <span class="puzzle-card-text">
+        <strong>{{ t('puzzle.title') }}</strong>
+        <span>{{ t('puzzle.subtitle') }}</span>
+      </span>
+      <span class="puzzle-card-go">{{ t('puzzle.score', score=puzzle_card.score) if puzzle_card.done else t('puzzle.play') }}</span>
+    </a>
+    {% endif %}
+
     <div class="paper-actions">
       <a class="btn btn-navy" href="/paper/{{ day }}/print{{ vq }}"><i data-lucide="newspaper"></i>{{ t('home.paper_view') }}</a>
       <a class="btn btn-outline" href="/paper/{{ day }}/pdf{{ vq }}" data-busy><i data-lucide="download"></i>{{ t('paper.download') }}</a>

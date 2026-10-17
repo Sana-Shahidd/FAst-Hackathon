@@ -11,7 +11,7 @@ from fastapi.responses import RedirectResponse, Response
 from app import deps
 from app.config import settings
 from app.deps import CurrentUser
-from app.services import edition, i18n, pdf, reading
+from app.services import edition, i18n, pdf, puzzle, reading
 
 router = APIRouter()
 
@@ -153,6 +153,7 @@ async def _edition_page(
         ed=ed,
         day=day,
         vq=_version_query(ed),
+        puzzle_card=await puzzle.card_state(user.id, ed["id"]),
         dev=dev_enabled(),
         reader_name=profile.display_name,
         nav_active="home"

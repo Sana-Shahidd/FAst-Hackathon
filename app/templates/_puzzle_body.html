@@ -1,0 +1,60 @@
+<div id="puzzle-body" class="puzzle-body">
+  {% if item %}
+  <p class="puzzle-step">{{ t('puzzle.question', n=current + 1, total=total) }}</p>
+  <ol class="puzzle-dots" aria-hidden="true">
+    {% for n in range(total) %}<li class="{% if n < summary.answered %}is-done{% endif %}{% if n == current %} is-current{% endif %}"></li>{% endfor %}
+  </ol>
+  <article class="clipping card">
+    <p class="clipping-source">{{ paper_name }} · {{ long_date }}</p>
+    <h2 class="clipping-head">{{ parts[0] }}<span class="blank">{% if revealed %}{{ item.answer }}{% else %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}</span>{{ parts[1] }}</h2>
+  </article>
+
+  {% if revealed %}
+  <ul class="choices">
+    {% for c in item.choices %}
+    <li class="choice {{ 'is-right' if c == item.answer else ('is-wrong' if chosen and c == chosen.choice else 'is-muted') }}">
+      {% if c == item.answer %}<i data-lucide="check"></i>{% endif %}{{ c }}
+    </li>
+    {% endfor %}
+  </ul>
+  <p class="puzzle-result {{ 'is-right' if revealed.correct else 'is-wrong' }}" role="status">
+    {{ t('puzzle.correct') if revealed.correct else t('puzzle.wrong', answer=item.answer) }}
+  </p>
+  <a class="puzzle-full" href="/r/{{ item.edition_article_id }}" target="_blank" rel="noopener">
+    {{ stories[current].headline }}
+  </a>
+  <button type="button" class="btn btn-navy btn-block"
+          hx-get="/puzzle/{{ day }}" hx-target="#puzzle-body" hx-swap="outerHTML">
+    {{ t('puzzle.see_score') if revealed.done else t('puzzle.next') }}
+  </button>
+  {% else %}
+  <ul class="choices">
+    {% for c in item.choices %}
+    <li>
+      <form hx-post="/puzzle/{{ day }}/answer" hx-target="#puzzle-body" hx-swap="outerHTML">
+        <input type="hidden" name="q" value="{{ current }}">
+        <input type="hidden" name="choice" value="{{ c }}">
+        <button type="submit" class="choice">{{ c }}</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% else %}
+  <section class="puzzle-score card">
+    <div class="score-ring" style="--pct: {{ (100 * summary.score / total) | round | int if total else 0 }}">
+      <span>{{ summary.score }}/{{ total }}</span>
+    </div>
+    <p class="puzzle-score-text">{{ t('puzzle.score', score=summary.score) }}</p>
+    <p class="puzzle-streak"><i data-lucide="flame"></i>{{ t('puzzle.streak', n=streak) }}</p>
+  </section>
+  <h3 class="puzzle-sub">{{ t('puzzle.read_stories') }}</h3>
+  <ul class="puzzle-stories">
+    {% for s in stories %}
+    <li><a class="card" href="/r/{{ s.id }}" target="_blank" rel="noopener">{{ s.headline }}</a></li>
+    {% endfor %}
+  </ul>
+  <a class="btn btn-outline btn-block" href="/paper/{{ day }}">{{ t('nav.home') }}</a>
+  {% endif %}
+</div>

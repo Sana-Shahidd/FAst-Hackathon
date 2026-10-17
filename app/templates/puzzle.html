@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ t('puzzle.title') }} · {{ paper_name }}{% endblock %}
+{% block body %}
+<main>
+  <header class="page-hero">
+    <div class="topbar">
+      <a class="brand-mini" href="/paper/{{ day }}"><img class="brand-logo" src="/static/logo-mark.png" alt="" width="30" height="30">{{ paper_name }}</a>
+      {% if streak %}<span class="glass-chip"><i data-lucide="flame"></i> {{ t('puzzle.streak', n=streak) }}</span>{% endif %}
+    </div>
+    <h1>{{ t('puzzle.title') }}</h1>
+    <p class="page-hero-sub">{{ t('puzzle.subtitle') }}</p>
+  </header>
+  <div class="page list-page puzzle-page">
+    {% include "_puzzle_body.html" %}
+  </div>
+</main>
+{% endblock %}
+{% block bottom_nav %}{% include "_bottom_nav.html" %}{% endblock %}

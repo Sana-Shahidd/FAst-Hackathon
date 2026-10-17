@@ -26,7 +26,16 @@ from slowapi.errors import RateLimitExceeded
 
 from app import deps
 from app.config import settings
-from app.routers import archive, auth, onboarding, paper, profile, reader, signals
+from app.routers import (
+    archive,
+    auth,
+    onboarding,
+    paper,
+    profile,
+    puzzle,
+    reader,
+    signals,
+)
 from app.services import i18n, pdf
 
 logger = logging.getLogger(__name__)
@@ -66,6 +75,7 @@ def create_app() -> FastAPI:
     application.include_router(paper.router)
     application.include_router(archive.router)
     application.include_router(profile.router)
+    application.include_router(puzzle.router)
     application.include_router(reader.router)
     application.include_router(signals.router)
     return application

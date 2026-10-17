@@ -432,6 +432,48 @@ html[dir="rtl"] .switch:checked::after { transform: translateX(-22px); }
 .hero-brand .source-strip { justify-content: center; flex-wrap: wrap; }
 .sec-title { text-align: center; }
 
+/* ---- headline puzzle (docs/07_DESIGN.md 3.4) ---- */
+.puzzle-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; border-radius: var(--r-card); background: linear-gradient(135deg, var(--maroon-800), var(--maroon-600)); color: #fff; text-decoration: none; box-shadow: var(--shadow); }
+.puzzle-card-text { display: flex; flex-direction: column; gap: 2px; }
+.puzzle-card-text strong { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; }
+.puzzle-card-text span { font-size: .85rem; opacity: .9; }
+.puzzle-card-go { background: #fff; color: var(--maroon-800); border-radius: var(--r-pill); padding: 9px 18px; font-weight: 700; font-size: .9rem; white-space: nowrap; }
+.puzzle-page { max-inline-size: 640px; margin-inline: auto; }
+.puzzle-body { display: flex; flex-direction: column; gap: 14px; }
+.puzzle-step { margin: 0; font-size: .85rem; font-weight: 600; color: var(--muted); }
+.puzzle-dots { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; }
+.puzzle-dots li { flex: 1; block-size: 6px; border-radius: var(--r-pill); background: var(--line); }
+.puzzle-dots li.is-done { background: var(--maroon-600); }
+.puzzle-dots li.is-current { background: var(--navy-600); }
+.clipping { background: #FBF7EC; color: #1d1a14; border: 1px solid #E4DAC0; border-radius: 6px; padding: 22px 20px; box-shadow: var(--shadow); }
+.clipping-source { margin: 0 0 10px; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: #7a6f55; border-block-end: 1px solid #D9CDAA; padding-block-end: 6px; }
+.clipping-head { font-family: var(--font-display); font-size: 1.7rem; line-height: 1.35; color: #1d1a14; }
+.blank { display: inline-block; min-inline-size: 4.5ch; border-block-end: 3px solid var(--maroon-600); color: var(--maroon-600); text-align: center; padding-inline: 4px; }
+.choices { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.choice { inline-size: 100%; min-block-size: 56px; display: flex; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 8px 12px; border-radius: var(--r-pill); border: 2px solid var(--line); background: var(--card); color: var(--ink); font-weight: 600; cursor: pointer; }
+.choice:hover { border-color: var(--maroon-400); }
+li.choice { cursor: default; }
+.choice.is-right { background: var(--success); border-color: var(--success); color: #fff; }
+.choice.is-wrong { border-color: var(--maroon-600); color: var(--maroon-600); }
+.choice.is-muted { opacity: .55; }
+.choice svg { inline-size: 18px; block-size: 18px; }
+.puzzle-result { margin: 0; font-weight: 700; }
+.puzzle-result.is-right { color: var(--success); }
+.puzzle-result.is-wrong { color: var(--link); }
+.puzzle-full { font-family: var(--font-display); font-size: 1.1rem; line-height: 1.35; color: var(--ink); }
+.puzzle-score { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 24px; }
+.score-ring { --pct: 0; inline-size: 120px; block-size: 120px; border-radius: 50%; background: conic-gradient(var(--maroon-600) calc(var(--pct) * 1%), var(--line) 0); display: grid; place-items: center; }
+.score-ring span { inline-size: 92px; block-size: 92px; border-radius: 50%; background: var(--card); display: grid; place-items: center; font-family: var(--font-display); font-size: 1.8rem; }
+.puzzle-score-text { margin: 0; font-weight: 700; font-size: 1.1rem; }
+.puzzle-streak { margin: 0; display: flex; align-items: center; gap: 6px; color: var(--link); font-weight: 600; }
+.puzzle-sub { font-size: 1.2rem; }
+.puzzle-stories { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.puzzle-stories a { display: block; text-decoration: none; font-family: var(--font-display); }
+@media (prefers-reduced-motion: no-preference) {
+  .choice.is-wrong { animation: shake .35s ease; }
+  @keyframes shake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+}
+
 /* ---- profile: interests as bars, history sparkline, learned notes ---- */
 .page-hero-sub { margin: -8px 0 0; color: var(--navy-200); font-size: .95rem; }
 .profile-body { display: flex; flex-direction: column; gap: 26px; }
