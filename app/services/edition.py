@@ -409,7 +409,19 @@ async def _run(
         "curator",
         "decision",
         f'Picked {len(picks)} stories across {len(sections)} sections; lead: "{lead.title[:120]}"',
-        {"notes": notes},
+        {
+            "notes": notes,
+            "picks": [
+                {
+                    "title": by_id[p.candidate_id].title[:110],
+                    "source": by_id[p.candidate_id].source_name[:40],
+                    "section": p.section,
+                    "slot": p.slot,
+                    "reason": p.reason,
+                }
+                for p in placed
+            ],
+        },
     )
     written, editor_out = await editor.write(
         picks, by_id, reader, edition_id, local_date
@@ -675,7 +687,7 @@ async def steps_for(edition_id: str) -> list[dict]:
     return await _db(
         lambda: (
             client.table("agent_activity")
-            .select("agent,kind,message,created_at")
+            .select("agent,kind,message,data,created_at")
             .eq("edition_id", edition_id)
             .order("created_at")
             .execute()

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}{{ t('paper.making_of') }} · {{ paper_name }}{% endblock %}
+{% block frame_class %} frame-wide{% endblock %}
+{% block body %}
+<main>
+  <header class="page-hero">
+    <div class="topbar">
+      <a class="brand-mini" href="/paper/{{ day }}{{ vq }}"><img class="brand-logo" src="/static/logo-mark.png" alt="" width="30" height="30">{{ paper_name }}</a>
+    </div>
+    <h1>{{ t('paper.making_of') }}</h1>
+    <p class="page-hero-sub">{{ t('paper.no', n=ed.edition_no) }} · {{ long_date }}</p>
+  </header>
+  <div class="page list-page making-page">
+    <ul class="making-stats">
+      <li><strong>{{ ed.sources_count or 0 }}</strong><span>feeds</span></li>
+      <li><strong>{{ '%.1f'|format((ed.generation_ms or 0) / 1000) }} s</strong><span>to print</span></li>
+      <li><strong>{{ 'yes' if ed.used_fallback else 'no' }}</strong><span>fallback used</span></li>
+    </ul>
+    <ol class="timeline">
+      {% for s in steps %}
+      <li class="tl-item tl-{{ s.kind }}">
+        <span class="tl-icon"><i data-lucide="{{ s.icon }}"></i></span>
+        <div class="tl-body">
+          <p class="tl-head">
+            <strong>{{ s.label }}</strong>
+            <span class="tl-kind">{{ s.kind }}</span>
+            <span class="tl-time muted">{{ s.time }}{% if s.ms %} · {{ '%.1f'|format(s.ms / 1000) }} s{% endif %}</span>
+          </p>
+          <p class="tl-msg">{{ s.message }}</p>
+          {% if s.picks %}
+          <ul class="tl-picks">
+            {% for p in s.picks %}
+            <li><span class="tl-slot">{{ p.slot }}</span> {{ p.title }}
+              <span class="muted">· {{ p.source }} · {{ p.section }}</span>
+              {% if p.reason %}<em>{{ p.reason }}</em>{% endif %}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</main>
+{% endblock %}
+{% block bottom_nav %}{% include "_bottom_nav.html" %}{% endblock %}

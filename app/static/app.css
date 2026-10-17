@@ -432,6 +432,38 @@ html[dir="rtl"] .switch:checked::after { transform: translateX(-22px); }
 .hero-brand .source-strip { justify-content: center; flex-wrap: wrap; }
 .sec-title { text-align: center; }
 
+/* ---- making-of timeline + listen card ---- */
+.hero-making { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 600; color: var(--link); text-decoration: none; }
+.hero-making svg { inline-size: 14px; block-size: 14px; }
+.making-stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.making-stats li { background: var(--card); border-radius: var(--r-card); padding: 14px; text-align: center; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 2px; }
+.making-stats strong { font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; }
+.making-stats span { font-size: .75rem; color: var(--muted); }
+.timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.tl-item { display: flex; gap: 12px; padding-block: 12px; border-inline-start: 2px solid var(--line); padding-inline-start: 16px; margin-inline-start: 16px; position: relative; }
+.tl-icon { position: absolute; inset-inline-start: -17px; inset-block-start: 10px; inline-size: 32px; block-size: 32px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; }
+.tl-icon svg { inline-size: 16px; block-size: 16px; }
+.tl-fallback .tl-icon, .tl-error .tl-icon { background: var(--maroon-600); color: #fff; }
+.tl-body { padding-inline-start: 22px; display: flex; flex-direction: column; gap: 4px; min-inline-size: 0; }
+.tl-head { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.tl-kind { font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--link); background: var(--blush); border-radius: var(--r-pill); padding: 2px 8px; }
+.tl-time { font-size: .78rem; }
+.tl-msg { margin: 0; font-size: .92rem; overflow-wrap: anywhere; }
+.tl-picks { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: .85rem; }
+.tl-picks em { display: block; color: var(--muted); }
+.tl-slot { font-size: .65rem; font-weight: 700; text-transform: uppercase; background: var(--navy-600); color: #fff; border-radius: 6px; padding: 1px 6px; }
+.listen-card { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 20px; background: var(--glass); border: 1px solid var(--glass-line); }
+.listen-btn { inline-size: 44px; block-size: 44px; flex: none; border-radius: 50%; border: 0; background: #fff; color: var(--navy-950); display: grid; place-items: center; cursor: pointer; }
+.listen-wave { flex: 1; display: flex; align-items: center; gap: 2px; block-size: 28px; min-inline-size: 0; overflow: hidden; }
+.listen-wave i { flex: 1; min-inline-size: 2px; max-inline-size: 3px; block-size: var(--h); background: rgba(255, 255, 255, .7); border-radius: 2px; }
+.listen-label { font-size: .75rem; opacity: .85; white-space: nowrap; }
+@media (max-width: 420px) { .listen-label { display: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .listen-card.is-playing .listen-wave i { animation: wave .9s ease-in-out infinite alternate; }
+  .listen-card.is-playing .listen-wave i:nth-child(odd) { animation-delay: .25s; }
+  @keyframes wave { from { transform: scaleY(.45); } to { transform: scaleY(1); } }
+}
+
 /* ---- headline puzzle (docs/07_DESIGN.md 3.4) ---- */
 .puzzle-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; border-radius: var(--r-card); background: linear-gradient(135deg, var(--maroon-800), var(--maroon-600)); color: #fff; text-decoration: none; box-shadow: var(--shadow); }
 .puzzle-card-text { display: flex; flex-direction: column; gap: 2px; }

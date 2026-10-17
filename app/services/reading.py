@@ -52,8 +52,8 @@ def age_hours(published_at: str | datetime | None, now: datetime | None = None) 
     return max(1, int((now - published_at).total_seconds() // 3600))
 
 
-def printed_time(ready_at: str | None, timezone: str) -> str:
-    """`06:02`: when the edition was printed, in the reader's timezone ("" while unknown)."""
+def printed_time(ready_at: str | None, timezone: str, seconds: bool = False) -> str:
+    """`06:02` (or `06:02:41` with `seconds`): a moment in the reader's timezone ("" while unknown)."""
     if not ready_at:
         return ""
     moment = datetime.fromisoformat(ready_at)
@@ -61,7 +61,7 @@ def printed_time(ready_at: str | None, timezone: str) -> str:
         moment = moment.astimezone(ZoneInfo(timezone))
     except Exception:  # noqa: BLE001 - an unknown zone falls back to UTC
         moment = moment.astimezone(UTC)
-    return moment.strftime("%H:%M")
+    return moment.strftime("%H:%M:%S" if seconds else "%H:%M")
 
 
 def toggled(saved: bool) -> bool:

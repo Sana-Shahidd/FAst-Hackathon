@@ -220,6 +220,52 @@ async def _own_ready_edition(
     return ed
 
 
+AGENT_LABELS = {
+    "pipeline": ("Pipeline", "workflow"),
+    "curator": ("Curator", "list-checks"),
+    "editor": ("Editor", "pen-line"),
+    "learner": ("Learner", "brain"),
+    "pdf": ("PDF printer", "file-text"),
+    "profiler": ("Profiler", "user-search"),
+}
+
+
+@router.get("/paper/{day}/making-of")
+async def making_of(
+    request: Request,
+    day: str,
+    user: Annotated[CurrentUser, Depends(deps.require_user)],
+    v: int | None = None,
+):
+    """ "How this paper was made" (F-14): the agent timeline of this edition."""
+    ed = await _own_ready_edition(user, day, v)
+    if ed is None:
+        return RedirectResponse("/onboarding", status_code=303)
+    profile, _ = await _today(user)
+    steps = await edition.steps_for(ed["id"])
+    for step in steps:
+        step["label"], step["icon"] = AGENT_LABELS.get(
+            step["agent"], (step["agent"], "circle")
+        )
+        step["time"] = reading.printed_time(
+            step["created_at"], profile.timezone, seconds=True
+        )
+        step["ms"] = (step.get("data") or {}).get("ms")
+        step["picks"] = (step.get("data") or {}).get("picks") or []
+    return deps.render(
+        request,
+        "making_of.html",
+        lang=ed["lang"],
+        profile=profile,
+        ed=ed,
+        day=ed["edition_date"],
+        vq=_version_query(ed),
+        steps=steps,
+        long_date=i18n.full_date(date.fromisoformat(ed["edition_date"]), ed["lang"]),
+        nav_active="home",
+    )
+
+
 @router.get("/paper/{day}/print")
 async def paper_print(
     request: Request,

@@ -53,6 +53,7 @@
         {% endif %}
       </div>
       <p class="hero-dateline">{{ t('paper.edition_of', name=reader_name) }} · {{ t('paper.no', n=ed.edition_no) }} · {{ long_date }}</p>
+      <a class="hero-making" href="/paper/{{ day }}/making-of{{ vq }}"><i data-lucide="workflow"></i>{{ t('paper.making_of') }}</a>
       {% if lead %}
       <a class="lead" id="lead-{{ lead.id }}" href="/paper/{{ day }}/a/{{ lead.id }}"
          hx-get="/paper/{{ day }}/a/{{ lead.id }}" hx-target="#sheet" hx-swap="innerHTML">

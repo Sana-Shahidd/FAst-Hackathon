@@ -145,6 +145,7 @@ def render(
         "fonts_url": fonts_url(lang),
         "font_display": meta["font_display"],
         "font_ui": meta["font_ui"],
+        "speech_lang": meta.get("speech", lang),
         "languages": [
             (code, info["native"]) for code, info in i18n.languages().items()
         ],

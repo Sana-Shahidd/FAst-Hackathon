@@ -33,7 +33,35 @@
     });
   }
 
+  // "Listen": the browser's own speech synthesis reads the story aloud, no server cost
+  function stopListening() {
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    document.querySelectorAll("[data-listen]").forEach(function (b) {
+      b.setAttribute("aria-pressed", "false");
+      b.closest("[data-listen-card]").classList.remove("is-playing");
+    });
+  }
+
+  function toggleListen(button) {
+    if (!window.speechSynthesis) return;
+    var playing = button.getAttribute("aria-pressed") === "true";
+    stopListening();
+    if (playing) return;
+    var utterance = new SpeechSynthesisUtterance(button.dataset.text);
+    utterance.lang = button.dataset.lang || "en-US";
+    utterance.onend = stopListening;
+    button.setAttribute("aria-pressed", "true");
+    button.closest("[data-listen-card]").classList.add("is-playing");
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function hideListenWithoutSpeech() {
+    if (window.speechSynthesis) return;
+    document.querySelectorAll("[data-listen-card]").forEach(function (c) { c.hidden = true; });
+  }
+
   function closeSheet() {
+    stopListening();
     var host = document.getElementById("sheet");
     if (!host || !host.firstElementChild) return;
     if (sheetArticle && sheetOpenedAt) {
@@ -83,6 +111,8 @@
       el.closest("dialog").close();
     } else if (el.hasAttribute("data-close-sheet")) {
       closeSheet();
+    } else if (el.hasAttribute("data-listen")) {
+      toggleListen(el);
     } else if (el.hasAttribute("data-busy")) {
       // the first PDF of a day is rendered on demand; show it is working, then re-enable the link
       el.classList.add("is-loading");
@@ -116,6 +146,7 @@
       var close = target.querySelector(".round-btn[data-close-sheet]");
       if (close) close.focus();
     }
+    hideListenWithoutSpeech();
     applyFilters();
   });
 })();
