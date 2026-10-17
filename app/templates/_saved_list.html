@@ -1,0 +1,27 @@
+<div id="saved-list" class="saved-list">
+  {% for day, items in groups %}
+  <section class="saved-day">
+    <h2 class="saved-date">{{ day_labels[day] }}</h2>
+    <ul class="saved-items">
+      {% for row in items %}
+      {% set art = row.edition_articles %}
+      {% set story = art.articles %}
+      <li class="saved-item card">
+        {% if story.image_url %}
+        <img class="saved-thumb" src="{{ story.image_url }}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+        {% endif %}
+        <div class="saved-text">
+          <a class="saved-head" href="/r/{{ art.id }}" target="_blank" rel="noopener">{{ art.headline }}</a>
+          <p class="muted saved-meta">{{ story.source_name }}</p>
+        </div>
+        <button type="button" class="icon-btn is-on" aria-label="{{ t('nav.saved') }}" aria-pressed="true"
+                hx-post="/saved/{{ art.id }}" hx-vals='{"ctx": "saved"}'
+                hx-target="#saved-list" hx-swap="outerHTML"><i data-lucide="bookmark"></i></button>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% else %}
+  <p class="card muted">{{ t('saved.empty') }}</p>
+  {% endfor %}
+</div>

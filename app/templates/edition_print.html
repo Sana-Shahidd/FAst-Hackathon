@@ -20,8 +20,8 @@
 <body class="{{ 'is-pdf' if pdf else 'is-web' }}">
   {% if not pdf %}
   <nav class="paper-bar" aria-label="{{ t('home.paper_view') }}">
-    <a class="paper-btn" href="/paper/{{ day }}">&larr; {{ t('nav.home') }}</a>
-    <a class="paper-btn paper-btn-solid" href="/paper/{{ day }}/pdf">{{ t('paper.download') }}</a>
+    <a class="paper-btn" href="/paper/{{ day }}{{ vq }}">&larr; {{ t('nav.home') }}</a>
+    <a class="paper-btn paper-btn-solid" href="/paper/{{ day }}/pdf{{ vq }}">{{ t('paper.download') }}</a>
   </nav>
   {% endif %}
   {% include "_edition_body.html" %}

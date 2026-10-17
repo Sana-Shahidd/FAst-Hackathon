@@ -116,9 +116,17 @@
     <p class="card muted" id="no-results" hidden>{{ t('home.no_results') }}</p>
 
     <div class="paper-actions">
-      <a class="btn btn-navy" href="/paper/{{ day }}/print"><i data-lucide="newspaper"></i>{{ t('home.paper_view') }}</a>
-      <a class="btn btn-outline" href="/paper/{{ day }}/pdf" data-busy><i data-lucide="download"></i>{{ t('paper.download') }}</a>
+      <a class="btn btn-navy" href="/paper/{{ day }}/print{{ vq }}"><i data-lucide="newspaper"></i>{{ t('home.paper_view') }}</a>
+      <a class="btn btn-outline" href="/paper/{{ day }}/pdf{{ vq }}" data-busy><i data-lucide="download"></i>{{ t('paper.download') }}</a>
     </div>
+    {% if nav_active == 'home' and not vq %}
+    <form class="paper-actions" method="post" action="/paper/generate">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="regenerate" value="1">
+      <button class="btn btn-outline" type="submit"><i data-lucide="refresh-cw"></i>{{ t('paper.regenerate') }}</button>
+    </form>
+    {% endif %}
+    {% if dev %}{% include "_dev_time_travel.html" %}{% endif %}
   </div>
 </main>
 

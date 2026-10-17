@@ -20,7 +20,8 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 | T-06 | Edition pipeline (Curator, Editor, fallbacks, puzzle items, layout) | **Done**; live timing (≤ 40 s) still not re-measured after the low-reasoning-effort fix | `85f4f23` |
 | T-07 | Home view, article sheet, `/r/{id}`, signals, read marks, save | **Done** (layout checked in the browser with a rendered test edition; not yet clicked through signed in) | T-07 commit |
 | T-08 | Paper view + PDF (Playwright), plus desktop layout and Day/Night/Auto theme | **Done** (176 unit + 129 integration green incl. real Chromium; layout checked in the browser on phone + desktop, light + dark; not yet clicked through signed in) | `a6ff59b` |
-| T-09 | Archive, Saved tab, regenerate, `/dev/time-travel` | Not started | |
+| T-09 | Archive, Saved tab, regenerate, `/dev/time-travel` | **Done** (archive with collapsed older versions + `?v=`, Saved tab, regenerate race fixed, dev time travel; 12 new integration tests; layout checked on a phone) | T-09 commit |
+| BRAND | Logo, header sunrise video, cache-busted static links | **Done**, pushed (`bde4869`) | `bde4869` |
 | T-10 | Learning weights, Learner agent, profile page | Not started | |
 | T-11 | Headline puzzle page | Not started | |
 | T-12 | Reading comfort, push notification, scheduler, settings | Not started | |
@@ -95,6 +96,6 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 
 0. Restart the dev server before looking at anything (it does not auto-reload: `preview_stop` + `preview_start`).
 1. Sign in in the browser pane and click through the signed-in flow once (onboarding → printing → home → sheet → save → Aa → Paper view → PDF); T-07/T-08 were verified by tests and rendered previews only. Also re-time a live edition (≤ 40 s).
-2. (T-08 is done, see the table.) Next is **T-09** (archive, Saved tab, regenerate, `/dev/time-travel`). Old note: **T-08 PDF** (`02_PRD.md` F-08): `edition_print.html`, `paper.css`, shared Playwright browser, upload to Supabase Storage, cache URL on the edition row.
+2. (T-08 and T-09 are done, see the table.) Next is **T-10** (learning weights, Learner agent, profile page). Network note: a push once failed with HTTP 408 while uploading the 1.5 MB header video; retrying with `git -c http.version=HTTP/1.1 -c http.postBuffer=524288000 push origin main` worked. Old note (T-08): **T-08 PDF** (`02_PRD.md` F-08): `edition_print.html`, `paper.css`, shared Playwright browser, upload to Supabase Storage, cache URL on the edition row.
 3. Then T-09 archive/saved, T-10 learning, T-11 puzzle, T-12 comfort/push/scheduler, T-13 extras.
 4. Keep `docs/DECISIONS.md` and this file updated after every shipped task.

@@ -139,5 +139,10 @@
  "common.close": "关闭",
  "home.menu": "更多操作",
  "home.no_results": "没有符合搜索的新闻。",
- "paper.pdf_busy": "你的 PDF 正在印刷中，请一分钟后再试。"
+ "paper.pdf_busy": "你的 PDF 正在印刷中，请一分钟后再试。",
+ "paper.regenerate": "重新印刷一份",
+ "archive.version": "版本 {n}",
+ "archive.older": "以往版本",
+ "archive.empty": "还没有往期报纸。",
+ "dev.time_travel": "Dev: print tomorrow's paper"
 }

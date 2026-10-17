@@ -139,5 +139,10 @@
  "common.close": "Close",
  "home.menu": "More actions",
  "home.no_results": "No stories match your search.",
- "paper.pdf_busy": "Your PDF is being printed. Try again in a minute."
+ "paper.pdf_busy": "Your PDF is being printed. Try again in a minute.",
+ "paper.regenerate": "Print a new version",
+ "archive.version": "Version {n}",
+ "archive.older": "Earlier versions",
+ "archive.empty": "No earlier papers yet.",
+ "dev.time_travel": "Dev: print tomorrow's paper"
 }

@@ -36,7 +36,7 @@ hidden input + `HX-Request` header check; token = HMAC of session id with `SECRE
 | GET | `/puzzle/{date}` | user | page `puzzle.html` | F-17; `today` allowed |
 | POST | `/puzzle/{date}/answer` | user | fragment: result card | `q` (0–4), `choice`; idempotent per question; updates `puzzle_attempts`; correct → `puzzle_correct` signal |
 | POST | `/saved/{edition_article_id}` | user | fragment: bookmark button | toggles save (F-19); records `save` signal on save |
-| GET | `/saved` | user | page `saved.html` | saved articles grouped by edition date |
+| GET | `/saved` | user | page `saved.html` | saved articles grouped by edition date; `POST /saved/{id}` with `ctx=saved` unsaves and returns the refreshed list |
 | POST | `/mutes` | user | fragment: mute chips | `action` = `add`/`remove`, `keyword` (2–40 chars, lower-cased, trimmed); max 30 |
 | GET | `/sources` | user | page `sources.html` | catalog for edition language + English, current favorites, custom feeds |
 | POST | `/sources` | user | fragment | `action` = `add_catalog` (`catalog_key`) / `add_custom` (`feed_url`, validated by one feedparser fetch, timeout 6 s, max 5) / `remove` (`id`) |

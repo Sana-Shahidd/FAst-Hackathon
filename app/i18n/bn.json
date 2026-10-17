@@ -139,5 +139,10 @@
  "common.close": "বন্ধ করুন",
  "home.menu": "আরও বিকল্প",
  "home.no_results": "আপনার অনুসন্ধানের সাথে কোনো খবর মেলেনি।",
- "paper.pdf_busy": "আপনার পিডিএফ ছাপা হচ্ছে। এক মিনিট পর আবার চেষ্টা করুন।"
+ "paper.pdf_busy": "আপনার পিডিএফ ছাপা হচ্ছে। এক মিনিট পর আবার চেষ্টা করুন।",
+ "paper.regenerate": "নতুন সংস্করণ ছাপুন",
+ "archive.version": "সংস্করণ {n}",
+ "archive.older": "আগের সংস্করণ",
+ "archive.empty": "এখনও কোনো পুরনো পত্রিকা নেই।",
+ "dev.time_travel": "Dev: print tomorrow's paper"
 }

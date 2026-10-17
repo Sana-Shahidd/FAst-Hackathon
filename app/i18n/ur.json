@@ -139,5 +139,10 @@
  "common.close": "بند کریں",
  "home.menu": "مزید اختیارات",
  "home.no_results": "آپ کی تلاش سے کوئی خبر نہیں ملی۔",
- "paper.pdf_busy": "آپ کی پی ڈی ایف تیار ہو رہی ہے۔ ایک منٹ بعد دوبارہ کوشش کریں۔"
+ "paper.pdf_busy": "آپ کی پی ڈی ایف تیار ہو رہی ہے۔ ایک منٹ بعد دوبارہ کوشش کریں۔",
+ "paper.regenerate": "نیا ایڈیشن چھاپیں",
+ "archive.version": "ورژن {n}",
+ "archive.older": "پچھلے ورژن",
+ "archive.empty": "ابھی کوئی پرانا اخبار نہیں۔",
+ "dev.time_travel": "Dev: print tomorrow's paper"
 }

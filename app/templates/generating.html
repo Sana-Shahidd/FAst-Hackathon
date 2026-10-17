@@ -9,7 +9,7 @@
     </h1>
     <p class="tagline">{{ t('gen.printing') }}</p>
     <ul class="steps" id="steps" role="status" aria-live="polite"
-        hx-get="/paper/status" hx-trigger="load, every 1s" hx-swap="innerHTML"></ul>
+        hx-get="{{ status_url or '/paper/status' }}" hx-trigger="load, every 1s" hx-swap="innerHTML"></ul>
   </section>
 </main>
 {% endblock %}
