@@ -20,7 +20,7 @@
     <ol class="dots" aria-hidden="true">
       {% for n in range(1, steps + 1) %}<li class="dot{% if n == 1 %} is-active{% endif %}"></li>{% endfor %}
     </ol>
-    <span class="brand-mini">{{ paper_name }}</span>
+    <span class="brand-mini"><img class="brand-logo" src="/static/logo-mark.png" alt="" width="30" height="30">{{ paper_name }}</span>
   </header>
 
   <p class="kicker" id="ob-kicker">{{ t('ob.step', n=1) }}</p>
@@ -41,4 +41,4 @@
   </footer>
 </form>
 {% endblock %}
-{% block scripts %}<script src="/static/onboarding.js" defer></script>{% endblock %}
+{% block scripts %}<script src="/static/onboarding.js?v={{ asset_v }}" defer></script>{% endblock %}

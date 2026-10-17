@@ -2,12 +2,12 @@
 {% block body %}
 <main class="hero-screen">
   <header class="topbar">
-    <span class="brand-mini">{{ paper_name }}</span>
+    <span class="brand-mini"><img class="brand-logo" src="/static/logo-mark.png" alt="" width="30" height="30">{{ paper_name }}</span>
     <a class="btn btn-ghost" href="/login">{{ t('auth.login') }}</a>
   </header>
   <section class="hero-body fade-up">
     <p class="kicker">{{ t('paper.price') }}</p>
-    <h1 class="masthead">{{ paper_name }}</h1>
+    <h1 class="logo-lockup"><img src="/static/logo.webp" alt="{{ paper_name }}" width="1254" height="980"></h1>
     <p class="tagline">{{ t('app.tagline') }}</p>
     <p class="pitch">{{ t('landing.pitch') }}</p>
     <div class="cta-row">

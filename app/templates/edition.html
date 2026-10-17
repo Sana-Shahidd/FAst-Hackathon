@@ -4,8 +4,14 @@
 {% block body %}
 <main class="home" id="home">
   <header class="home-hero">
+    <video class="hero-video" autoplay muted loop playsinline preload="metadata" disablepictureinpicture aria-hidden="true" tabindex="-1">
+      <source src="/static/video/subah_header_background.mp4" type="video/mp4">
+    </video>
+    <div class="hero-video-overlay" aria-hidden="true"></div>
     <div class="topbar">
-      <a class="round-btn avatar" href="/profile" aria-label="{{ t('nav.profile') }}">{{ (reader_name or '?')[:1]|upper }}</a>
+      <a class="round-btn avatar" href="/profile" aria-label="{{ t('nav.profile') }}">
+        <img src="/static/logo-mark.png" alt="" width="44" height="44">
+      </a>
       <div class="topbar-actions">
         <button type="button" class="round-btn" id="search-toggle" aria-label="{{ t('home.search') }}" aria-expanded="false" aria-controls="search-box">
           <i data-lucide="search"></i>
@@ -128,4 +134,4 @@
 <div id="sheet" class="sheet-host" aria-live="polite"></div>
 {% endblock %}
 {% block bottom_nav %}{% include "_bottom_nav.html" %}{% endblock %}
-{% block scripts %}<script src="/static/home.js" defer></script>{% endblock %}
+{% block scripts %}<script src="/static/home.js?v={{ asset_v }}" defer></script>{% endblock %}

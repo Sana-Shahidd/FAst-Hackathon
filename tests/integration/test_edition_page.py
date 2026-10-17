@@ -47,6 +47,21 @@ def test_edition_page_shows_hero_lead_sections_and_every_story(
     assert 'aria-current="page"' in html  # bottom nav
 
 
+def test_the_header_plays_the_sunrise_video_and_the_logo_files_are_served(
+    client: TestClient, edition
+) -> None:
+    html = client.get("/paper/today").text
+    assert 'class="hero-video"' in html and 'class="hero-video-overlay"' in html
+    assert 'src="/static/logo-mark.png"' in html
+    video = client.get("/static/video/subah_header_background.mp4")
+    assert video.status_code == 200 and video.headers["content-type"] == "video/mp4"
+    assert client.get("/static/logo.webp").status_code == 200
+    assert client.get("/static/logo-mark.png").status_code == 200
+    assert (
+        "/static/app.css?v=" in html
+    )  # cache-busted so a deploy is never styled by old CSS
+
+
 def test_the_edition_is_served_by_date_and_bad_dates_are_404(
     client: TestClient, edition
 ) -> None:

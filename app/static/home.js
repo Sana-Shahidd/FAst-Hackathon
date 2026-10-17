@@ -52,6 +52,14 @@
     document.body.style.overflow = "";
   }
 
+  // header video: honour "reduce motion" (CSS hides it, this also stops it from playing/downloading)
+  var heroVideo = document.querySelector(".hero-video");
+  if (heroVideo && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    heroVideo.removeAttribute("autoplay");
+    heroVideo.pause();
+    heroVideo.remove();
+  }
+
   document.addEventListener("click", function (event) {
     var el = event.target.closest("button, a, summary, [data-close-sheet]");
     if (!el) return;

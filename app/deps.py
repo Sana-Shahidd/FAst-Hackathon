@@ -111,6 +111,18 @@ async def verify_csrf(request: Request) -> None:
 
 # ---------------------------------------------------------------- rendering
 
+_STATIC_FILES = ("app.css", "app.js", "home.js", "onboarding.js")
+
+
+def static_version() -> str:
+    """Newest mtime of the shared static files: `?v=` on their links busts stale browser caches."""
+    stamps = [
+        (i18n.APP_DIR / "static" / name).stat().st_mtime
+        for name in _STATIC_FILES
+        if (i18n.APP_DIR / "static" / name).exists()
+    ]
+    return str(int(max(stamps))) if stamps else "0"
+
 
 def render(
     request: Request,
@@ -137,6 +149,7 @@ def render(
             (code, info["native"]) for code, info in i18n.languages().items()
         ],
         "paper_name": PAPER_NAME,
+        "asset_v": static_version(),
         "csrf_token": _sign(csrf_id),
         "path": request.url.path,
         "t": lambda key, **vars: i18n.t(key, lang, **vars),
