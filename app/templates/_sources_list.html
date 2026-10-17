@@ -1,0 +1,28 @@
+<div id="sources">
+  {% if source_error %}<p class="alert" role="alert">{{ t(source_error) }}</p>{% endif %}
+  <ul class="source-list">
+    {% for f in favorites %}
+    <li class="source-item">
+      <span class="source-name-line"><strong>{{ f.name }}</strong>
+        <span class="muted">{{ 'RSS' if f.kind == 'custom' else '' }}</span></span>
+      <button type="button" class="icon-btn" aria-label="{{ t('profile.remove') }}: {{ f.name }}"
+              hx-post="/sources" hx-vals='{"action": "remove", "id": "{{ f.id }}"}'
+              hx-target="#sources" hx-swap="outerHTML"><i data-lucide="x"></i></button>
+    </li>
+    {% endfor %}
+  </ul>
+  {% if catalog %}
+  <form class="inline-add" hx-post="/sources" hx-target="#sources" hx-swap="outerHTML">
+    <input type="hidden" name="action" value="add_catalog">
+    <select name="catalog_key" aria-label="{{ t('settings.add_source') }}">
+      {% for o in catalog %}<option value="{{ o.key }}">{{ o.name }}</option>{% endfor %}
+    </select>
+    <button class="pill is-active" type="submit">{{ t('ob.add') }}</button>
+  </form>
+  {% endif %}
+  <form class="inline-add" hx-post="/sources" hx-target="#sources" hx-swap="outerHTML">
+    <input type="hidden" name="action" value="add_custom">
+    <input type="url" name="feed_url" placeholder="{{ t('sources.paste') }}" required>
+    <button class="pill is-active" type="submit">{{ t('ob.add') }}</button>
+  </form>
+</div>

@@ -1,0 +1,24 @@
+# Render Blueprint: one Docker web service (pages + API + PDF renderer). docs/03_TECH.md §9.
+# Free plan = 512 MB RAM, so the app starts Chromium per PDF there (app/services/pdf.py: low_memory()).
+# Non-secret settings (APP_ENV, cookies, model ids) come from the Dockerfile; the public URL comes from
+# Render's RENDER_EXTERNAL_URL. Only the secrets below are asked for when the Blueprint is created.
+services:
+  - type: web
+    name: subah-paper
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false

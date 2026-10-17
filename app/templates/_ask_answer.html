@@ -1,0 +1,18 @@
+<div class="ask-answer" id="ask-answer">
+  {% if answer %}
+  <p class="ask-text">{{ answer }}</p>
+  {% elif sources %}
+  <p class="ask-text muted">{{ t('ask.fallback_note') }}</p>
+  {% else %}
+  <p class="ask-text muted">{{ t('ask.none') }}</p>
+  {% endif %}
+  {% if sources %}
+  <p class="ask-label">{{ t('ask.sources') }}</p>
+  <ul class="ask-sources">
+    {% for s in sources %}
+    <li><a href="{{ s.url }}" {% if not s.internal_id %}target="_blank" rel="noopener noreferrer"{% else %}target="_blank" rel="noopener"{% endif %}>{{ s.title }}</a>
+      <span class="muted">{{ s.source }}</span></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>

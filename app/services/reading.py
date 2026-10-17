@@ -6,6 +6,7 @@ Read state is derived from `signals` (no extra table); every query filters by `u
 from __future__ import annotations
 
 import asyncio
+import logging
 from collections import defaultdict
 from datetime import UTC, datetime
 from typing import Any
@@ -14,7 +15,9 @@ from zoneinfo import ZoneInfo
 from app import deps
 from app.agents import editor
 from app.models import Reader
-from app.services import sources
+from app.services import learning, sources
+
+logger = logging.getLogger(__name__)
 
 READ_KINDS = ("open", "click")
 FEEDBACK_KINDS = ("more_like", "less_like", "skip_source")
@@ -49,8 +52,8 @@ def age_hours(published_at: str | datetime | None, now: datetime | None = None) 
     return max(1, int((now - published_at).total_seconds() // 3600))
 
 
-def printed_time(ready_at: str | None, timezone: str) -> str:
-    """`06:02`: when the edition was printed, in the reader's timezone ("" while unknown)."""
+def printed_time(ready_at: str | None, timezone: str, seconds: bool = False) -> str:
+    """`06:02` (or `06:02:41` with `seconds`): a moment in the reader's timezone ("" while unknown)."""
     if not ready_at:
         return ""
     moment = datetime.fromisoformat(ready_at)
@@ -58,7 +61,7 @@ def printed_time(ready_at: str | None, timezone: str) -> str:
         moment = moment.astimezone(ZoneInfo(timezone))
     except Exception:  # noqa: BLE001 - an unknown zone falls back to UTC
         moment = moment.astimezone(UTC)
-    return moment.strftime("%H:%M")
+    return moment.strftime("%H:%M:%S" if seconds else "%H:%M")
 
 
 def toggled(saved: bool) -> bool:
@@ -287,6 +290,12 @@ async def record_signal(
         "value": value,
     }
     await _db(lambda: client.table("signals").insert(row).execute())
+    try:
+        await learning.apply_signal(user_id, edition_article_id, kind, value)
+    except Exception:
+        logger.warning(
+            "could not apply %s signal to the reader's interests", kind, exc_info=True
+        )
 
 
 async def toggle_saved(user_id: str, edition_article_id: str) -> bool:
@@ -400,6 +409,8 @@ async def load_view(user_id: str, edition: dict) -> dict[str, Any]:
     feedback = await feedback_state(user_id, ids)
     labels = await interest_labels(user_id)
     favs = await favorites(user_id)
+    pending = await learning.pending_suggestions(user_id)
+    notes = await learning.recent_notes(user_id, limit=1)
     for art in articles:
         decorate(art, edition["edition_date"], read, saved, feedback)
     lead = next((a for a in articles if a["slot"] == "lead"), None)
@@ -411,4 +422,6 @@ async def load_view(user_id: str, edition: dict) -> dict[str, Any]:
         "read_count": len(read),
         "total": len(articles),
         "circles": source_circles(favs),
+        "suggestion": pending[0] if pending else None,
+        "learner_note": notes[0] if notes else None,
     }

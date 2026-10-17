@@ -82,6 +82,18 @@ Run locally: `pytest -m unit -q` and `pytest -m integration -q` (needs `TEST_SUP
 - `/health` version: `GIT_SHA` env, else `RAILWAY_GIT_COMMIT_SHA`, else the `app/VERSION` file written by
   `scripts/deploy.sh`, else `dev` (`main.version()`).
 
+## 2.2 Live host: Render free web service (current)
+Render's free plan has 512 MB RAM, so the app starts Chromium only while a PDF prints (`pdf.low_memory()`),
+and the service sleeps after 15 minutes idle (the first request after that takes about a minute: open the
+app before the demo).
+1. render.com → New → **Blueprint** → connect the GitHub repo → pick the branch → it reads `render.yaml`.
+2. Fill the 5 secrets it asks for (`SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+   `GEMINI_API_KEY`, `GROQ_API_KEY`); `SECRET_KEY` is generated. `bash scripts/space_env.sh` writes these
+   from your `.env` into the gitignored `space_secrets.txt` (delete it afterwards).
+3. Everything else has a default: the Dockerfile sets `APP_ENV`, cookies and the model ids, and the public
+   URL comes from Render's `RENDER_EXTERNAL_URL`.
+4. When the deploy is live: `bash scripts/smoke.sh https://<service>.onrender.com`.
+
 ## 3. Demo data
 `scripts/seed_demo.py --email demo@subah.app` creates a user (EN edition + Urdu source
 language, topics ai, startups, pakistan, sports_cricket, climate; city Lahore), generates

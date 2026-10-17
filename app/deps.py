@@ -14,6 +14,7 @@ from functools import cache, lru_cache
 from hashlib import sha256
 from urllib.parse import quote
 
+import httpx
 from fastapi import HTTPException, Request, Response
 from fastapi.templating import Jinja2Templates
 from slowapi import Limiter
@@ -22,7 +23,7 @@ from supabase_auth.errors import AuthError
 
 from app.config import PAPER_NAME, SUPPORTED_LANGS, settings
 from app.services import i18n
-from supabase import Client, create_client
+from supabase import Client, ClientOptions, create_client
 
 ACCESS_COOKIE = "sb_access"
 REFRESH_COOKIE = "sb_refresh"
@@ -45,12 +46,31 @@ templates = Jinja2Templates(directory=str(i18n.APP_DIR / "templates"))
 # ---------------------------------------------------------------- Supabase
 
 
+def threadsafe_http() -> httpx.Client:
+    """HTTP/1.1 client with a connection pool.
+
+    The service-role client is shared by many worker threads (`asyncio.to_thread`). supabase-py's
+    default HTTP/2 connection is not safe for that: under 12 threads about 30% of requests failed with
+    `ReadError` / `h2.StreamIDTooLowError`. HTTP/1.1 with a pool handled the same load with no errors.
+    """
+    return httpx.Client(
+        http2=False,
+        timeout=60,
+        follow_redirects=True,
+        limits=httpx.Limits(max_connections=32, max_keepalive_connections=16),
+    )
+
+
 @lru_cache(maxsize=1)
 def supabase_admin() -> Client:
     """Service-role Supabase client. Server-side only; the key never reaches the browser."""
     if not settings.SUPABASE_URL or not settings.SUPABASE_SERVICE_ROLE_KEY:
         raise RuntimeError("SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY are not set")
-    return create_client(settings.SUPABASE_URL, settings.SUPABASE_SERVICE_ROLE_KEY)
+    return create_client(
+        settings.SUPABASE_URL,
+        settings.SUPABASE_SERVICE_ROLE_KEY,
+        options=ClientOptions(httpx_client=threadsafe_http()),
+    )
 
 
 def supabase_anon() -> Client:
@@ -145,6 +165,7 @@ def render(
         "fonts_url": fonts_url(lang),
         "font_display": meta["font_display"],
         "font_ui": meta["font_ui"],
+        "speech_lang": meta.get("speech", lang),
         "languages": [
             (code, info["native"]) for code, info in i18n.languages().items()
         ],

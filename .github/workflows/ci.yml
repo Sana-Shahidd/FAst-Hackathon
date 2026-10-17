@@ -50,7 +50,7 @@ jobs:
           node-version: "22"
       - run: npm install -g @railway/cli
         if: env.HAS_RAILWAY_TOKEN == 'true'
-      - name: deploy to Railway and wait for this commit
+      - name: deploy and wait for this commit (Render deploys from GitHub itself; Railway via its CLI)
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_SERVICE: ${{ vars.RAILWAY_SERVICE || 'subah' }}

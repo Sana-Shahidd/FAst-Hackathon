@@ -196,3 +196,15 @@ def test_health_reports_the_shared_browser_once_the_app_has_started(
     monkeypatch.setattr(pdf, "start_on_startup", REAL_START_ON_STARTUP)
     with TestClient(app) as started:
         assert started.get("/health").json()["pdf"] is True
+
+
+def test_on_a_low_memory_host_chromium_runs_only_while_a_pdf_is_printed(
+    client: TestClient, edition, monkeypatch
+) -> None:
+    monkeypatch.setattr(pdf, "low_memory", lambda: True)
+    assert pdf._browser is None  # nothing is kept running between requests
+    response = client.get(f"/paper/{edition['day']}/pdf")
+    assert response.status_code == 200 and response.content.startswith(b"%PDF")
+    assert len(response.content) > 20_000
+    assert pdf._browser is None  # stopped again as soon as the PDF was printed
+    assert pdf._active_renders == 0

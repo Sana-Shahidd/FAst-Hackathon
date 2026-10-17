@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ t('nav.profile') }} · {{ paper_name }}{% endblock %}
+{% block frame_class %} frame-wide{% endblock %}
+{% block body %}
+<main>
+  <header class="page-hero">
+    <div class="topbar">
+      <a class="brand-mini" href="/paper/today"><img class="brand-logo" src="/static/logo-mark.png" alt="" width="30" height="30">{{ paper_name }}</a>
+      <a class="round-btn" href="/settings" aria-label="{{ t('nav.settings') }}"><i data-lucide="settings"></i></a>
+    </div>
+    <h1>{{ reader_name }}</h1>
+    <p class="page-hero-sub">{{ t('nav.profile') }}</p>
+  </header>
+  <div class="page list-page">
+    {% include "_profile_body.html" %}
+  </div>
+</main>
+{% endblock %}
+{% block bottom_nav %}{% include "_bottom_nav.html" %}{% endblock %}

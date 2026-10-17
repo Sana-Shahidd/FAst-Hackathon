@@ -53,6 +53,7 @@
         {% endif %}
       </div>
       <p class="hero-dateline">{{ t('paper.edition_of', name=reader_name) }} · {{ t('paper.no', n=ed.edition_no) }} · {{ long_date }}</p>
+      <a class="hero-making" href="/paper/{{ day }}/making-of{{ vq }}"><i data-lucide="workflow"></i>{{ t('paper.making_of') }}</a>
       {% if lead %}
       <a class="lead" id="lead-{{ lead.id }}" href="/paper/{{ day }}/a/{{ lead.id }}"
          hx-get="/paper/{{ day }}/a/{{ lead.id }}" hx-target="#sheet" hx-swap="innerHTML">
@@ -89,6 +90,32 @@
     </aside>
     {% endif %}
 
+    <section class="card ask" aria-label="{{ t('ask.title') }}">
+      <form hx-post="/ask" hx-target="#ask-result" hx-swap="innerHTML" hx-indicator="#ask-spinner">
+        <p class="note-label">{{ t('ask.title') }}</p>
+        <div class="ask-row">
+          <input type="text" name="q" minlength="3" maxlength="200" placeholder="{{ t('ask.placeholder') }}" aria-label="{{ t('ask.title') }}" autocomplete="off" required>
+          <button class="pill is-active" type="submit"><i data-lucide="sparkles"></i>{{ t('ask.button') }}</button>
+        </div>
+        <p id="ask-spinner" class="htmx-indicator muted ask-wait">{{ t('gen.printing') }}</p>
+      </form>
+      <div id="ask-result" aria-live="polite"></div>
+    </section>
+
+    {% if suggestion %}
+    <aside class="card suggest" id="suggestion-card" data-keep>
+      <p class="note-label">{{ t('profile.learned') }}</p>
+      <p>{{ learner_note or t('learner.default') }}</p>
+      <p class="suggest-ask">{{ t('paper.suggest', label=suggestion.label) }}</p>
+      <div class="suggest-actions">
+        <button class="pill is-active" type="button" hx-post="/suggestions/{{ suggestion.id }}"
+                hx-vals='{"decision": "accept"}' hx-target="#suggestion-card" hx-swap="outerHTML">{{ t('paper.yes') }}</button>
+        <button class="pill" type="button" hx-post="/suggestions/{{ suggestion.id }}"
+                hx-vals='{"decision": "reject"}' hx-target="#suggestion-card" hx-swap="outerHTML">{{ t('paper.no_thanks') }}</button>
+      </div>
+    </aside>
+    {% endif %}
+
     {% for key, title, items in sections %}
     <section class="sec" data-section="{{ key }}">
       <h2 class="sec-title">{{ title }}</h2>
@@ -100,6 +127,16 @@
     <p class="card muted">{{ t('empty.thin') }}</p>
     {% endif %}
     <p class="card muted" id="no-results" hidden>{{ t('home.no_results') }}</p>
+
+    {% if puzzle_card %}
+    <a class="puzzle-card" href="/puzzle/{{ 'today' if nav_active == 'home' else day }}">
+      <span class="puzzle-card-text">
+        <strong>{{ t('puzzle.title') }}</strong>
+        <span>{{ t('puzzle.subtitle') }}</span>
+      </span>
+      <span class="puzzle-card-go">{{ t('puzzle.score', score=puzzle_card.score) if puzzle_card.done else t('puzzle.play') }}</span>
+    </a>
+    {% endif %}
 
     <div class="paper-actions">
       <a class="btn btn-navy" href="/paper/{{ day }}/print{{ vq }}"><i data-lucide="newspaper"></i>{{ t('home.paper_view') }}</a>

@@ -6,3 +6,4 @@ __pycache__/
 
 app/VERSION
 railway.env
+space_secrets.txt

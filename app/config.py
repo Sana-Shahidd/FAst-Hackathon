@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import os
+
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PAPER_NAME = "Subah"
@@ -59,6 +62,46 @@ class Settings(BaseSettings):
     TEST_SUPABASE_ANON_KEY: str = ""
     TEST_SUPABASE_SERVICE_ROLE_KEY: str = ""
 
+    @model_validator(mode="after")
+    def _public_url_from_space(self) -> Settings:
+        """The public address comes from the host (`SPACE_HOST` or Render's `RENDER_EXTERNAL_URL`) unless set explicitly."""
+        if not self.PUBLIC_BASE_URL.startswith("http://localhost"):
+            return self
+        if host := os.getenv("SPACE_HOST"):
+            self.PUBLIC_BASE_URL = f"https://{host}"
+        elif url := os.getenv(
+            "RENDER_EXTERNAL_URL"
+        ):  # Render sets this to the service address
+            self.PUBLIC_BASE_URL = url
+        return self
+
+    def production_problems(self) -> tuple[list[str], list[str]]:
+        """(errors, warnings) for `APP_ENV=production`: errors stop the app from starting."""
+        errors = [
+            f"{name} is not set"
+            for name in (
+                "SECRET_KEY",
+                "SUPABASE_URL",
+                "SUPABASE_ANON_KEY",
+                "SUPABASE_SERVICE_ROLE_KEY",
+            )
+            if not getattr(self, name)
+        ]
+        warnings = []
+        if not self.SESSION_COOKIE_SECURE:
+            warnings.append(
+                "SESSION_COOKIE_SECURE is false: session cookies are not marked Secure"
+            )
+        if self.PUBLIC_BASE_URL.startswith("http://localhost"):
+            warnings.append(
+                "PUBLIC_BASE_URL still points at localhost: PDF links will be wrong"
+            )
+        if not (self.GEMINI_API_KEY or self.GROQ_API_KEY):
+            warnings.append(
+                "no LLM key is set: every edition will use the code fallbacks"
+            )
+        return errors, warnings
+
     def model_for(self, key: str) -> str:
         """Primary `provider:model_id` spec for agent `key` (profiler, curator, ...)."""
         specs = {
@@ -66,6 +109,7 @@ class Settings(BaseSettings):
             "curator": self.CURATOR_MODEL,
             "editor": self.EDITOR_MODEL,
             "learner": self.LEARNER_MODEL,
+            "answerer": self.EDITOR_MODEL,  # Ask Subah reuses the Editor's model
         }
         if key not in specs:
             raise KeyError(f"unknown agent key: {key}")

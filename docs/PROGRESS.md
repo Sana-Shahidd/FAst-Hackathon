@@ -8,7 +8,7 @@ If you are an AI coding tool taking over: read `AGENTS.md`, `CLAUDE.md`, `docs/0
 file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). Follow
 `docs/08_BUILD_PLAN.md` task by task; never invent names that are not in `docs/`.
 
-## Overall: about 47% of the 9-hour plan done (T-01…T-07 complete)
+## Overall: about 90% of the 9-hour plan done (T-01…T-14 mostly done; T-15 docs/demo left; push notifications and the language switch were cut)
 
 | Task | What | State | Commit |
 |---|---|---|---|
@@ -22,8 +22,8 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 | T-08 | Paper view + PDF (Playwright), plus desktop layout and Day/Night/Auto theme | **Done** (176 unit + 129 integration green incl. real Chromium; layout checked in the browser on phone + desktop, light + dark; not yet clicked through signed in) | `a6ff59b` |
 | T-09 | Archive, Saved tab, regenerate, `/dev/time-travel` | **Done** (archive with collapsed older versions + `?v=`, Saved tab, regenerate race fixed, dev time travel; 12 new integration tests; layout checked on a phone) | T-09 commit |
 | BRAND | Logo, header sunrise video, cache-busted static links | **Done**, pushed (`bde4869`) | `bde4869` |
-| T-10 | Learning weights, Learner agent, profile page | Not started | |
-| T-11 | Headline puzzle page | Not started | |
+| T-10 | Learning weights, Learner agent, profile page | **Done** (signals move weights + history; Learner with fallback runs in the next edition; suggestion card; `/profile` with bars, sliders, sparklines; 12 integration tests) | T-10/T-11 commit |
+| T-11 | Headline puzzle page | **Done** (one question at a time, server grading, score ring, streak, home card, `puzzle_correct` feeds learning; 8 integration tests) | T-10/T-11 commit |
 | T-12 | Reading comfort, push notification, scheduler, settings | Not started | |
 | T-13 | City section, making-of, Three Things, language switch | Not started | |
 | T-14 | Hardening, rate limits, seed demo data, production checks | Not started | |

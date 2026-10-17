@@ -231,3 +231,24 @@ class Reader(BaseModel):
     blocked_sources: list[str] = Field(default_factory=list)
     liked: list[str] = Field(default_factory=list)  # recent headlines liked
     disliked: list[str] = Field(default_factory=list)
+
+
+class LearnerOut(BaseModel):
+    """What the Learner agent returns (docs/06_AGENTS.md §3, §7); over-long text is trimmed."""
+
+    add: Annotated[list[ParsedInterest], _cap(3), Field(max_length=3)] = Field(
+        default_factory=list
+    )
+    lower: Annotated[list[str], _cap(2), Field(max_length=2)] = Field(
+        default_factory=list
+    )  # existing interest labels
+    note: Annotated[str, _trim(200), Field(max_length=200)] = ""
+
+
+class AnswerOut(BaseModel):
+    """What the Answerer agent returns (docs/06_AGENTS.md §7b); over-long text is trimmed."""
+
+    answer: Annotated[str, _trim(700), Field(max_length=700)] = ""
+    used: Annotated[list[int], _cap(5), Field(max_length=5)] = Field(
+        default_factory=list
+    )

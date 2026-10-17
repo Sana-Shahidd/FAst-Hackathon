@@ -17,6 +17,12 @@
             aria-label="{{ t('nav.saved') if art.saved else t('saved.save') }}"><i data-lucide="bookmark"></i></button>
     <button type="button" class="round-btn" data-copy="/r/{{ art.id }}" aria-label="{{ t('article.share') }}"><i data-lucide="share-2"></i></button>
   </div>
+  <div class="listen-card" data-listen-card>
+    <button type="button" class="listen-btn" data-listen data-lang="{{ speech_lang }}" data-text="{{ art.headline }}. {{ art.summary }}"
+            aria-label="{{ t('paper.listen') }}" aria-pressed="false"><i data-lucide="play"></i></button>
+    <div class="listen-wave" aria-hidden="true">{% for n in range(40) %}<i style="--h: {{ 20 + (n * 37) % 70 }}%"></i>{% endfor %}</div>
+    <span class="listen-label">{{ t('paper.listen') }}</span>
+  </div>
   <h2 class="sheet-head">{{ art.headline }}</h2>
   <p class="sheet-sum">{{ art.summary }}</p>
   {% if art.why %}<p class="sheet-why"><strong>{{ t('paper.why') }}</strong> · {{ art.why }}</p>{% endif %}
