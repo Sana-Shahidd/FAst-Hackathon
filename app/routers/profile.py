@@ -1,14 +1,16 @@
-"""Reader preferences (docs/05_ROUTES.md): reading comfort now; settings and profile pages come later."""
+"""Reader preferences (docs/05_ROUTES.md): the profile page, interests, suggestions and reading comfort."""
 
 from __future__ import annotations
 
 import asyncio
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, HTTPException, Response
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
+from fastapi.responses import RedirectResponse
 
 from app import deps
 from app.deps import CurrentUser
+from app.services import edition, learning
 
 router = APIRouter()
 
@@ -43,3 +45,86 @@ async def save_comfort(
             )
         )
     return Response(status_code=204, headers={"HX-Refresh": "true"})
+
+
+async def _profile_body(request: Request, user: CurrentUser, profile):
+    """The part of the profile page the interest and suggestion buttons refresh."""
+    return deps.render(
+        request,
+        "_profile_body.html",
+        lang=profile.edition_lang,
+        profile=profile,
+        interests=await learning.list_interests(user.id),
+        suggestions=await learning.pending_suggestions(user.id),
+        notes=await learning.recent_notes(user.id),
+    )
+
+
+@router.get("/profile")
+async def profile_page(
+    request: Request, user: Annotated[CurrentUser, Depends(deps.require_user)]
+):
+    """What Subah knows about the reader: interests as bars, their history, suggestions, notes (F-10, F-11)."""
+    profile, _ = await edition.profile_today(user.id)
+    if profile is None:
+        return RedirectResponse("/onboarding", status_code=303)
+    return deps.render(
+        request,
+        "profile.html",
+        lang=profile.edition_lang,
+        profile=profile,
+        reader_name=profile.display_name,
+        interests=await learning.list_interests(user.id),
+        suggestions=await learning.pending_suggestions(user.id),
+        notes=await learning.recent_notes(user.id),
+        nav_active="profile",
+    )
+
+
+@router.post("/interests", dependencies=[Depends(deps.verify_csrf)])
+async def change_interests(
+    request: Request,
+    user: Annotated[CurrentUser, Depends(deps.require_user)],
+    action: Annotated[str, Form()],
+    interest_id: Annotated[str, Form()] = "",
+    weight: Annotated[float | None, Form()] = None,
+    label: Annotated[str, Form()] = "",
+):
+    """The reader edits their own interests: `update` the weight, `delete`, or `add` one."""
+    profile, _ = await edition.profile_today(user.id)
+    if profile is None:
+        raise HTTPException(status_code=404)
+    if action == "update" and weight is not None:
+        ok = await learning.set_weight(user.id, interest_id, weight)
+    elif action == "delete":
+        ok = await learning.remove_interest(user.id, interest_id)
+    elif action == "add":
+        ok = await learning.add_interest(user.id, label)
+    else:
+        raise HTTPException(status_code=422, detail="unknown action")
+    if not ok:
+        raise HTTPException(status_code=404)
+    return await _profile_body(request, user, profile)
+
+
+@router.post("/suggestions/{suggestion_id}", dependencies=[Depends(deps.verify_csrf)])
+async def decide_suggestion(
+    request: Request,
+    suggestion_id: str,
+    user: Annotated[CurrentUser, Depends(deps.require_user)],
+    decision: Annotated[str, Form()],
+    ctx: Annotated[str, Form()] = "",
+):
+    """Yes adds the suggested interest, No remembers the refusal; the card then disappears."""
+    if decision not in ("accept", "reject"):
+        raise HTTPException(status_code=422, detail="unknown decision")
+    if not await learning.decide_suggestion(
+        user.id, suggestion_id, decision == "accept"
+    ):
+        raise HTTPException(status_code=404)
+    if ctx == "profile":
+        profile, _ = await edition.profile_today(user.id)
+        if profile is None:
+            raise HTTPException(status_code=404)
+        return await _profile_body(request, user, profile)
+    return Response(status_code=200)

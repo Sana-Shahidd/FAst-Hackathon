@@ -1,0 +1,55 @@
+<div id="profile-body" class="profile-body">
+  <section class="profile-sec">
+    <h2>{{ t('profile.interests') }}</h2>
+    <ul class="interest-list">
+      {% for i in interests %}
+      <li class="interest card">
+        <div class="interest-top">
+          <span class="interest-label">{{ i.label }}</span>
+          <span class="interest-pct">{{ i.percent }}%</span>
+          <button type="button" class="icon-btn" aria-label="{{ t('profile.remove') }}: {{ i.label }}"
+                  hx-post="/interests" hx-vals='{"action": "delete", "interest_id": "{{ i.id }}"}'
+                  hx-target="#profile-body" hx-swap="outerHTML"><i data-lucide="x"></i></button>
+        </div>
+        <div class="interest-bar" role="presentation"><i style="inline-size: {{ i.percent }}%"></i></div>
+        <div class="interest-edit">
+          <input type="range" name="weight" min="0.05" max="1" step="0.05" value="{{ i.weight }}"
+                 aria-label="{{ t('profile.weight') }}: {{ i.label }}"
+                 hx-post="/interests" hx-trigger="change" hx-include="this"
+                 hx-vals='{"action": "update", "interest_id": "{{ i.id }}"}'
+                 hx-target="#profile-body" hx-swap="outerHTML">
+          <svg class="spark" viewBox="0 0 90 26" aria-hidden="true"><polyline points="{{ i.spark }}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <form class="inline-add" hx-post="/interests" hx-target="#profile-body" hx-swap="outerHTML">
+      <input type="hidden" name="action" value="add">
+      <input type="text" name="label" placeholder="{{ t('profile.add') }}" minlength="2" maxlength="60" required>
+      <button class="pill is-active" type="submit">{{ t('ob.add') }}</button>
+    </form>
+  </section>
+
+  <section class="profile-sec">
+    <h2>{{ t('profile.learned') }}</h2>
+    {% for note in notes %}
+    <p class="card learned-note">{{ note }}</p>
+    {% else %}
+    <p class="card learned-note muted">{{ t('learner.default') }}</p>
+    {% endfor %}
+    {% if suggestions %}
+    <h3 class="profile-sub">{{ t('profile.suggested') }}</h3>
+    {% for s in suggestions %}
+    <div class="card suggest">
+      <p>{{ t('paper.suggest', label=s.label) }}</p>
+      <div class="suggest-actions">
+        <button class="pill is-active" type="button" hx-post="/suggestions/{{ s.id }}"
+                hx-vals='{"decision": "accept", "ctx": "profile"}' hx-target="#profile-body" hx-swap="outerHTML">{{ t('paper.yes') }}</button>
+        <button class="pill" type="button" hx-post="/suggestions/{{ s.id }}"
+                hx-vals='{"decision": "reject", "ctx": "profile"}' hx-target="#profile-body" hx-swap="outerHTML">{{ t('paper.no_thanks') }}</button>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+  </section>
+</div>

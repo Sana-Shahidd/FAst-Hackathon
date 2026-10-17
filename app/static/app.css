@@ -432,6 +432,33 @@ html[dir="rtl"] .switch:checked::after { transform: translateX(-22px); }
 .hero-brand .source-strip { justify-content: center; flex-wrap: wrap; }
 .sec-title { text-align: center; }
 
+/* ---- profile: interests as bars, history sparkline, learned notes ---- */
+.page-hero-sub { margin: -8px 0 0; color: var(--navy-200); font-size: .95rem; }
+.profile-body { display: flex; flex-direction: column; gap: 26px; }
+.profile-sec { display: flex; flex-direction: column; gap: 12px; }
+.profile-sec h2 { font-size: 1.5rem; }
+.profile-sub { font-size: 1.1rem; color: var(--muted); margin-block-start: 6px; }
+.interest-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.interest { display: flex; flex-direction: column; gap: 8px; padding: 14px; }
+.interest-top { display: flex; align-items: center; gap: 10px; }
+.interest-label { flex: 1; font-weight: 600; }
+.interest-pct { font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.interest-bar { block-size: 8px; border-radius: var(--r-pill); background: var(--navy-600); overflow: hidden; }
+.interest-bar i { display: block; block-size: 100%; background: var(--maroon-600); border-radius: inherit; transition: inline-size .3s ease; }
+.interest-edit { display: flex; align-items: center; gap: 12px; }
+.interest-edit input[type="range"] { flex: 1; accent-color: var(--maroon-600); min-block-size: 32px; }
+.spark { inline-size: 90px; block-size: 26px; flex: none; color: var(--maroon-600); }
+.inline-add { display: flex; gap: 8px; }
+.inline-add input { flex: 1; min-inline-size: 0; min-block-size: 46px; padding-inline: 16px; border-radius: 16px; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); }
+.learned-note { margin: 0; }
+.suggest { display: flex; flex-direction: column; gap: 8px; }
+.suggest p { margin: 0; }
+.suggest-ask { font-weight: 600; }
+.suggest-actions { display: flex; gap: 8px; }
+@media (min-width: 900px) {
+  .interest-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 /* ---- header sunrise video: video at the back, navy/maroon overlay above it, content above both ---- */
 .home-hero { position: relative; isolation: isolate; overflow: hidden; }
 .home-hero > :not(.hero-video):not(.hero-video-overlay) { position: relative; z-index: 2; }

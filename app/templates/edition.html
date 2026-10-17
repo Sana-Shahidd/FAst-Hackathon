@@ -89,6 +89,20 @@
     </aside>
     {% endif %}
 
+    {% if suggestion %}
+    <aside class="card suggest" id="suggestion-card" data-keep>
+      <p class="note-label">{{ t('profile.learned') }}</p>
+      <p>{{ learner_note or t('learner.default') }}</p>
+      <p class="suggest-ask">{{ t('paper.suggest', label=suggestion.label) }}</p>
+      <div class="suggest-actions">
+        <button class="pill is-active" type="button" hx-post="/suggestions/{{ suggestion.id }}"
+                hx-vals='{"decision": "accept"}' hx-target="#suggestion-card" hx-swap="outerHTML">{{ t('paper.yes') }}</button>
+        <button class="pill" type="button" hx-post="/suggestions/{{ suggestion.id }}"
+                hx-vals='{"decision": "reject"}' hx-target="#suggestion-card" hx-swap="outerHTML">{{ t('paper.no_thanks') }}</button>
+      </div>
+    </aside>
+    {% endif %}
+
     {% for key, title, items in sections %}
     <section class="sec" data-section="{{ key }}">
       <h2 class="sec-title">{{ title }}</h2>

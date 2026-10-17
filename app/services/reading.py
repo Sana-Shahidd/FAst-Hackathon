@@ -6,6 +6,7 @@ Read state is derived from `signals` (no extra table); every query filters by `u
 from __future__ import annotations
 
 import asyncio
+import logging
 from collections import defaultdict
 from datetime import UTC, datetime
 from typing import Any
@@ -14,7 +15,9 @@ from zoneinfo import ZoneInfo
 from app import deps
 from app.agents import editor
 from app.models import Reader
-from app.services import sources
+from app.services import learning, sources
+
+logger = logging.getLogger(__name__)
 
 READ_KINDS = ("open", "click")
 FEEDBACK_KINDS = ("more_like", "less_like", "skip_source")
@@ -245,6 +248,12 @@ async def record_signal(
         "value": value,
     }
     await _db(lambda: client.table("signals").insert(row).execute())
+    try:
+        await learning.apply_signal(user_id, edition_article_id, kind, value)
+    except Exception:
+        logger.warning(
+            "could not apply %s signal to the reader's interests", kind, exc_info=True
+        )
 
 
 async def toggle_saved(user_id: str, edition_article_id: str) -> bool:
@@ -358,6 +367,8 @@ async def load_view(user_id: str, edition: dict) -> dict[str, Any]:
     feedback = await feedback_state(user_id, ids)
     labels = await interest_labels(user_id)
     favs = await favorites(user_id)
+    pending = await learning.pending_suggestions(user_id)
+    notes = await learning.recent_notes(user_id, limit=1)
     for art in articles:
         decorate(art, edition["edition_date"], read, saved, feedback)
     lead = next((a for a in articles if a["slot"] == "lead"), None)
@@ -369,4 +380,6 @@ async def load_view(user_id: str, edition: dict) -> dict[str, Any]:
         "read_count": len(read),
         "total": len(articles),
         "circles": source_circles(favs),
+        "suggestion": pending[0] if pending else None,
+        "learner_note": notes[0] if notes else None,
     }

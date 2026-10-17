@@ -23,7 +23,7 @@ from app.config import (
     RECENT_EDITIONS_EXCLUDE,
 )
 from app.models import Candidate, FavoriteSource, Interest, Profile, Reader
-from app.services import activity, feeds, layout, mutes, puzzle
+from app.services import activity, feeds, layout, learning, mutes, puzzle
 
 logger = logging.getLogger(__name__)
 
@@ -312,6 +312,10 @@ async def generate_edition(
 async def _run(
     client, user_id, edition_id, profile, lang, local_date, version, started
 ) -> None:
+    try:
+        await learning.maybe_run_learner(user_id, edition_id)
+    except Exception:
+        logger.warning("learner failed for edition %s", edition_id, exc_info=True)
     interests_rows = await _db(
         lambda: (
             client.table("interests")
