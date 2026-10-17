@@ -1,0 +1,16 @@
+<div id="mutes">
+  {% if mute_error %}<p class="alert" role="alert">{{ t(mute_error) }}</p>{% endif %}
+  <ul class="chip-list mute-chips">
+    {% for word in mutes %}
+    <li class="chip chip-dark">{{ word }}
+      <button type="button" class="chip-x" aria-label="{{ t('profile.remove') }}: {{ word }}"
+              hx-post="/mutes" hx-vals='{"action": "remove", "keyword": {{ word|tojson }}}'
+              hx-target="#mutes" hx-swap="outerHTML"><i data-lucide="x"></i></button></li>
+    {% endfor %}
+  </ul>
+  <form class="inline-add" hx-post="/mutes" hx-target="#mutes" hx-swap="outerHTML">
+    <input type="hidden" name="action" value="add">
+    <input type="text" name="keyword" placeholder="{{ t('mute.placeholder') }}" minlength="2" maxlength="40" required>
+    <button class="pill is-active" type="submit">{{ t('ob.add') }}</button>
+  </form>
+</div>

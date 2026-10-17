@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ t('nav.settings') }} · {{ paper_name }}{% endblock %}
+{% block frame_class %} frame-wide{% endblock %}
+{% block body %}
+<main>
+  <header class="page-hero">
+    <div class="topbar">
+      <a class="brand-mini" href="/paper/today"><img class="brand-logo" src="/static/logo-mark.png" alt="" width="30" height="30">{{ paper_name }}</a>
+    </div>
+    <h1>{{ t('nav.settings') }}</h1>
+  </header>
+  <div class="page list-page settings-page">
+    {% if saved %}<p class="alert" role="status">{{ t('settings.saved') }}</p>{% endif %}
+    {% if error %}<p class="alert" role="alert">{{ t(error) }}</p>{% endif %}
+
+    <form class="card settings-card" method="post" action="/settings">
+      <h2>{{ t('settings.edition') }}</h2>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="field"><label for="display_name">{{ t('settings.name') }}</label>
+        <input id="display_name" name="display_name" type="text" maxlength="40" value="{{ s.display_name }}"></div>
+      <div class="field"><label for="edition_lang">{{ t('settings.language') }}</label>
+        <select id="edition_lang" name="edition_lang">
+          {% for code, native in languages %}<option value="{{ code }}"{% if code == s.edition_lang %} selected{% endif %}>{{ native }}</option>{% endfor %}
+        </select></div>
+      <div class="field"><label for="city">{{ t('ob.city') }}</label>
+        <input id="city" name="city" type="text" maxlength="60" value="{{ s.city or '' }}"></div>
+      <div class="field"><label for="timezone">{{ t('ob.timezone') }}</label>
+        <input id="timezone" name="timezone" type="text" list="zones" value="{{ s.timezone }}">
+        <datalist id="zones">{% for z in zones %}<option value="{{ z }}">{% endfor %}</datalist></div>
+      <div class="field"><label for="reading_minutes">{{ t('ob.reading') }}</label>
+        <select id="reading_minutes" name="reading_minutes">
+          {% for m in (5, 10, 20) %}<option value="{{ m }}"{% if m == s.reading_minutes %} selected{% endif %}>{{ t('ob.minutes', n=m) }}</option>{% endfor %}
+        </select></div>
+      <div class="field"><label for="delivery_time">{{ t('settings.delivery') }}</label>
+        <input id="delivery_time" name="delivery_time" type="time" value="{{ s.delivery_time }}"></div>
+      <label class="switch-row settings-switch"><span>{{ t('notify.toggle') }}</span>
+        <input class="switch" type="checkbox" name="notify" value="1"{% if s.notify %} checked{% endif %}></label>
+      <button class="btn btn-navy btn-block" type="submit">{{ t('settings.save') }}</button>
+    </form>
+
+    <section class="card settings-card">
+      <h2>{{ t('comfort.title') }}</h2>
+      <form hx-post="/settings/comfort" hx-trigger="change" hx-swap="none" class="comfort-form">
+        <div class="seg" role="radiogroup" aria-label="{{ t('comfort.title') }}">
+          {% for value, label in [('day', 'comfort.day'), ('night', 'comfort.night'), ('auto', 'comfort.auto')] %}
+          <label class="seg-item"><input type="radio" name="theme" value="{{ value }}" class="sr-only"{% if theme == value %} checked{% endif %}><span>{{ t(label) }}</span></label>
+          {% endfor %}
+        </div>
+        <p class="comfort-label">{{ t('comfort.size') }}</p>
+        <div class="seg" role="radiogroup" aria-label="{{ t('comfort.size') }}">
+          {% for value in ['S', 'M', 'L', 'XL'] %}
+          <label class="seg-item"><input type="radio" name="text_size" value="{{ value }}" class="sr-only"{% if text_size == value %} checked{% endif %}><span>{{ value }}</span></label>
+          {% endfor %}
+        </div>
+      </form>
+    </section>
+
+    <section class="card settings-card" id="mutes-card">
+      <h2>{{ t('mute.title') }}</h2>
+      {% include "_mutes.html" %}
+    </section>
+
+    <section class="card settings-card" id="sources-card">
+      <h2>{{ t('sources.title') }}</h2>
+      {% include "_sources_list.html" %}
+    </section>
+
+    <form method="post" action="/logout">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <button class="btn btn-outline btn-block" type="submit"><i data-lucide="log-out"></i>{{ t('nav.logout') }}</button>
+    </form>
+  </div>
+</main>
+{% endblock %}
+{% block bottom_nav %}{% include "_bottom_nav.html" %}{% endblock %}

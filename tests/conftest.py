@@ -24,7 +24,7 @@ from fastapi.testclient import TestClient
 # (as CI runs it) has no repo root on `sys.path` and cannot import `app`.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app import deps
+from app import deps, jobs
 from app.config import settings
 from app.main import app
 from app.services import pdf
@@ -67,6 +67,7 @@ def no_browser_on_startup(monkeypatch: pytest.MonkeyPatch) -> None:
         return None
 
     monkeypatch.setattr(pdf, "start_on_startup", skip)
+    monkeypatch.setattr(jobs, "start_scheduler", lambda: None)
 
 
 @pytest.fixture(autouse=True)

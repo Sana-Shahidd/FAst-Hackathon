@@ -10,7 +10,7 @@ from fastapi.responses import RedirectResponse
 
 from app import deps
 from app.deps import CurrentUser
-from app.services import edition, learning
+from app.services import edition, learning, prefs
 
 router = APIRouter()
 
@@ -128,3 +128,59 @@ async def decide_suggestion(
             raise HTTPException(status_code=404)
         return await _profile_body(request, user, profile)
     return Response(status_code=200)
+
+
+async def _settings_page(request: Request, user: CurrentUser, profile, **extra):
+    import zoneinfo
+
+    s = await prefs.get_settings(user.id)
+    return deps.render(
+        request,
+        "settings.html",
+        lang=s.get("edition_lang", profile.edition_lang),
+        profile=profile,
+        s=s,
+        zones=sorted(zoneinfo.available_timezones()),
+        mutes=await prefs.list_mutes(user.id),
+        favorites=await prefs.list_favorites(user.id),
+        catalog=await _catalog_options(user.id, s.get("edition_lang", "en")),
+        nav_active="profile",
+        **extra,
+    )
+
+
+async def _catalog_options(user_id: str, lang: str) -> list[dict]:
+    from app.services import sources
+
+    taken = {f["catalog_key"] for f in await prefs.list_favorites(user_id)}
+    return [o for o in sources.catalog_for(lang) if o["key"] not in taken]
+
+
+@router.get("/settings")
+async def settings_page(
+    request: Request,
+    user: Annotated[CurrentUser, Depends(deps.require_user)],
+    saved: int = 0,
+):
+    """Edition, reading comfort, never-show-me words and favorite sources in one place (docs/05_ROUTES.md)."""
+    profile, _ = await edition.profile_today(user.id)
+    if profile is None:
+        return RedirectResponse("/onboarding", status_code=303)
+    return await _settings_page(request, user, profile, saved=bool(saved))
+
+
+@router.post("/settings", dependencies=[Depends(deps.verify_csrf)])
+async def save_settings(
+    request: Request, user: Annotated[CurrentUser, Depends(deps.require_user)]
+):
+    profile, _ = await edition.profile_today(user.id)
+    if profile is None:
+        return RedirectResponse("/onboarding", status_code=303)
+    form = dict((await request.form()).items())
+    try:
+        await prefs.save_settings(user.id, form)
+    except prefs.PrefsError as exc:
+        page = await _settings_page(request, user, profile, error=exc.key)
+        page.status_code = 400
+        return page
+    return RedirectResponse("/settings?saved=1", status_code=303)

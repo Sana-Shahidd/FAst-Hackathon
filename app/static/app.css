@@ -432,6 +432,19 @@ html[dir="rtl"] .switch:checked::after { transform: translateX(-22px); }
 .hero-brand .source-strip { justify-content: center; flex-wrap: wrap; }
 .sec-title { text-align: center; }
 
+/* ---- settings ---- */
+.settings-page { max-inline-size: 640px; margin-inline: auto; inline-size: 100%; }
+.settings-card { display: flex; flex-direction: column; gap: 12px; }
+.settings-card h2 { font-size: 1.3rem; }
+.settings-page .field select, .inline-add select { min-block-size: 50px; padding-inline: 14px; border-radius: 16px; border: 1.5px solid var(--line); background: var(--canvas); color: var(--ink); }
+.inline-add select { flex: 1; min-inline-size: 0; background: var(--card); }
+.settings-switch { background: var(--canvas); border-color: var(--line); }
+.settings-switch .switch { background: var(--line); }
+.settings-switch .switch:checked { background: var(--maroon-600); }
+.chip-dark { background: var(--blush); color: var(--link); }
+.source-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.source-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 4px; border-block-end: 1px solid var(--line); }
+
 /* ---- making-of timeline + listen card ---- */
 .hero-making { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 600; color: var(--link); text-decoration: none; }
 .hero-making svg { inline-size: 14px; block-size: 14px; }

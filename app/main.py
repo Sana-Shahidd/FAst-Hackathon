@@ -24,7 +24,7 @@ from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
-from app import deps
+from app import deps, jobs
 from app.config import settings
 from app.routers import (
     archive,
@@ -47,7 +47,10 @@ health_router = APIRouter()
 async def lifespan(application: FastAPI):
     """One shared Chromium for the PDF renderer lives as long as the app (docs/03_TECH.md §9)."""
     await pdf.start_on_startup(application)
+    scheduler = jobs.start_scheduler()
     yield
+    if scheduler is not None:
+        scheduler.shutdown(wait=False)
     await pdf.stop_browser()
 
 

@@ -10,7 +10,7 @@ from fastapi.responses import RedirectResponse
 
 from app import deps
 from app.deps import CurrentUser
-from app.services import edition, i18n, reading
+from app.services import edition, i18n, prefs, reading, sources
 
 router = APIRouter()
 
@@ -104,4 +104,72 @@ async def toggle_saved(
     art = await reading.card_state(user.id, art)
     return deps.render(
         request, "_article.html", lang=art["editions"]["lang"], art=art, oob=False
+    )
+
+
+@router.post("/mutes", dependencies=[Depends(deps.verify_csrf)])
+async def change_mutes(
+    request: Request,
+    user: Annotated[CurrentUser, Depends(deps.require_user)],
+    action: Annotated[str, Form()],
+    keyword: Annotated[str, Form()] = "",
+):
+    """Add or remove one "never show me" word; returns the refreshed chips (F-18)."""
+    error = None
+    if action == "add":
+        try:
+            await prefs.add_mute(user.id, keyword)
+        except prefs.PrefsError as exc:
+            error = exc.key
+    elif action == "remove":
+        await prefs.remove_mute(user.id, keyword)
+    else:
+        raise HTTPException(status_code=422, detail="unknown action")
+    profile, _ = await edition.profile_today(user.id)
+    return deps.render(
+        request,
+        "_mutes.html",
+        lang=profile.edition_lang if profile else "en",
+        mutes=await prefs.list_mutes(user.id),
+        mute_error=error,
+    )
+
+
+@router.get("/sources")
+async def sources_page(user: Annotated[CurrentUser, Depends(deps.require_user)]):
+    return RedirectResponse("/settings#sources-card", status_code=303)
+
+
+@router.post("/sources", dependencies=[Depends(deps.verify_csrf)])
+async def change_sources(
+    request: Request,
+    user: Annotated[CurrentUser, Depends(deps.require_user)],
+    action: Annotated[str, Form()],
+    catalog_key: Annotated[str, Form()] = "",
+    feed_url: Annotated[str, Form()] = "",
+    id: Annotated[str, Form()] = "",
+):
+    """Favorite sources: add from the catalog, add a pasted feed (validated), or remove (F-23)."""
+    profile, _ = await edition.profile_today(user.id)
+    lang = profile.edition_lang if profile else "en"
+    error = None
+    try:
+        if action == "add_catalog":
+            await prefs.add_catalog_source(user.id, catalog_key, lang)
+        elif action == "add_custom":
+            await prefs.add_custom_source(user.id, feed_url)
+        elif action == "remove":
+            await prefs.remove_source(user.id, id)
+        else:
+            raise HTTPException(status_code=422, detail="unknown action")
+    except prefs.PrefsError as exc:
+        error = exc.key
+    taken = {f["catalog_key"] for f in await prefs.list_favorites(user.id)}
+    return deps.render(
+        request,
+        "_sources_list.html",
+        lang=lang,
+        favorites=await prefs.list_favorites(user.id),
+        catalog=[o for o in sources.catalog_for(lang) if o["key"] not in taken],
+        source_error=error,
     )
