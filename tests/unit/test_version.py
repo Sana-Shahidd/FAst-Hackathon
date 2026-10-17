@@ -15,6 +15,7 @@ pytestmark = pytest.mark.unit
 def clean_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
     monkeypatch.delenv("GIT_SHA", raising=False)
     monkeypatch.delenv("RAILWAY_GIT_COMMIT_SHA", raising=False)
+    monkeypatch.delenv("RENDER_GIT_COMMIT", raising=False)
     path = tmp_path / "VERSION"
     monkeypatch.setattr(main, "VERSION_FILE", path)
     return path
@@ -49,3 +50,9 @@ def test_without_any_source_the_version_is_dev() -> None:
 def test_an_empty_version_file_means_dev(clean_env: Path) -> None:
     clean_env.write_text("\n")
     assert main.version() == "dev"
+
+
+def test_render_exposes_its_commit_too(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GIT_SHA", "dev")
+    monkeypatch.setenv("RENDER_GIT_COMMIT", "abc9999")
+    assert main.version() == "abc9999"

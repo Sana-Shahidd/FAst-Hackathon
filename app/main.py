@@ -121,15 +121,16 @@ VERSION_FILE = Path(__file__).resolve().parent / "VERSION"
 
 
 def version() -> str:
-    """Commit sha of this build: `GIT_SHA`, else Railway's, else the `app/VERSION` file, else `"dev"`.
+    """Commit sha of this build: `GIT_SHA`, else the host's (Render/Railway), else the `app/VERSION` file, else `"dev"`.
 
     `scripts/deploy.sh` writes `app/VERSION` before `railway up`, which uploads files without git metadata.
     """
     sha = os.getenv("GIT_SHA", "dev")
     if sha != "dev":
         return sha
-    if railway_sha := os.getenv("RAILWAY_GIT_COMMIT_SHA"):
-        return railway_sha
+    for name in ("RENDER_GIT_COMMIT", "RAILWAY_GIT_COMMIT_SHA"):
+        if host_sha := os.getenv(name):
+            return host_sha
     try:
         return VERSION_FILE.read_text(encoding="utf-8").strip() or "dev"
     except OSError:
