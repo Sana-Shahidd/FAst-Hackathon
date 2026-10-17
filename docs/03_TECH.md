@@ -15,7 +15,7 @@ openai-agents==0.24.0
 feedparser==6.0.14
 httpx==0.28.1
 rapidfuzz==3.14.6
-playwright==1.64.0
+playwright==1.63.0
 babel==2.18.0
 apscheduler==3.11.3
 tenacity==9.2.1
@@ -318,7 +318,7 @@ git push (feature branch or main)
              wait until $RENDER_APP_URL/health returns {"version": <this sha>}  (max 10 min)
              scripts/smoke.sh $RENDER_APP_URL  (frontend pages + API + PDF)
 ```
-- **Dockerfile:** `FROM mcr.microsoft.com/playwright/python:v1.64.0-noble` (Chromium and
+- **Dockerfile:** `FROM mcr.microsoft.com/playwright/python:v1.63.0-noble` (Chromium and
   system fonts preinstalled; tag must match the pinned `playwright` version) →
   `pip install -r requirements.txt` → copy app → `ARG GIT_SHA` → `ENV GIT_SHA` →
   `CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}`. Also install

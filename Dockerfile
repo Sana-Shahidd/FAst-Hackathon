@@ -1,6 +1,6 @@
 # Frontend pages + backend API + PDF renderer in one image.
 # Base tag must match the pinned playwright version in requirements.txt.
-FROM mcr.microsoft.com/playwright/python:v1.64.0-noble
+FROM mcr.microsoft.com/playwright/python:v1.63.0-noble
 RUN apt-get update && apt-get install -y --no-install-recommends fonts-noto-core fonts-noto-cjk \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /srv
