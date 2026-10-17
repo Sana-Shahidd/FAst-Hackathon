@@ -82,6 +82,17 @@ Run locally: `pytest -m unit -q` and `pytest -m integration -q` (needs `TEST_SUP
 - `/health` version: `GIT_SHA` env, else `RAILWAY_GIT_COMMIT_SHA`, else the `app/VERSION` file written by
   `scripts/deploy.sh`, else `dev` (`main.version()`).
 
+## 2.2 Live host: Hugging Face Space (current)
+1. huggingface.co → New Space → name `subah` → SDK **Docker** → Blank → Public (or Private) → Create.
+2. Space → Settings → Variables and secrets → add each line of `space_secrets.txt` as a **secret** (run
+   `bash scripts/space_env.sh` once to create it from your `.env`; delete the file afterwards).
+3. Deploy: create a write token (huggingface.co/settings/tokens), then
+   `HF_TOKEN=hf_xxx HF_SPACE=<your-hf-user>/subah bash scripts/deploy_hf.sh`
+   (first build takes about 10 minutes; progress is on the Space's **Logs** tab).
+4. Open `https://<user>-subah.hf.space` (the direct address, not the huggingface.co page), then
+   `bash scripts/smoke.sh https://<user>-subah.hf.space`.
+5. For CI deploys add the GitHub secrets `HF_TOKEN` and `HF_SPACE`.
+
 ## 3. Demo data
 `scripts/seed_demo.py --email demo@subah.app` creates a user (EN edition + Urdu source
 language, topics ai, startups, pakistan, sports_cricket, climate; city Lahore), generates

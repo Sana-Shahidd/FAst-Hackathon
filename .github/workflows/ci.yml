@@ -50,14 +50,17 @@ jobs:
           node-version: "22"
       - run: npm install -g @railway/cli
         if: env.HAS_RAILWAY_TOKEN == 'true'
-      - name: deploy to Railway and wait for this commit
+      - name: deploy (Hugging Face Space if HF_TOKEN is set, else Railway) and wait for this commit
         env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_SPACE: ${{ secrets.HF_SPACE }}
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_SERVICE: ${{ vars.RAILWAY_SERVICE || 'subah' }}
           APP_URL: ${{ secrets.APP_URL }}
-        run: bash scripts/deploy.sh "${{ github.sha }}"
+        run: |
+          if [ -n "$HF_TOKEN" ]; then bash scripts/deploy_hf.sh "${{ github.sha }}"; else bash scripts/deploy.sh "${{ github.sha }}"; fi
       - name: smoke test frontend + backend
         env:
           SMOKE_EMAIL: ${{ secrets.SMOKE_EMAIL }}
           SMOKE_PASSWORD: ${{ secrets.SMOKE_PASSWORD }}
-        run: bash scripts/smoke.sh "${{ secrets.APP_URL }}"
+        run: bash scripts/smoke.sh "${APP_URL:-${{ secrets.APP_URL }}}"

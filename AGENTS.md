@@ -38,7 +38,7 @@ working and simple beats clever.
 | HTTP | httpx (async) | requests |
 | Icons | Lucide (CDN UMD) | hand-drawn SVG icon sets |
 | Web push | pywebpush (VAPID) | VAPID signing / payload encryption code |
-| Deploy | Dockerfile on Playwright base image + Railway + GitHub Actions | custom servers, manual uploads |
+| Deploy | Dockerfile on Playwright base image + Hugging Face Spaces (or Railway) + GitHub Actions | custom servers, manual uploads |
 | Testing | pytest, pytest-asyncio, respx, FastAPI TestClient | ad-hoc test scripts |
 
 Do not add dependencies outside `docs/03_TECH.md`. If one is truly needed, add it there

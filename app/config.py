@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import os
+
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PAPER_NAME = "Subah"
@@ -58,6 +61,14 @@ class Settings(BaseSettings):
     TEST_SUPABASE_URL: str = ""
     TEST_SUPABASE_ANON_KEY: str = ""
     TEST_SUPABASE_SERVICE_ROLE_KEY: str = ""
+
+    @model_validator(mode="after")
+    def _public_url_from_space(self) -> Settings:
+        """On a Hugging Face Space the public address is `https://$SPACE_HOST` unless set explicitly."""
+        host = os.getenv("SPACE_HOST")
+        if host and self.PUBLIC_BASE_URL.startswith("http://localhost"):
+            self.PUBLIC_BASE_URL = f"https://{host}"
+        return self
 
     def production_problems(self) -> tuple[list[str], list[str]]:
         """(errors, warnings) for `APP_ENV=production`: errors stop the app from starting."""
