@@ -9,9 +9,6 @@
     </video>
     <div class="hero-video-overlay" aria-hidden="true"></div>
     <div class="topbar">
-      <a class="round-btn avatar" href="/profile" aria-label="{{ t('nav.profile') }}">
-        <img src="/static/logo-mark.png" alt="" width="44" height="44">
-      </a>
       <div class="topbar-actions">
         <button type="button" class="round-btn" id="search-toggle" aria-label="{{ t('home.search') }}" aria-expanded="false" aria-controls="search-box">
           <i data-lucide="search"></i>
@@ -25,19 +22,25 @@
       <input type="search" id="search-input" placeholder="{{ t('home.search') }}" aria-label="{{ t('home.search') }}" autocomplete="off">
     </div>
 
-    {% if circles %}
-    <section aria-label="{{ t('home.sources') }}">
-      <p class="home-label">{{ t('home.sources') }}</p>
-      <ul class="source-strip">
-        {% for c in circles %}
-        <li><button type="button" class="source-dot" data-source-filter="{{ c.name|lower }}" aria-pressed="false">
-          <span class="source-initials" style="--brand: {{ c.color }}">{{ c.initials }}</span>
-          <span class="source-name">{{ c.name }}</span>
-        </button></li>
-        {% endfor %}
-      </ul>
-    </section>
-    {% endif %}
+    <div class="hero-brand">
+      <a class="hero-logo" href="/profile" aria-label="{{ t('nav.profile') }}">
+        <img src="/static/logo-mark.png" alt="" width="88" height="88">
+        <span class="hero-logo-name">{{ paper_name }}</span>
+      </a>
+      {% if circles %}
+      <section aria-label="{{ t('home.sources') }}">
+        <p class="home-label">{{ t('home.sources') }}</p>
+        <ul class="source-strip">
+          {% for c in circles %}
+          <li><button type="button" class="source-dot" data-source-filter="{{ c.name|lower }}" aria-pressed="false">
+            <span class="source-initials" style="--brand: {{ c.color }}">{{ c.initials }}</span>
+            <span class="source-name">{{ c.name }}</span>
+          </button></li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+    </div>
 
     <section class="hero-card" aria-label="{{ t('home.headlines') }}">
       <div class="hero-card-top">

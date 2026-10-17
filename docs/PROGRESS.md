@@ -59,11 +59,12 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 1. **Supabase: done.** Project `yjnmfpwrwzhqqgmswrbe` has the schema applied, "Confirm email" OFF, and all
    three keys in `.env` (the same project serves as prod and test for now; tests delete the `it-…@subah.test`
    users they create, verified: zero left over). Create a separate test project later if time allows.
-2. **Render** deploy: unconfirmed. The first image failed (`playwright/python:v1.64.0-noble` does not exist);
-   fixed by pinning 1.63.0 in `b446dcf`. The `onrender.com` URL was never confirmed (`subah.onrender.com`
-   is someone else's Express app). Deployment is parked by the user's choice. When resuming: set every
-   env var from `.env.example` on Render (incl. `SECRET_KEY`, the Supabase keys, the model ids below), and the
-   GitHub secrets listed in `docs/09_SETUP_TEST_DEMO.md` §2.1.
+2. **Deploy: Railway only** (Render was dropped on 2026-10-17; Vercel cannot run this server-rendered app). Config is
+   committed (`railway.toml`, `scripts/deploy.sh`, `scripts/railway_env.sh`, CI deploy job); the **service itself is not
+   created yet**: the owner must create the Railway project from the GitHub repo, generate a domain, then run
+   `bash scripts/railway_env.sh https://<domain>` (writes a gitignored `railway.env` to paste into Railway's RAW editor)
+   and set `PUBLIC_BASE_URL`. See `docs/09_SETUP_TEST_DEMO.md` §2.1. The Docker image itself builds (pinned
+   `playwright` 1.63.0 base, fixed in `b446dcf`).
 3. API keys (Gemini, Groq, Supabase secret) were pasted into chat; rotate them after the demo.
 
 ## Environment & workflow gotchas (Windows, this machine)

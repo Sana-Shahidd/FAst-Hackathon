@@ -129,7 +129,7 @@ sequenceDiagram
 ```
 subah/
 ├── AGENTS.md  CLAUDE.md  README.md  .env.example  .gitignore  requirements.txt
-├── Dockerfile  render.yaml  pytest.ini  .dockerignore
+├── Dockerfile  railway.toml  pytest.ini  .dockerignore
 ├── .claude/agents/  shipper.md  deployer.md      # Claude Code subagents (ship gate + deploy)
 ├── .github/workflows/ci.yml                      # tests on every push; deploy on main after tests
 ├── scripts/  ship.sh  deploy.sh  smoke.sh  gen_vapid.py  seed_demo.py
@@ -268,7 +268,7 @@ FALLBACK_MODEL=groq:<instruction-model-id>
 VAPID_PUBLIC_KEY=                    # python -m scripts.gen_vapid
 VAPID_PRIVATE_KEY=
 VAPID_SUBJECT=mailto:you@example.com
-GIT_SHA=dev                          # set by the Docker build / Render
+GIT_SHA=dev                          # set by the Docker build; Railway sets RAILWAY_GIT_COMMIT_SHA
 ```
 GitHub repository secrets (for CI/CD): `RENDER_DEPLOY_HOOK_URL`, `RENDER_APP_URL`.
 Integration tests use a separate Supabase project (free) via `TEST_SUPABASE_URL`,
@@ -318,17 +318,20 @@ git push (feature branch or main)
    └─ GitHub Actions ci.yml
         ├─ job test: ruff check · pytest -m unit · pytest -m integration (TEST_SUPABASE_*)
         └─ job deploy (only main, only if test passed):
-             curl -X POST $RENDER_DEPLOY_HOOK_URL  → Render builds Dockerfile
-             wait until $RENDER_APP_URL/health returns {"version": <this sha>}  (max 10 min)
-             scripts/smoke.sh $RENDER_APP_URL  (frontend pages + API + PDF)
+             scripts/deploy.sh <sha>: writes app/VERSION, `railway up --ci` → Railway builds the Dockerfile
+             wait until $APP_URL/health returns {"version": <this sha>}  (max 10 min)
+             scripts/smoke.sh $APP_URL  (frontend pages + API + PDF)
 ```
 - **Dockerfile:** `FROM mcr.microsoft.com/playwright/python:v1.63.0-noble` (Chromium and
   system fonts preinstalled; tag must match the pinned `playwright` version) →
   `pip install -r requirements.txt` → copy app → `ARG GIT_SHA` → `ENV GIT_SHA` →
   `CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}`. Also install
   `fonts-noto-core fonts-noto-cjk` via apt for offline script fonts in PDFs.
-- **render.yaml:** one `web` service, `runtime: docker`, `plan: free`, `autoDeploy: false`
-  (only CI deploys), `healthCheckPath: /health`, env vars from §6 (`sync: false` for secrets).
-- Render free instances sleep after ~15 min idle and have 512 MB RAM: open the app 2 minutes
-  before the demo; Playwright PDF rendering uses one shared browser to stay within memory.
+- **railway.toml:** builder `DOCKERFILE`, `healthcheckPath: /health`, restart on failure. Env vars
+  from §6 live in the Railway service (`scripts/railway_env.sh` copies them from your local `.env`).
+- **Why Railway only (no Vercel):** the app is server-rendered and needs a long-running process
+  (Playwright Chromium for PDFs, background printing), which Vercel's serverless runtime cannot run.
+- `/health` version: `GIT_SHA` env, else `RAILWAY_GIT_COMMIT_SHA`, else the `app/VERSION` file that
+  `scripts/deploy.sh` writes (a `railway up` upload carries no git metadata), else `dev`.
+- Playwright PDF rendering uses one shared browser to stay within memory.
   Backup: local `uvicorn` + `cloudflared tunnel`.

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Usage: scripts/smoke.sh https://subah.onrender.com   (optional SMOKE_EMAIL / SMOKE_PASSWORD)
+# Usage: scripts/smoke.sh https://<your-service>.up.railway.app   (optional SMOKE_EMAIL / SMOKE_PASSWORD)
 set -uo pipefail
 U="${1:?base url}"; FAIL=0; JAR="$(mktemp)"
 ok(){ echo "✓ $1"; }; bad(){ echo "✗ $1"; FAIL=1; }
@@ -12,7 +12,7 @@ echo "$H" | grep -q '"pdf": *true' && ok "pdf engine" || bad "pdf engine"
 [ "$(code "$U/")" = 200 ]                && ok "landing page"   || bad "landing page"
 [ "$(code "$U/login")" = 200 ]           && ok "login page"     || bad "login page"
 [ "$(code "$U/static/app.css")" = 200 ]  && ok "static css"     || bad "static css"
-[ "$(code "$U/sw.js")" = 200 ]           && ok "service worker" || bad "service worker"
+[ "$(code "$U/static/logo.webp")" = 200 ]  && ok "logo asset"     || bad "logo asset"
 [ "$(code "$U/paper/today")" = 303 ] || [ "$(code "$U/paper/today")" = 302 ] && ok "auth redirect" || bad "auth redirect"
 
 if [ -n "${SMOKE_EMAIL:-}" ] && [ -n "${SMOKE_PASSWORD:-}" ]; then

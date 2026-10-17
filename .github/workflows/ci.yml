@@ -40,15 +40,24 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      HAS_RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
-      - name: trigger Render deploy and wait for this commit
+      - uses: actions/setup-node@v4
+        if: env.HAS_RAILWAY_TOKEN == 'true'
+        with:
+          node-version: "22"
+      - run: npm install -g @railway/cli
+        if: env.HAS_RAILWAY_TOKEN == 'true'
+      - name: deploy to Railway and wait for this commit
         env:
-          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-          RENDER_APP_URL: ${{ secrets.RENDER_APP_URL }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_SERVICE || 'subah' }}
+          APP_URL: ${{ secrets.APP_URL }}
         run: bash scripts/deploy.sh "${{ github.sha }}"
       - name: smoke test frontend + backend
         env:
           SMOKE_EMAIL: ${{ secrets.SMOKE_EMAIL }}
           SMOKE_PASSWORD: ${{ secrets.SMOKE_PASSWORD }}
-        run: bash scripts/smoke.sh "${{ secrets.RENDER_APP_URL }}"
+        run: bash scripts/smoke.sh "${{ secrets.APP_URL }}"

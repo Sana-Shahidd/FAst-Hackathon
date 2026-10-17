@@ -422,6 +422,16 @@ html[dir="rtl"] .switch:checked::after { transform: translateX(-22px); }
 .avatar { padding: 0; overflow: hidden; background: #FDF8EC; }
 .avatar img { inline-size: 100%; block-size: 100%; object-fit: cover; }
 
+/* home header: the logo and "Your sources" sit centred in the middle, search + Aa in the corner */
+.home-hero .topbar { justify-content: flex-end; }
+.hero-brand { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+.hero-logo { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #fff; text-decoration: none; }
+.hero-logo img { inline-size: 88px; block-size: 88px; border-radius: 50%; object-fit: cover; background: #FDF8EC; box-shadow: 0 6px 22px rgba(0, 0, 0, .35), 0 0 0 3px rgba(255, 255, 255, .55); }
+.hero-logo-name { font-family: var(--font-display); font-size: 1.7rem; line-height: 1.1; letter-spacing: .01em; text-shadow: 0 2px 10px rgba(0, 0, 0, .45); }
+.hero-brand .home-label { text-align: center; }
+.hero-brand .source-strip { justify-content: center; flex-wrap: wrap; }
+.sec-title { text-align: center; }
+
 /* ---- header sunrise video: video at the back, navy/maroon overlay above it, content above both ---- */
 .home-hero { position: relative; isolation: isolate; overflow: hidden; }
 .home-hero > :not(.hero-video):not(.hero-video-overlay) { position: relative; z-index: 2; }
