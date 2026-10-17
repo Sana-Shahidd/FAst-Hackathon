@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+<main class="hero-screen">
+  <header class="topbar">
+    <span class="brand-mini">{{ paper_name }}</span>
+    <a class="btn btn-ghost" href="/login">{{ t('auth.login') }}</a>
+  </header>
+  <section class="hero-body fade-up">
+    <p class="kicker">{{ t('paper.price') }}</p>
+    <h1 class="masthead">{{ paper_name }}</h1>
+    <p class="tagline">{{ t('app.tagline') }}</p>
+    <p class="pitch">{{ t('landing.pitch') }}</p>
+    <div class="cta-row">
+      <a class="btn btn-light btn-block" href="/signup">{{ t('auth.signup') }}</a>
+    </div>
+  </section>
+  <footer>{% include "_lang_chips.html" %}</footer>
+</main>
+{% endblock %}

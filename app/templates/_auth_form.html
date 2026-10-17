@@ -1,0 +1,35 @@
+<main class="hero-screen">
+  <header class="topbar">
+    <a class="brand-mini" href="/">{{ paper_name }}</a>
+    <a class="round-btn" href="/" aria-label="{{ t('common.back') }}"><i data-lucide="chevron-left"></i></a>
+  </header>
+  <section class="hero-body fade-up">
+    <form class="auth-card" method="post" action="/{{ mode }}" novalidate>
+      <h1>{{ t('auth.signup') if mode == 'signup' else t('auth.login') }}</h1>
+      <p class="muted" style="margin:0">{{ t('app.tagline') }}</p>
+      {% if error %}<p class="alert" role="alert">{{ t(error) }}</p>{% endif %}
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="field">
+        <label for="email">{{ t('auth.email') }}</label>
+        <input id="email" name="email" type="email" inputmode="email" autocomplete="email"
+               value="{{ email or '' }}" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">{{ t('auth.password') }}</label>
+        <input id="password" name="password" type="password" minlength="6" required
+               autocomplete="{{ 'new-password' if mode == 'signup' else 'current-password' }}">
+      </div>
+      <button class="btn btn-navy btn-block" type="submit">
+        {{ t('auth.signup') if mode == 'signup' else t('auth.login') }}
+      </button>
+      <p class="switch-line">
+        {% if mode == 'signup' %}
+          {{ t('auth.have_account') }} <a href="/login">{{ t('auth.login') }}</a>
+        {% else %}
+          {{ t('auth.no_account') }} <a href="/signup">{{ t('auth.signup') }}</a>
+        {% endif %}
+      </p>
+    </form>
+  </section>
+  <footer>{% include "_lang_chips.html" %}</footer>
+</main>

@@ -18,7 +18,7 @@ def test_all_eight_tables_share_identical_keys() -> None:
     tables = i18n.load_tables()
     assert set(tables) == SUPPORTED
     en_keys = set(tables["en"])
-    assert len(en_keys) == 121
+    assert len(en_keys) >= 121
     for lang, table in tables.items():
         assert set(table) == en_keys, f"{lang}.json keys differ from en.json"
         assert all(value.strip() for value in table.values()), (

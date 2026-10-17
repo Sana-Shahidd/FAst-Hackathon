@@ -119,5 +119,12 @@
  "puzzle.wrong": "Casi — era «{answer}»",
  "puzzle.score": "Tu puntuación: {score}/5",
  "puzzle.streak": "Racha de {n} días",
- "puzzle.pdf_line": "Juega el acertijo de hoy en la edición web"
+ "puzzle.pdf_line": "Juega el acertijo de hoy en la edición web",
+ "auth.error.credentials": "Correo o contraseña incorrectos.",
+ "auth.error.exists": "Ese correo ya tiene un periódico. Prueba a iniciar sesión.",
+ "auth.error.weak": "Usa un correo válido y una contraseña de al menos 6 caracteres.",
+ "auth.error.generic": "Algo salió mal. Inténtalo de nuevo.",
+ "auth.have_account": "¿Ya tienes tu periódico?",
+ "auth.no_account": "¿Nuevo en Subah?",
+ "landing.pitch": "Cuatro agentes de IA imprimen cada mañana un periódico nuevo, en tu idioma y sobre lo que te importa."
 }

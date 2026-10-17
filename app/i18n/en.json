@@ -119,5 +119,12 @@
  "puzzle.wrong": "Not quite — it was “{answer}”",
  "puzzle.score": "You scored {score}/5",
  "puzzle.streak": "{n}-day streak",
- "puzzle.pdf_line": "Play today's puzzle on the web edition"
+ "puzzle.pdf_line": "Play today's puzzle on the web edition",
+ "auth.error.credentials": "Wrong email or password.",
+ "auth.error.exists": "That email already has a paper. Try logging in.",
+ "auth.error.weak": "Use a valid email and a password of at least 6 characters.",
+ "auth.error.generic": "Something went wrong. Please try again.",
+ "auth.have_account": "Already have a paper?",
+ "auth.no_account": "New to Subah?",
+ "landing.pitch": "Four AI agents print you a fresh newspaper every morning — in your language, about what you care about."
 }

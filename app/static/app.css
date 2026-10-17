@@ -1,0 +1,165 @@
+/* Subah app UI — navy + maroon (docs/07_DESIGN.md). Logical properties only, so RTL mirrors. */
+:root {
+  /* brand */
+  --navy-950: #07142B; --navy-800: #0F2547; --navy-600: #1E3A6B; --navy-200: #C9D4E8;
+  --maroon-800: #5A1426; --maroon-600: #7F1D33; --maroon-400: #B04A5E; --blush: #F6E7EB;
+  /* surfaces */
+  --canvas: #EEF1F6; --card: #FFFFFF;
+  --ink: #0E1626; --muted: #5E6678; --line: #E3E7EF;
+  --glass: rgba(255,255,255,.14); --glass-line: rgba(255,255,255,.28);
+  --hero: linear-gradient(165deg, #07142B 0%, #13294F 38%, #5A1426 78%, #7F1D33 100%);
+  --success: #1F8A5B; --danger: #B3263E;
+  /* theme-aware roles */
+  --primary: var(--navy-950); --on-primary: #fff; --link: var(--maroon-600); --alert-ink: var(--maroon-800);
+  /* type */
+  --font-display: var(--lang-display, "DM Serif Display"), "DM Serif Display", Georgia, serif;
+  --font-ui: var(--lang-ui, "Inter"), system-ui, sans-serif;
+  /* shape */
+  --r-card: 22px; --r-hero: 28px; --r-pill: 999px;
+  --shadow: 0 8px 24px rgba(7, 20, 43, .12);
+  color-scheme: light;
+}
+html[data-theme="night"] {
+  --canvas: #050D1D; --card: #0F2547; --ink: #EEF1F6; --muted: #A8B3C9; --line: #1E3A6B;
+  --blush: #2A1520; --shadow: 0 8px 24px rgba(0, 0, 0, .4); color-scheme: dark;
+  --primary: var(--maroon-600); --link: #F0B4C0; --alert-ink: #F6E7EB;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-theme="auto"] {
+    --canvas: #050D1D; --card: #0F2547; --ink: #EEF1F6; --muted: #A8B3C9; --line: #1E3A6B;
+    --blush: #2A1520; --shadow: 0 8px 24px rgba(0, 0, 0, .4); color-scheme: dark;
+    --primary: var(--maroon-600); --link: #F0B4C0; --alert-ink: #F6E7EB;
+  }
+}
+html[data-text-size="S"] { font-size: 15px; }
+html[data-text-size="M"] { font-size: 17px; }
+html[data-text-size="L"] { font-size: 19px; }
+html[data-text-size="XL"] { font-size: 21px; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--canvas); color: var(--ink);
+  font-family: var(--font-ui); line-height: 1.5; min-height: 100dvh;
+}
+html[lang="ur"] body { line-height: 2.1; }
+html[lang="ar"] body { line-height: 1.8; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; }
+a { color: inherit; }
+img { max-inline-size: 100%; display: block; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--maroon-400); outline-offset: 2px; }
+.sr-only {
+  position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---- frame: full width on phones, a centred 480px "phone column" on desktop ---- */
+.frame {
+  position: relative; min-block-size: 100dvh; background: var(--canvas);
+  margin-inline: auto; max-inline-size: 480px; overflow: clip;
+}
+@media (min-width: 900px) {
+  .frame { box-shadow: 0 0 0 1px var(--line), 0 24px 64px rgba(7, 20, 43, .18); }
+}
+.page { padding: 20px 16px calc(112px + env(safe-area-inset-bottom)); }
+
+/* ---- hero screens (landing, auth, onboarding) ---- */
+.hero-screen {
+  min-block-size: 100dvh; background: var(--hero); color: #fff;
+  padding: calc(18px + env(safe-area-inset-top)) 22px calc(28px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: 22px;
+}
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand-mini { font-family: var(--font-display); font-size: 1.25rem; letter-spacing: .01em; text-decoration: none; }
+.hero-body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
+.kicker { margin: 0; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--navy-200); }
+.masthead {
+  font-size: clamp(4rem, 22vw, 6.2rem); line-height: 1; letter-spacing: -.01em;
+  padding-block-end: 14px; border-block-end: 3px double rgba(255, 255, 255, .55);
+}
+.tagline { margin: 0; font-size: 1.15rem; color: #fff; }
+.pitch { margin: 0; color: rgba(255, 255, 255, .86); font-size: .98rem; max-inline-size: 36ch; }
+.cta-row { display: flex; flex-direction: column; gap: 10px; margin-block-start: 6px; }
+
+/* ---- buttons ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-block-size: 50px; padding-inline: 24px; border-radius: var(--r-pill);
+  border: 2px solid transparent; font-weight: 600; font-size: 1rem; text-decoration: none;
+  cursor: pointer; transition: transform .12s ease, background .12s ease;
+}
+.btn:active { transform: scale(.98); }
+.btn-light { background: #fff; color: var(--navy-950); }
+.btn-light:hover { background: var(--blush); }
+.btn-navy { background: var(--primary); color: var(--on-primary); }
+.btn-navy:hover { filter: brightness(1.15); }
+.btn-ghost { background: var(--glass); color: #fff; border-color: var(--glass-line); backdrop-filter: blur(6px); }
+.btn-ghost:hover { background: rgba(255, 255, 255, .22); }
+.btn-block { inline-size: 100%; }
+.round-btn {
+  display: inline-grid; place-items: center; inline-size: 44px; block-size: 44px;
+  border-radius: 50%; background: #fff; color: var(--navy-950); border: 0; cursor: pointer;
+  text-decoration: none; box-shadow: var(--shadow);
+}
+
+/* ---- language chips ---- */
+.lang-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.lang-chip {
+  display: inline-flex; align-items: center; min-block-size: 38px; padding-inline: 14px;
+  border-radius: var(--r-pill); background: var(--glass); border: 1px solid var(--glass-line);
+  color: #fff; text-decoration: none; font-size: .9rem;
+}
+.lang-chip[aria-current="true"] { background: #fff; color: var(--navy-950); border-color: #fff; font-weight: 600; }
+
+/* ---- auth card ---- */
+.auth-card {
+  background: var(--card); color: var(--ink); border-radius: var(--r-hero);
+  padding: 26px 22px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 16px;
+}
+.auth-card h1 { font-size: 1.9rem; color: var(--ink); }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: .85rem; font-weight: 600; color: var(--muted); }
+.field input {
+  min-block-size: 50px; padding-inline: 16px; border-radius: 16px; border: 1.5px solid var(--line);
+  background: var(--canvas); color: var(--ink);
+}
+.field input:focus { border-color: var(--maroon-600); outline: none; box-shadow: 0 0 0 3px rgba(127, 29, 51, .18); }
+.alert {
+  margin: 0; padding: 12px 14px; border-radius: 14px; background: var(--blush);
+  border-inline-start: 4px solid var(--maroon-400); color: var(--alert-ink); font-size: .92rem;
+}
+.switch-line { margin: 0; text-align: center; color: var(--muted); font-size: .92rem; }
+.switch-line a { color: var(--link); font-weight: 600; }
+
+/* ---- cards & pills (home, archive, profile) ---- */
+.card { background: var(--card); border-radius: var(--r-card); box-shadow: var(--shadow); padding: 16px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px; min-block-size: 36px; padding-inline: 14px;
+  border-radius: var(--r-pill); background: var(--blush); color: var(--link);
+  font-size: .85rem; font-weight: 600; border: 0; text-decoration: none; cursor: pointer;
+}
+.pill[aria-pressed="true"], .pill.is-active { background: var(--primary); color: var(--on-primary); }
+.muted { color: var(--muted); }
+
+/* ---- floating bottom nav ---- */
+.bottom-nav {
+  position: fixed; inset-inline: 0; inset-block-end: calc(16px + env(safe-area-inset-bottom));
+  margin-inline: auto; inline-size: fit-content; z-index: 20;
+  display: flex; align-items: center; gap: 6px; padding: 8px;
+  background: var(--card); border-radius: var(--r-pill); box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+.nav-item {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-inline-size: 44px; block-size: 44px; padding-inline: 12px; border-radius: var(--r-pill);
+  color: var(--muted); text-decoration: none; font-weight: 600; font-size: .9rem;
+}
+.nav-item svg { inline-size: 22px; block-size: 22px; }
+.nav-item[aria-current="page"] { background: var(--primary); color: var(--on-primary); padding-inline: 18px; }
+
+/* ---- motion ---- */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-up { animation: fade-up .15s ease-out both; }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+}

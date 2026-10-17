@@ -119,5 +119,12 @@
  "puzzle.wrong": "不对——答案是“{answer}”",
  "puzzle.score": "你的得分 {score}/5",
  "puzzle.streak": "连续 {n} 天",
- "puzzle.pdf_line": "在网页版玩今日谜题"
+ "puzzle.pdf_line": "在网页版玩今日谜题",
+ "auth.error.credentials": "邮箱或密码错误。",
+ "auth.error.exists": "该邮箱已有报纸，请直接登录。",
+ "auth.error.weak": "请输入有效邮箱和至少 6 位的密码。",
+ "auth.error.generic": "出错了，请重试。",
+ "auth.have_account": "已经有报纸了？",
+ "auth.no_account": "初次使用 Subah？",
+ "landing.pitch": "四位 AI 智能体每天清晨用你的语言，为你印出一份关于你所关心话题的新报纸。"
 }

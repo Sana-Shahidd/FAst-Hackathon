@@ -1,0 +1,14 @@
+{# Floating bottom nav for signed-in pages. Set `nav_active` to home | archive | saved | profile. #}
+<nav class="bottom-nav" aria-label="Main">
+  {% for key, href, icon, label in [
+      ('home', '/paper/today', 'house', 'nav.home'),
+      ('archive', '/archive', 'compass', 'nav.archive'),
+      ('saved', '/saved', 'bookmark', 'nav.saved'),
+      ('profile', '/profile', 'user-round', 'nav.profile')] %}
+  <a class="nav-item" href="{{ href }}" aria-label="{{ t(label) }}"
+     {% if nav_active == key %}aria-current="page"{% endif %}>
+    <i data-lucide="{{ icon }}"></i>
+    {% if nav_active == key %}<span>{{ t(label) }}</span>{% endif %}
+  </a>
+  {% endfor %}
+</nav>

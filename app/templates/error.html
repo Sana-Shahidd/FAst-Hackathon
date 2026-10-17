@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block body %}
+<main class="hero-screen">
+  <header class="topbar"><a class="brand-mini" href="/">{{ paper_name }}</a></header>
+  <section class="hero-body">
+    <div class="auth-card">
+      <h1>{{ paper_name }}</h1>
+      <p class="alert" role="alert">{{ t('auth.error.generic') }}</p>
+      <a class="btn btn-navy btn-block" href="/">{{ t('nav.home') }}</a>
+    </div>
+  </section>
+</main>
+{% endblock %}

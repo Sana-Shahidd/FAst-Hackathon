@@ -1,0 +1,6 @@
+<ul class="lang-chips" aria-label="Language">
+  {% for code, native in languages %}
+  <li><a class="lang-chip" href="{{ path }}?lang={{ code }}" hreflang="{{ code }}"
+         {% if code == lang %}aria-current="true"{% endif %}>{{ native }}</a></li>
+  {% endfor %}
+</ul>

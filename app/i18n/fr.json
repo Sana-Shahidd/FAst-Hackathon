@@ -119,5 +119,12 @@
  "puzzle.wrong": "Pas tout à fait — c'était « {answer} »",
  "puzzle.score": "Votre score : {score}/5",
  "puzzle.streak": "{n} jours d'affilée",
- "puzzle.pdf_line": "Jouez à l'énigme du jour sur l'édition web"
+ "puzzle.pdf_line": "Jouez à l'énigme du jour sur l'édition web",
+ "auth.error.credentials": "E-mail ou mot de passe incorrect.",
+ "auth.error.exists": "Cet e-mail a déjà un journal. Essayez de vous connecter.",
+ "auth.error.weak": "Utilisez un e-mail valide et un mot de passe d'au moins 6 caractères.",
+ "auth.error.generic": "Une erreur s'est produite. Réessayez.",
+ "auth.have_account": "Vous avez déjà un journal ?",
+ "auth.no_account": "Nouveau sur Subah ?",
+ "landing.pitch": "Quatre agents IA impriment chaque matin un journal inédit, dans votre langue, sur ce qui vous intéresse."
 }

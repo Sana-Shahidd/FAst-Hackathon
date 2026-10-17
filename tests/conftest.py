@@ -55,3 +55,11 @@ def feeds_mock() -> None:
 def fake_agents() -> None:
     """Fixed CuratorOut/EditorOut/LearnerOut/ProfilerOut, or None to force fallbacks."""
     raise NotImplementedError("F-05: fake_agents fixture arrives with agents in T-02")
+
+
+@pytest.fixture(autouse=True)
+def reset_rate_limits() -> None:
+    """Rate limits are per client IP; every test starts with a clean slate."""
+    from app import deps
+
+    deps.limiter.reset()
