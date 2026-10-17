@@ -1,0 +1,11 @@
+{# Shared bits for the edition page and article sheet. #}
+{% macro age_label(art, t) -%}
+  {%- if art.age >= 48 -%}{{ (art.articles.published_at or '')[:10] }}
+  {%- elif art.age > 0 -%}{{ t('home.time_ago', n=art.age) }}{%- endif -%}
+{%- endmacro %}
+
+{% macro cover(art, t) -%}
+  {% if art.articles.image_url %}
+  <img src="{{ art.articles.image_url }}" alt="{{ art.headline }}" loading="lazy" referrerpolicy="no-referrer">
+  {% endif %}
+{%- endmacro %}

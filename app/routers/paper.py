@@ -1,18 +1,16 @@
-"""Paper routes (docs/05_ROUTES.md): printing screen, status polling, today's paper.
-
-`/paper/today` renders the edition in T-07; until then it only checks the reader has one.
-"""
+"""Paper routes (docs/05_ROUTES.md): printing screen, status polling, the web edition."""
 
 from __future__ import annotations
 
+from datetime import date
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, Depends, Form, HTTPException, Request
 from fastapi.responses import RedirectResponse
 
 from app import deps
 from app.deps import CurrentUser
-from app.services import edition
+from app.services import edition, i18n, reading
 
 router = APIRouter()
 
@@ -78,11 +76,54 @@ async def status(
     return response
 
 
+async def _edition_page(request: Request, user: CurrentUser, profile, day: date):
+    """Render `edition.html` for one ready edition of this reader, or None when there is none."""
+    ed = await edition.ready_edition(user.id, day)
+    if ed is None:
+        return None
+    view = await reading.load_view(user.id, ed)
+    return deps.render(
+        request,
+        "edition.html",
+        lang=ed["lang"],
+        profile=profile,
+        ed=ed,
+        day=day,
+        reader_name=profile.display_name,
+        nav_active="home"
+        if day == edition.local_date_for(profile.timezone)
+        else "archive",
+        long_date=i18n.full_date(day, ed["lang"]),
+        printed=reading.printed_time(ed.get("ready_at"), profile.timezone),
+        **view,
+    )
+
+
 @router.get("/paper/today")
-async def paper_today(user: Annotated[CurrentUser, Depends(deps.require_user)]):
+async def paper_today(
+    request: Request, user: Annotated[CurrentUser, Depends(deps.require_user)]
+):
     profile, today = await _today(user)
     if profile is None:
         return RedirectResponse("/onboarding", status_code=303)
-    if await edition.ready_edition(user.id, today) is None:
-        return RedirectResponse("/paper/generate", status_code=303)
-    raise NotImplementedError("F-07: today's edition page arrives with T-07")
+    page = await _edition_page(request, user, profile, today)
+    return page or RedirectResponse("/paper/generate", status_code=303)
+
+
+@router.get("/paper/{day}")
+async def paper_day(
+    request: Request,
+    day: str,
+    user: Annotated[CurrentUser, Depends(deps.require_user)],
+):
+    try:
+        wanted = date.fromisoformat(day)
+    except ValueError:
+        raise HTTPException(status_code=404) from None
+    profile, _ = await _today(user)
+    if profile is None:
+        return RedirectResponse("/onboarding", status_code=303)
+    page = await _edition_page(request, user, profile, wanted)
+    if page is None:
+        raise HTTPException(status_code=404)
+    return page

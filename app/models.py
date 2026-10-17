@@ -25,6 +25,8 @@ class Profile(BaseModel):
     city: str | None = None
     timezone: str = "UTC"
     reading_minutes: int = 10
+    text_size: str = "M"
+    theme: str = "auto"
 
 
 class Interest(BaseModel):

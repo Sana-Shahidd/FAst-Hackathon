@@ -1,0 +1,45 @@
+{% from "_macros.html" import age_label %}
+{% set src = art.articles %}
+{% set open_attrs %}href="/paper/{{ art.day }}/a/{{ art.id }}" hx-get="/paper/{{ art.day }}/a/{{ art.id }}" hx-target="#sheet" hx-swap="innerHTML"{% endset %}
+<article id="card-{{ art.id }}" class="story card fade-up{% if art.read %} is-read{% endif %}"
+         data-section="{{ art.section }}" data-source="{{ (src.source_name or '')|lower }}"
+         {% if oob %}hx-swap-oob="outerHTML"{% endif %}>
+  {% if src.image_url %}
+  <a class="story-img" {{ open_attrs|safe }} tabindex="-1" aria-hidden="true">
+    <img src="{{ src.image_url }}" alt="" loading="lazy" referrerpolicy="no-referrer">
+    {% if age_label(art, t)|trim %}<span class="glass-chip">{{ age_label(art, t) }}</span>{% endif %}
+  </a>
+  {% endif %}
+  <div class="story-top">
+    <span class="story-src">
+      {{ src.source_name }}
+      {% if not src.image_url and age_label(art, t)|trim %}<span class="muted"> · {{ age_label(art, t) }}</span>{% endif %}
+      {% if art.read %}<i data-lucide="check" class="read-tick" aria-hidden="true"></i><span class="sr-only">{{ t('article.read') }}</span>{% endif %}
+    </span>
+    <details class="menu">
+      <summary class="icon-btn" aria-label="{{ t('home.menu') }}"><i data-lucide="ellipsis"></i></summary>
+      <div class="menu-pop">
+        {% set target = 'hx-target="#card-' ~ art.id ~ '" hx-swap="outerHTML"' %}
+        <button type="button" hx-post="/signals" {{ target|safe }}
+                hx-vals='{"edition_article_id": "{{ art.id }}", "kind": "more_like"}'
+                aria-pressed="{{ 'true' if 'more_like' in art.feedback else 'false' }}">
+          <i data-lucide="thumbs-up"></i>{{ t('paper.more') }}</button>
+        <button type="button" hx-post="/signals" {{ target|safe }}
+                hx-vals='{"edition_article_id": "{{ art.id }}", "kind": "less_like"}'
+                aria-pressed="{{ 'true' if 'less_like' in art.feedback else 'false' }}">
+          <i data-lucide="thumbs-down"></i>{{ t('paper.less') }}</button>
+        <button type="button" hx-post="/saved/{{ art.id }}" {{ target|safe }}
+                class="{% if art.saved %}is-on{% endif %}" aria-pressed="{{ 'true' if art.saved else 'false' }}">
+          <i data-lucide="bookmark"></i>{{ t('nav.saved') if art.saved else t('saved.save') }}</button>
+        <button type="button" hx-post="/signals" {{ target|safe }}
+                hx-vals='{"edition_article_id": "{{ art.id }}", "kind": "skip_source"}'>
+          <i data-lucide="eye-off"></i>{{ t('paper.block_source') }}</button>
+      </div>
+    </details>
+  </div>
+  <h3 class="story-head"><a {{ open_attrs|safe }}>{{ art.headline }}</a></h3>
+  <p class="story-sum">{{ art.summary }}</p>
+  {% if art.why %}
+  <details class="why"><summary>{{ t('paper.why') }}</summary><p>{{ art.why }}</p></details>
+  {% endif %}
+</article>

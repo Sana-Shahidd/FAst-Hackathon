@@ -1,6 +1,6 @@
 # PROGRESS — read this first if you are picking the project up mid-build
 
-Last updated: 2026-10-17 ~14:30 (local). Demo deadline: **8 pm today**. Repo:
+Last updated: 2026-10-17 ~15:30 (local). Demo deadline: **8 pm today**. Repo:
 https://github.com/Sana-Shahidd/FAst-Hackathon (branch `main`). Working dir:
 `C:\Users\mobee\Downloads\subah-docs\subah`.
 
@@ -8,7 +8,7 @@ If you are an AI coding tool taking over: read `AGENTS.md`, `CLAUDE.md`, `docs/0
 file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). Follow
 `docs/08_BUILD_PLAN.md` task by task; never invent names that are not in `docs/`.
 
-## Overall: about 40% of the 9-hour plan done (T-01…T-06 complete)
+## Overall: about 47% of the 9-hour plan done (T-01…T-07 complete)
 
 | Task | What | State | Commit |
 |---|---|---|---|
@@ -17,8 +17,8 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 | T-03 | Feeds, mute filter, source catalog, custom feed validation, `feeds.json` | **Done**, live Check passed (261 en / 195 ur candidates) | `9c5904d` |
 | T-04 | Layout, language/RTL, CSRF, sessions, landing/login/signup, real-DB auth tests | **Done** (part 1 + part 2) | `ccc7ed0` + part 2 commit |
 | T-05 | Onboarding (5 steps, Profiler agent, taste test, `POST /onboarding`) | **Done**, also verified by hand in a browser | T-05 commit |
-| T-06 | Edition pipeline (Curator, Editor, fallbacks, puzzle items, layout) | **Done** (171 unit + 16 integration tests green) | T-06 commit |
-| T-07 | Home view, article sheet, `/r/{id}`, signals, read marks, save | Not started | |
+| T-06 | Edition pipeline (Curator, Editor, fallbacks, puzzle items, layout) | **Done**; live timing (≤ 40 s) still not re-measured after the low-reasoning-effort fix | `85f4f23` |
+| T-07 | Home view, article sheet, `/r/{id}`, signals, read marks, save | **Done** (layout checked in the browser with a rendered test edition; not yet clicked through signed in) | T-07 commit |
 | T-08 | Paper view + PDF (Playwright) | Not started | |
 | T-09 | Archive, Saved tab, regenerate, `/dev/time-travel` | Not started | |
 | T-10 | Learning weights, Learner agent, profile page | Not started | |
@@ -28,9 +28,9 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 | T-14 | Hardening, rate limits, seed demo data, production checks | Not started | |
 | T-15 | Architecture diagram, README screenshots, Loom, submit | Not started | |
 
-**Minimum for a believable 8 pm demo:** ~~T-04 → T-05 → T-06~~ (**done**) → **T-07** (home view, read a real paper) → T-08 (PDF), T-09 (archive), T-10 (learning). Cut order is in `08_BUILD_PLAN.md`.
+**Minimum for a believable 8 pm demo:** ~~T-04 → T-07~~ (**done**) → T-08 (PDF), T-09 (archive), T-10 (learning). Cut order is in `08_BUILD_PLAN.md`.
 
-## What exists now (all on `main`; unit = 155 tests, integration ≈ 96 tests green; the integration run takes ≈ 3 min because it hits real Supabase)
+## What exists now (unit = 170 tests, integration ≈ 114 tests green; the integration run takes ≈ 8 min because it hits real Supabase and builds editions)
 
 - `app/main.py` (`create_app()` factory, `/health` with a real DB check), `app/config.py`, `app/deps.py`
   (Supabase clients, `render()`, CSRF, cookies + refresh, `require_user`, slowapi limiter),
@@ -43,7 +43,11 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
   currently redirects to a 404 until T-06).
 - `app/agents/profiler.py` (Profiler agent + code fallback), `app/services/onboarding.py` (form validation, taste cards, save).
 - `app/agents/{curator,editor}.py` (+ deterministic fallbacks, id validation), `app/services/{edition,layout,puzzle}.py`.
-- `app/routers/paper.py` (`/paper/generate` GET+POST, `/paper/status` HTMX, `/paper/today` stub → T-07).
+- `app/routers/paper.py` (`/paper/generate` GET+POST, `/paper/status` HTMX, `/paper/today`, `/paper/{date}`),
+  `routers/reader.py` (article sheet, `POST /saved/{id}`), `routers/signals.py` (`/r/{id}`, `POST /signals`),
+  `services/reading.py` (read marks, saves, signals, page view), `templates/edition.html` + `_article*.html`,
+  `static/home.js`. Not built yet: Paper view/PDF buttons (T-08), Archive/Saved/Profile pages (T-09/T-10 — the bottom nav links 404),
+  puzzle card (T-11), mute-a-word/bell/Aa (T-12). See DECISIONS.md "T-07".
 - Templates: `base.html`, `landing.html`, `login.html`, `signup.html`, `_auth_form.html`,
   `_lang_chips.html`, `_bottom_nav.html`, `generating.html`, `_status.html`, `error.html`.
 - Static: `app.css`, `app.js`, `favicon.svg`.
@@ -89,11 +93,7 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 
 ## Next steps, in order
 
-1. **T-07 home view** (`07_DESIGN.md` §3.1–3.2, `02_PRD.md` F-07, `05_ROUTES.md`): `paper_today` replaces the stub;
-   source circles, hero card, section pills, article cards, ⋯ menu, article sheet (HTMX), search filter; `/r/{id}`
-   redirect route; `signals` table writes (`more_like`, `less_like`, `skip_source`); `mark_read` toggle; `save` toggle.
-   Tests: `unit/test_reading.py`, `integration/test_edition_page.py`, `integration/test_signals.py`,
-   `integration/test_redirect.py`; fill the `edition` fixture in `tests/conftest.py`.
+1. Sign in in the browser pane and click through the signed-in flow once (onboarding → printing → home → sheet → save); T-07 was verified by tests and a rendered preview only. Also re-time a live edition (≤ 40 s).
 2. **T-08 PDF** (`02_PRD.md` F-08): `edition_print.html`, `paper.css`, shared Playwright browser, upload to Supabase Storage, cache URL on the edition row.
 3. Then T-09 archive/saved, T-10 learning, T-11 puzzle, T-12 comfort/push/scheduler, T-13 extras.
 4. Keep `docs/DECISIONS.md` and this file updated after every shipped task.

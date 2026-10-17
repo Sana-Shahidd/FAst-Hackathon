@@ -129,5 +129,8 @@
  "landing.pitch": "四位 AI 智能体每天清晨用你的语言，为你印出一份关于你所关心话题的新报纸。",
  "ob.timezone": "你的时区",
  "ob.add": "添加",
- "ob.skip": "跳过"
+ "ob.skip": "跳过",
+ "common.close": "关闭",
+ "home.menu": "更多操作",
+ "home.no_results": "没有符合搜索的新闻。"
 }

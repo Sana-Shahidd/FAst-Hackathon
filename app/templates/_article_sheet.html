@@ -1,0 +1,27 @@
+{% from "_macros.html" import age_label %}
+{% set src = art.articles %}
+<div class="sheet-backdrop" data-close-sheet></div>
+<section class="sheet" role="dialog" aria-modal="true" aria-label="{{ art.headline }}" data-article="{{ art.id }}">
+  <div class="sheet-bar">
+    <button type="button" class="round-btn" data-close-sheet aria-label="{{ t('common.close') }}"><i data-lucide="x"></i></button>
+  </div>
+  {% if src.image_url %}
+  <img class="sheet-img" src="{{ src.image_url }}" alt="{{ art.headline }}" referrerpolicy="no-referrer">
+  {% endif %}
+  <div class="sheet-meta">
+    {% if age_label(art, t)|trim %}<span class="glass-chip">{{ age_label(art, t) }}</span>{% endif %}
+    <span class="sheet-src">{{ src.source_name }}</span>
+    <button type="button" class="round-btn{% if art.saved %} is-on{% endif %}" id="sheet-save"
+            hx-post="/saved/{{ art.id }}" hx-vals='{"ctx": "sheet"}' hx-target="#sheet" hx-swap="innerHTML"
+            aria-pressed="{{ 'true' if art.saved else 'false' }}"
+            aria-label="{{ t('nav.saved') if art.saved else t('saved.save') }}"><i data-lucide="bookmark"></i></button>
+    <button type="button" class="round-btn" data-copy="/r/{{ art.id }}" aria-label="{{ t('article.share') }}"><i data-lucide="share-2"></i></button>
+  </div>
+  <h2 class="sheet-head">{{ art.headline }}</h2>
+  <p class="sheet-sum">{{ art.summary }}</p>
+  {% if art.why %}<p class="sheet-why"><strong>{{ t('paper.why') }}</strong> · {{ art.why }}</p>{% endif %}
+  <a class="btn btn-light btn-block" href="/r/{{ art.id }}" target="_blank" rel="noopener">
+    {{ t('article.read_original', source=src.source_name or '') }} <i data-lucide="{{ 'arrow-left' if dir == 'rtl' else 'arrow-right' }}"></i>
+  </a>
+</section>
+{% with oob = True %}{% include "_article.html" %}{% include "_progress.html" %}{% endwith %}

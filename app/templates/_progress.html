@@ -1,0 +1,4 @@
+<div id="progress" class="progress"{% if oob %} hx-swap-oob="true"{% endif %}>
+  <span>{{ t('home.progress', read=read_count, total=total) }}</span>
+  <div class="bar" role="presentation"><i style="inline-size: {{ (100 * read_count / total) | round | int if total else 0 }}%"></i></div>
+</div>

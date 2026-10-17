@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}{{ t('home.daily') }} {{ t('home.headlines') }} · {{ paper_name }}{% endblock %}
+{% block body %}
+<main class="home" id="home">
+  <header class="home-hero">
+    <div class="topbar">
+      <a class="round-btn avatar" href="/profile" aria-label="{{ t('nav.profile') }}">{{ (reader_name or '?')[:1]|upper }}</a>
+      <button type="button" class="round-btn" id="search-toggle" aria-label="{{ t('home.search') }}" aria-expanded="false" aria-controls="search-box">
+        <i data-lucide="search"></i>
+      </button>
+    </div>
+    <div id="search-box" class="search-box" hidden>
+      <input type="search" id="search-input" placeholder="{{ t('home.search') }}" aria-label="{{ t('home.search') }}" autocomplete="off">
+    </div>
+
+    {% if circles %}
+    <section aria-label="{{ t('home.sources') }}">
+      <p class="home-label">{{ t('home.sources') }}</p>
+      <ul class="source-strip">
+        {% for c in circles %}
+        <li><button type="button" class="source-dot" data-source-filter="{{ c.name|lower }}" aria-pressed="false">
+          <span class="source-initials" style="--brand: {{ c.color }}">{{ c.initials }}</span>
+          <span class="source-name">{{ c.name }}</span>
+        </button></li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    <section class="hero-card" aria-label="{{ t('home.headlines') }}">
+      <div class="hero-card-top">
+        <div>
+          <p class="home-kicker">{{ t('home.daily') }}</p>
+          <h1>{{ t('home.headlines') }}</h1>
+        </div>
+        {% if ed.three_things %}
+        <button type="button" class="badge-btn" data-open-dialog="three">{{ t('paper.three_things') }}</button>
+        {% endif %}
+      </div>
+      <p class="hero-dateline">{{ t('paper.edition_of', name=reader_name) }} · {{ t('paper.no', n=ed.edition_no) }} · {{ long_date }}</p>
+      {% if lead %}
+      <a class="lead" id="lead-{{ lead.id }}" href="/paper/{{ day }}/a/{{ lead.id }}"
+         hx-get="/paper/{{ day }}/a/{{ lead.id }}" hx-target="#sheet" hx-swap="innerHTML">
+        {% if lead.articles.image_url %}
+        <img src="{{ lead.articles.image_url }}" alt="" loading="eager" referrerpolicy="no-referrer">
+        {% endif %}
+        <span class="lead-text">
+          <span class="lead-head">{{ ed.lead_headline or lead.headline }}</span>
+          <span class="lead-dek">{{ ed.lead_dek or lead.summary }}</span>
+        </span>
+      </a>
+      {% endif %}
+      <p class="hero-meta">
+        {% if printed %}{{ t('home.printed', time=printed, n=ed.sources_count or 0) }}{% endif %}
+      </p>
+      {% include "_progress.html" %}
+    </section>
+  </header>
+
+  <div class="home-body page">
+    {% if sections %}
+    <nav class="pills" aria-label="{{ t('home.all') }}">
+      <button type="button" class="pill is-active" data-section-filter="" aria-pressed="true">{{ t('home.all') }}</button>
+      {% for key, title, items in sections %}
+      <button type="button" class="pill" data-section-filter="{{ key }}" aria-pressed="false">{{ title }}</button>
+      {% endfor %}
+    </nav>
+    {% endif %}
+
+    {% if ed.editor_note %}
+    <aside class="card note" data-keep>
+      <p class="note-label">{{ t('paper.editor_note') }}</p>
+      <p>{{ ed.editor_note }}</p>
+    </aside>
+    {% endif %}
+
+    {% for key, title, items in sections %}
+    <section class="sec" data-section="{{ key }}">
+      <h2 class="sec-title">{{ title }}</h2>
+      {% for art in items %}{% include "_article.html" %}{% endfor %}
+    </section>
+    {% endfor %}
+
+    {% if not sections and not lead %}
+    <p class="card muted">{{ t('empty.thin') }}</p>
+    {% endif %}
+    <p class="card muted" id="no-results" hidden>{{ t('home.no_results') }}</p>
+  </div>
+</main>
+
+{% if ed.three_things %}
+<dialog id="three" class="dialog">
+  <h2>{{ t('paper.three_things') }}</h2>
+  <ol>{% for line in ed.three_things %}<li>{{ line }}</li>{% endfor %}</ol>
+  <button type="button" class="btn btn-navy btn-block" data-close-dialog>{{ t('common.close') }}</button>
+</dialog>
+{% endif %}
+
+<div id="sheet" class="sheet-host" aria-live="polite"></div>
+{% endblock %}
+{% block bottom_nav %}{% include "_bottom_nav.html" %}{% endblock %}
+{% block scripts %}<script src="/static/home.js" defer></script>{% endblock %}

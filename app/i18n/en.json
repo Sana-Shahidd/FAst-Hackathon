@@ -129,5 +129,8 @@
  "landing.pitch": "Four AI agents print you a fresh newspaper every morning — in your language, about what you care about.",
  "ob.timezone": "Your timezone",
  "ob.add": "Add",
- "ob.skip": "Skip"
+ "ob.skip": "Skip",
+ "common.close": "Close",
+ "home.menu": "More actions",
+ "home.no_results": "No stories match your search."
 }

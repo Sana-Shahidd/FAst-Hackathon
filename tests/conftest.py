@@ -175,9 +175,31 @@ def onboarded_user(make_user, client: TestClient, post_form) -> TestUser:
 
 
 @pytest.fixture
-def edition() -> None:
-    """Edition generated with fake agent outputs and mocked feeds."""
-    raise NotImplementedError("F-07: edition fixture is populated by T-07")
+def edition(onboarded_user, feeds_mock, fake_agents, monkeypatch, admin) -> dict:
+    """Today's edition for `onboarded_user`, built with fake agents and mocked feeds.
+
+    Returns `{"id", "day", "articles"}` where `articles` are its `edition_articles` rows
+    (lead first) joined with their `articles` row.
+    """
+    import asyncio
+
+    from app.agents import runner
+    from app.services import edition as pipeline
+
+    monkeypatch.setattr(runner, "run_agent", fake_agents)
+    profile = asyncio.run(pipeline.get_profile(onboarded_user.id))
+    day = pipeline.local_date_for(profile.timezone)
+    edition_id = asyncio.run(pipeline.generate_edition(onboarded_user.id, day))
+    rows = (
+        admin.table("edition_articles")
+        .select("*,articles(*)")
+        .eq("edition_id", edition_id)
+        .order("position")
+        .execute()
+        .data
+    )
+    assert rows, "the fixture edition has no articles"
+    return {"id": edition_id, "day": day.isoformat(), "articles": rows}
 
 
 def rss(titles: list[str], source: str = "Test Wire") -> str:
