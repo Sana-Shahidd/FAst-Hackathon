@@ -432,6 +432,20 @@ html[dir="rtl"] .switch:checked::after { transform: translateX(-22px); }
 .hero-brand .source-strip { justify-content: center; flex-wrap: wrap; }
 .sec-title { text-align: center; }
 
+/* ---- Ask Subah ---- */
+.ask { display: flex; flex-direction: column; gap: 10px; }
+.ask form { display: flex; flex-direction: column; gap: 8px; }
+.ask-row { display: flex; gap: 8px; }
+.ask-row input { flex: 1; min-inline-size: 0; min-block-size: 46px; padding-inline: 16px; border-radius: 16px; border: 1.5px solid var(--line); background: var(--canvas); color: var(--ink); }
+.ask-row .pill { min-block-size: 46px; padding-inline: 16px; }
+.ask-row .pill svg { inline-size: 16px; block-size: 16px; }
+.ask-wait { margin: 0; font-size: .85rem; }
+.ask-answer { display: flex; flex-direction: column; gap: 8px; padding-block-start: 4px; border-block-start: 1px solid var(--line); }
+.ask-text { margin: 0; font-size: 1rem; }
+.ask-label { margin: 4px 0 0; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--link); }
+.ask-sources { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: .9rem; }
+.ask-sources a { font-weight: 600; text-decoration-color: var(--maroon-400); }
+
 /* ---- settings ---- */
 .settings-page { max-inline-size: 640px; margin-inline: auto; inline-size: 100%; }
 .settings-card { display: flex; flex-direction: column; gap: 12px; }

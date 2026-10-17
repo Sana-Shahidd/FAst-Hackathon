@@ -243,3 +243,12 @@ class LearnerOut(BaseModel):
         default_factory=list
     )  # existing interest labels
     note: Annotated[str, _trim(200), Field(max_length=200)] = ""
+
+
+class AnswerOut(BaseModel):
+    """What the Answerer agent returns (docs/06_AGENTS.md §7b); over-long text is trimmed."""
+
+    answer: Annotated[str, _trim(700), Field(max_length=700)] = ""
+    used: Annotated[list[int], _cap(5), Field(max_length=5)] = Field(
+        default_factory=list
+    )

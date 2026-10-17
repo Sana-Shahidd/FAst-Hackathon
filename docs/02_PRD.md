@@ -247,6 +247,16 @@ for that language.
   any are fresh. Shown as the "Your sources" circles row (F-07).
 - Removing a favorite stops fetching it from the next edition.
 
+## F-24 Ask Subah (question answering)
+- A question box on the web edition: the reader types a question ("what happened with the central
+  bank today?"), the app searches **today's paper** (headlines + summaries) and a **live Google News
+  search** for the question in the edition language, ranks the matches in code, and the **Answerer
+  Agent** writes a short answer (2-4 sentences, edition language) from ONLY those stories.
+- The answer cites the stories it used (title, source, link); stories from the paper link through
+  `/r/{id}`. If the Answerer fails or the stories do not answer the question, the box shows the
+  closest stories without an answer text (code fallback). Question ≤ 200 characters; rate limit
+  10 per minute per reader. Only the question and article data are sent to the model.
+
 ## Non-functional
 - Mobile-first app view (single column < 720 px; centered 480 px phone-width column with
   side panels on desktop); Paper view and PDF use newspaper columns.

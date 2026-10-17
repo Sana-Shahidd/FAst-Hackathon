@@ -90,6 +90,18 @@
     </aside>
     {% endif %}
 
+    <section class="card ask" aria-label="{{ t('ask.title') }}">
+      <form hx-post="/ask" hx-target="#ask-result" hx-swap="innerHTML" hx-indicator="#ask-spinner">
+        <p class="note-label">{{ t('ask.title') }}</p>
+        <div class="ask-row">
+          <input type="text" name="q" minlength="3" maxlength="200" placeholder="{{ t('ask.placeholder') }}" aria-label="{{ t('ask.title') }}" autocomplete="off" required>
+          <button class="pill is-active" type="submit"><i data-lucide="sparkles"></i>{{ t('ask.button') }}</button>
+        </div>
+        <p id="ask-spinner" class="htmx-indicator muted ask-wait">{{ t('gen.printing') }}</p>
+      </form>
+      <div id="ask-result" aria-live="polite"></div>
+    </section>
+
     {% if suggestion %}
     <aside class="card suggest" id="suggestion-card" data-keep>
       <p class="note-label">{{ t('profile.learned') }}</p>

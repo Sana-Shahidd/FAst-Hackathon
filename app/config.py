@@ -93,6 +93,7 @@ class Settings(BaseSettings):
             "curator": self.CURATOR_MODEL,
             "editor": self.EDITOR_MODEL,
             "learner": self.LEARNER_MODEL,
+            "answerer": self.EDITOR_MODEL,  # Ask Subah reuses the Editor's model
         }
         if key not in specs:
             raise KeyError(f"unknown agent key: {key}")

@@ -10,7 +10,7 @@ from fastapi.responses import RedirectResponse
 
 from app import deps
 from app.deps import CurrentUser
-from app.services import edition, i18n, prefs, reading, sources
+from app.services import ask, edition, i18n, prefs, reading, sources
 
 router = APIRouter()
 
@@ -173,3 +173,21 @@ async def change_sources(
         catalog=[o for o in sources.catalog_for(lang) if o["key"] not in taken],
         source_error=error,
     )
+
+
+@router.post("/ask", dependencies=[Depends(deps.verify_csrf)])
+@deps.limiter.limit("10/minute", key_func=deps.user_key)
+async def ask_subah(
+    request: Request,
+    user: Annotated[CurrentUser, Depends(deps.require_user)],
+    q: Annotated[str, Form()],
+):
+    """Ask Subah (F-24): search today's paper and the live news, answer from those stories only."""
+    question = " ".join(q.split())
+    if not 3 <= len(question):
+        raise HTTPException(status_code=422, detail="question too short")
+    profile, edition_id = await ask.todays_edition_id(user.id)
+    if profile is None:
+        raise HTTPException(status_code=404)
+    result = await ask.ask(user.id, question, profile.edition_lang, edition_id)
+    return deps.render(request, "_ask_answer.html", lang=profile.edition_lang, **result)
