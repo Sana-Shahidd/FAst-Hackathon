@@ -11,6 +11,7 @@ import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import APIRouter, FastAPI, Request
 from fastapi.responses import (
@@ -96,10 +97,23 @@ async def renew_session_cookies(request: Request, call_next) -> Response:
     return response
 
 
+VERSION_FILE = Path(__file__).resolve().parent / "VERSION"
+
+
 def version() -> str:
-    """Commit sha of this build: `GIT_SHA`, else Render's, else `"dev"`."""
+    """Commit sha of this build: `GIT_SHA`, else Railway's, else the `app/VERSION` file, else `"dev"`.
+
+    `scripts/deploy.sh` writes `app/VERSION` before `railway up`, which uploads files without git metadata.
+    """
     sha = os.getenv("GIT_SHA", "dev")
-    return sha if sha != "dev" else os.getenv("RENDER_GIT_COMMIT", "dev")
+    if sha != "dev":
+        return sha
+    if railway_sha := os.getenv("RAILWAY_GIT_COMMIT_SHA"):
+        return railway_sha
+    try:
+        return VERSION_FILE.read_text(encoding="utf-8").strip() or "dev"
+    except OSError:
+        return "dev"
 
 
 async def db_ok() -> bool:

@@ -33,5 +33,5 @@ web or download a newspaper-style PDF, in 8 languages, and it learns from what y
 
 Ready-made content (do not regenerate): `app/i18n/*.json` (121 keys × 8 languages),
 `app/data/languages.json`, `topics.json` (with icons), `sources.json`, `stopwords.json`;
-plus `Dockerfile`, `render.yaml`, `.github/workflows/ci.yml`, `scripts/ship.sh`,
+plus `Dockerfile`, `railway.toml`, `.github/workflows/ci.yml`, `scripts/ship.sh`,
 `scripts/deploy.sh`, `scripts/smoke.sh`, `pytest.ini`, `supabase/schema.sql`.

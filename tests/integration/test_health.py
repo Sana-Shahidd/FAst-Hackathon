@@ -26,9 +26,9 @@ def test_health_version_is_the_commit_sha(
     assert client.get("/health").json()["version"] == "1a2b3c4"
 
 
-def test_health_version_falls_back_to_render_commit(
+def test_health_version_falls_back_to_railway_commit(
     client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setenv("GIT_SHA", "dev")
-    monkeypatch.setenv("RENDER_GIT_COMMIT", "9f8e7d6")
+    monkeypatch.setenv("RAILWAY_GIT_COMMIT_SHA", "9f8e7d6")
     assert client.get("/health").json()["version"] == "9f8e7d6"

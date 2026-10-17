@@ -71,14 +71,16 @@ Run locally: `pytest -m unit -q` and `pytest -m integration -q` (needs `TEST_SUP
   F-19, F-22)" — or run `bash scripts/ship.sh T-07 "web edition"`.
 - **Deploy:** pushing to `main` deploys automatically after CI tests pass. To deploy or
   re-check by hand: "use the deployer agent", or
-  `RENDER_DEPLOY_HOOK_URL=… RENDER_APP_URL=… bash scripts/deploy.sh && bash scripts/smoke.sh $RENDER_APP_URL`.
-- **One-time Render setup (T-01):** render.com → New → Blueprint → pick the repo
-  (`render.yaml`) → fill env vars → after first deploy, Settings → Deploy Hook → copy URL.
-  GitHub → Settings → Secrets → Actions: `RENDER_DEPLOY_HOOK_URL`, `RENDER_APP_URL`,
+  `APP_URL=https://… bash scripts/deploy.sh && bash scripts/smoke.sh $APP_URL` (Railway CLI logged in).
+- **One-time Railway setup:** railway.com → New Project → Empty Service named `subah` → Settings →
+  Networking → Generate Domain. Locally: `npm i -g @railway/cli`, `railway login`, `railway link`,
+  then `bash scripts/railway_env.sh https://<domain>` (copies your `.env` settings to Railway) and
+  `APP_URL=https://<domain> bash scripts/deploy.sh`. For CI: Project Settings → Tokens → create a
+  project token; GitHub → Settings → Secrets → Actions: `RAILWAY_TOKEN`, `APP_URL`,
   `TEST_SUPABASE_URL`, `TEST_SUPABASE_ANON_KEY`, `TEST_SUPABASE_SERVICE_ROLE_KEY`,
-  `SMOKE_EMAIL`, `SMOKE_PASSWORD`. Set `PUBLIC_BASE_URL` on Render to the Render URL.
-- `/health` version: `GIT_SHA` env or Render's `RENDER_GIT_COMMIT`
-  (`version = os.getenv("GIT_SHA") if != "dev" else os.getenv("RENDER_GIT_COMMIT", "dev")`).
+  `SMOKE_EMAIL`, `SMOKE_PASSWORD`. `PUBLIC_BASE_URL` on Railway must be the public URL.
+- `/health` version: `GIT_SHA` env, else `RAILWAY_GIT_COMMIT_SHA`, else the `app/VERSION` file written by
+  `scripts/deploy.sh`, else `dev` (`main.version()`).
 
 ## 3. Demo data
 `scripts/seed_demo.py --email demo@subah.app` creates a user (EN edition + Urdu source
@@ -100,7 +102,7 @@ shows movement and one pending suggestion.
 - [ ] Puzzle playable, score + streak shown
 - [ ] Night edition + XL text persist after reload
 - [ ] Push "Your paper is ready" received (Android/desktop Chrome)
-- [ ] Live Render URL passes `scripts/smoke.sh` with the SMOKE account
+- [ ] Live Railway URL passes `scripts/smoke.sh` with the SMOKE account
 
 ## 5. Loom script (≤ 5 minutes)
 1. **0:00 Problem (20 s):** "News is scattered across dozens of sites. Social media has one

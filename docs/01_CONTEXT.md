@@ -63,7 +63,7 @@ the edition language). The original article always opens in its own language.
 | Agents | `openai-agents` SDK; models via Gemini (primary) and Groq (fallback) OpenAI-compatible endpoints |
 | News | RSS via `feedparser`: Google News RSS search per interest + a curated feed list |
 | PDF | Same Jinja edition template, print CSS, Playwright Chromium `page.pdf()` |
-| Hosting | One Docker image (frontend pages + backend API + Playwright) on Render, deployed by GitHub Actions after tests pass; local + Cloudflare tunnel as backup |
+| Hosting | One Docker image (frontend pages + backend API + Playwright) on Railway, deployed by GitHub Actions after tests pass; local + Cloudflare tunnel as backup |
 | Workflow | One feature per push, only after unit + integration tests pass (`shipper` agent); deploys via the `deployer` agent (`.claude/agents/`) |
 
 ## 7. Out of scope (say "roadmap" if asked)
