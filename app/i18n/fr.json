@@ -133,5 +133,10 @@
  "common.close": "Fermer",
  "home.menu": "Plus d'actions",
  "home.no_results": "Aucun article ne correspond à votre recherche.",
- "paper.pdf_busy": "Votre PDF est en cours d'impression. Réessayez dans une minute."
+ "paper.pdf_busy": "Votre PDF est en cours d'impression. Réessayez dans une minute.",
+ "paper.regenerate": "Imprimer une nouvelle version",
+ "archive.version": "Version {n}",
+ "archive.older": "Versions précédentes",
+ "archive.empty": "Pas encore d'anciens journaux.",
+ "dev.time_travel": "Dev: print tomorrow's paper"
 }

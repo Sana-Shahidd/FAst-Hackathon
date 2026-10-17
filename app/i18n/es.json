@@ -133,5 +133,10 @@
  "common.close": "Cerrar",
  "home.menu": "Más acciones",
  "home.no_results": "Ninguna noticia coincide con tu búsqueda.",
- "paper.pdf_busy": "Tu PDF se está imprimiendo. Inténtalo de nuevo en un minuto."
+ "paper.pdf_busy": "Tu PDF se está imprimiendo. Inténtalo de nuevo en un minuto.",
+ "paper.regenerate": "Imprimir una nueva versión",
+ "archive.version": "Versión {n}",
+ "archive.older": "Versiones anteriores",
+ "archive.empty": "Aún no hay periódicos anteriores.",
+ "dev.time_travel": "Dev: print tomorrow's paper"
 }

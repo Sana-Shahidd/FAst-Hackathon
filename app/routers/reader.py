@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+from datetime import date
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Form, HTTPException, Request
+from fastapi.responses import RedirectResponse
 
 from app import deps
 from app.deps import CurrentUser
-from app.services import reading
+from app.services import edition, i18n, reading
 
 router = APIRouter()
 
@@ -31,6 +33,41 @@ async def _sheet(request: Request, user: CurrentUser, art: dict):
         art=art,
         read_count=read,
         total=total,
+    )
+
+
+async def _saved_context(user: CurrentUser, lang: str) -> dict:
+    groups = reading.group_saved(await reading.saved_stories(user.id))
+    return {
+        "groups": groups,
+        "day_labels": {
+            day: i18n.full_date(date.fromisoformat(day), lang) for day, _ in groups
+        },
+    }
+
+
+async def _saved_list(request: Request, user: CurrentUser, lang: str):
+    return deps.render(
+        request, "_saved_list.html", lang=lang, **await _saved_context(user, lang)
+    )
+
+
+@router.get("/saved")
+async def saved_page(
+    request: Request, user: Annotated[CurrentUser, Depends(deps.require_user)]
+):
+    """Saved for later (F-19), grouped by edition date, newest first."""
+    profile, _ = await edition.profile_today(user.id)
+    if profile is None:
+        return RedirectResponse("/onboarding", status_code=303)
+    lang = profile.edition_lang
+    return deps.render(
+        request,
+        "saved.html",
+        lang=lang,
+        profile=profile,
+        nav_active="saved",
+        **await _saved_context(user, lang),
     )
 
 
@@ -59,6 +96,11 @@ async def toggle_saved(
     await reading.toggle_saved(user.id, edition_article_id)
     if ctx == "sheet":
         return await _sheet(request, user, art)
+    if ctx == "saved":
+        profile, _ = await edition.profile_today(user.id)
+        return await _saved_list(
+            request, user, profile.edition_lang if profile else "en"
+        )
     art = await reading.card_state(user.id, art)
     return deps.render(
         request, "_article.html", lang=art["editions"]["lang"], art=art, oob=False

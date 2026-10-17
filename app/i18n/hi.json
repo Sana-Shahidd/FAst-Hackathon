@@ -133,5 +133,10 @@
  "common.close": "बंद करें",
  "home.menu": "और विकल्प",
  "home.no_results": "आपकी खोज से कोई खबर नहीं मिली।",
- "paper.pdf_busy": "आपका पीडीएफ़ छप रहा है। एक मिनट बाद फिर कोशिश करें।"
+ "paper.pdf_busy": "आपका पीडीएफ़ छप रहा है। एक मिनट बाद फिर कोशिश करें।",
+ "paper.regenerate": "नया संस्करण छापें",
+ "archive.version": "संस्करण {n}",
+ "archive.older": "पिछले संस्करण",
+ "archive.empty": "अभी कोई पुराना अख़बार नहीं है।",
+ "dev.time_travel": "Dev: print tomorrow's paper"
 }

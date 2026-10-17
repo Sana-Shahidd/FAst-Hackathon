@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ t('saved.title') }} · {{ paper_name }}{% endblock %}
+{% block frame_class %} frame-wide{% endblock %}
+{% block body %}
+<main>
+  <header class="page-hero">
+    <div class="topbar">
+      <a class="brand-mini" href="/paper/today"><img class="brand-logo" src="/static/logo-mark.png" alt="" width="30" height="30">{{ paper_name }}</a>
+    </div>
+    <h1>{{ t('saved.title') }}</h1>
+  </header>
+  <div class="page list-page">
+    {% include "_saved_list.html" %}
+  </div>
+</main>
+{% endblock %}
+{% block bottom_nav %}{% include "_bottom_nav.html" %}{% endblock %}

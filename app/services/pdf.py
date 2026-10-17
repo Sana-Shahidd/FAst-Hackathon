@@ -142,6 +142,7 @@ async def build_context(ed: dict, *, pdf: bool) -> dict[str, Any]:
         "text_size": profile.text_size if profile else "M",
         "ed": ed,
         "day": day,
+        "vq": f"?v={ed['version']}" if ed["status"] == "superseded" else "",
         "reader_name": profile.display_name if profile else "",
         "long_date": i18n.full_date(date.fromisoformat(day), lang),
         "printed": reading.printed_time(

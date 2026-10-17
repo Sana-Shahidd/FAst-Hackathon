@@ -81,6 +81,14 @@ async def is_onboarded(user_id: str) -> bool:
     return bool(rows and rows[0].get("onboarded_at"))
 
 
+async def profile_today(user_id: str) -> tuple[Profile | None, date | None]:
+    """(profile, the reader's local date); profile is None until onboarding is finished."""
+    profile = await get_profile(user_id)
+    if profile is None or not await is_onboarded(user_id):
+        return None, None
+    return profile, local_date_for(profile.timezone)
+
+
 async def _feedback(client, user_id: str) -> tuple[list[str], list[str], list[str]]:
     """(liked headlines, disliked headlines, blocked source names) from recent signals."""
     signals = await _db(
@@ -557,21 +565,44 @@ async def _save(
 # ---------------------------------------------------------- background runs
 
 _running: dict[str, asyncio.Task] = {}
+_baseline: dict[str, int] = {}  # newest version the reader had when the run started
 
 
-def start_generation(
+def _forget(user_id: str) -> None:
+    _running.pop(user_id, None)
+    _baseline.pop(user_id, None)
+
+
+async def start_generation(
     user_id: str, local_date: date, *, lang: str | None = None, regenerate: bool = False
 ) -> asyncio.Task:
     """Run `generate_edition` in the background; one run per reader at a time."""
     running = _running.get(user_id)
     if running is not None and not running.done():
         return running
+    latest = await latest_edition(user_id, local_date)
+    _baseline[user_id] = latest["version"] if latest else 0
     task = asyncio.create_task(
         generate_edition(user_id, local_date, lang=lang, regenerate=regenerate)
     )
     _running[user_id] = task
-    task.add_done_callback(lambda t: _running.pop(user_id, None))
+    task.add_done_callback(lambda t: _forget(user_id))
     return task
+
+
+def regenerating(user_id: str, latest: dict | None) -> bool:
+    """True while a run is going but its new version row does not exist yet.
+
+    Without this, the printing page of a regeneration would see the old *ready* version and
+    bounce straight back to the paper.
+    """
+    running = _running.get(user_id)
+    return bool(
+        latest
+        and running is not None
+        and not running.done()
+        and latest["version"] == _baseline.get(user_id)
+    )
 
 
 async def latest_edition(user_id: str, local_date: date) -> dict | None:
@@ -592,23 +623,46 @@ async def latest_edition(user_id: str, local_date: date) -> dict | None:
     return rows[0] if rows else None
 
 
-async def ready_edition(user_id: str, local_date: date) -> dict | None:
-    """Newest *ready* version for a date; during a regeneration the old one stays visible."""
+async def ready_edition(
+    user_id: str, local_date: date, version: int | None = None
+) -> dict | None:
+    """Newest *ready* version for a date; during a regeneration the old one stays visible.
+
+    With `version`, that exact version if it is finished (ready, or superseded by a newer one).
+    """
     client = deps.supabase_admin()
-    rows = await _db(
+    statuses = ["ready", "superseded"] if version is not None else ["ready"]
+    query = (
+        client.table("editions")
+        .select("*")
+        .eq("user_id", user_id)
+        .eq("edition_date", local_date.isoformat())
+        .in_("status", statuses)
+    )
+    if version is not None:
+        query = query.eq("version", version)
+    rows = await _db(lambda: query.order("version", desc=True).limit(1).execute().data)
+    return rows[0] if rows else None
+
+
+async def list_editions(user_id: str) -> list[dict]:
+    """Every finished edition (ready or superseded) of the reader, newest date first."""
+    client = deps.supabase_admin()
+    return await _db(
         lambda: (
             client.table("editions")
-            .select("*")
+            .select(
+                "id,edition_date,version,edition_no,lang,status,lead_headline,"
+                "lead_dek,pdf_path,ready_at"
+            )
             .eq("user_id", user_id)
-            .eq("edition_date", local_date.isoformat())
-            .eq("status", "ready")
+            .in_("status", ["ready", "superseded"])
+            .order("edition_date", desc=True)
             .order("version", desc=True)
-            .limit(1)
             .execute()
             .data
         )
     )
-    return rows[0] if rows else None
 
 
 async def steps_for(edition_id: str) -> list[dict]:

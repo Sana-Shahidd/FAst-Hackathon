@@ -1,0 +1,5 @@
+{# Demo helper, only rendered when APP_ENV=dev: prints the paper for the day after the newest edition. #}
+<form class="paper-actions" method="post" action="/dev/time-travel">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <button class="btn btn-outline" type="submit"><i data-lucide="fast-forward"></i>{{ t('dev.time_travel') }}</button>
+</form>

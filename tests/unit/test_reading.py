@@ -112,3 +112,53 @@ def test_a_section_missing_from_the_order_is_still_shown_last() -> None:
         [art("x", "climate", "brief", 1), art("y", "ai", "brief", 2)], ["ai"]
     )
     assert [key for key, _ in groups] == ["ai", "climate"]
+
+
+def ed(day: str, version: int, status: str = "ready") -> dict:
+    return {
+        "edition_date": day,
+        "version": version,
+        "status": status,
+        "id": f"{day}-v{version}",
+    }
+
+
+def test_archive_lists_dates_newest_first_with_older_versions_collapsed() -> None:
+    rows = [
+        ed("2026-10-15", 1),
+        ed("2026-10-17", 1, "superseded"),
+        ed("2026-10-17", 2),
+        ed("2026-10-16", 1),
+    ]
+    entries = reading.group_editions(rows)
+    assert [e["day"] for e in entries] == ["2026-10-17", "2026-10-16", "2026-10-15"]
+    assert entries[0]["latest"]["version"] == 2
+    assert [o["version"] for o in entries[0]["older"]] == [1]
+    assert entries[1]["older"] == [] and entries[2]["older"] == []
+
+
+def test_an_empty_archive_has_no_entries() -> None:
+    assert reading.group_editions([]) == []
+
+
+def save(day: str, saved_at: str, name: str) -> dict:
+    return {
+        "created_at": saved_at,
+        "edition_articles": {"id": name, "editions": {"edition_date": day}},
+    }
+
+
+def test_saved_stories_are_grouped_by_edition_date_newest_first() -> None:
+    rows = [
+        save("2026-10-15", "2026-10-17T08:00:00+00:00", "old-day-late-save"),
+        save("2026-10-17", "2026-10-17T07:00:00+00:00", "today-first"),
+        save("2026-10-17", "2026-10-17T09:00:00+00:00", "today-second"),
+    ]
+    groups = reading.group_saved(rows)
+    assert [day for day, _ in groups] == ["2026-10-17", "2026-10-15"]
+    names = [r["edition_articles"]["id"] for r in groups[0][1]]
+    assert names == ["today-second", "today-first"]  # newest save first inside a date
+
+
+def test_nothing_saved_means_no_groups() -> None:
+    assert reading.group_saved([]) == []

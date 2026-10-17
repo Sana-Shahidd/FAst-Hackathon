@@ -93,6 +93,29 @@ def source_circles(favorites: list[dict]) -> list[dict]:
     return circles
 
 
+def group_editions(rows: list[dict]) -> list[dict]:
+    """Archive entries, newest date first: the newest version of each date plus its older versions."""
+    by_day: dict[str, list[dict]] = {}
+    for row in sorted(
+        rows, key=lambda r: (r["edition_date"], r["version"]), reverse=True
+    ):
+        by_day.setdefault(row["edition_date"], []).append(row)
+    return [
+        {"day": day, "latest": versions[0], "older": versions[1:]}
+        for day, versions in by_day.items()
+    ]
+
+
+def group_saved(rows: list[dict]) -> list[tuple[str, list[dict]]]:
+    """Saved stories grouped by edition date (newest date first), newest save first inside a date."""
+    groups: dict[str, list[dict]] = {}
+    for row in sorted(rows, key=lambda r: r["created_at"], reverse=True):
+        groups.setdefault(
+            row["edition_articles"]["editions"]["edition_date"], []
+        ).append(row)
+    return sorted(groups.items(), key=lambda item: item[0], reverse=True)
+
+
 def group_sections(
     articles: list[dict], section_order: list[str]
 ) -> list[tuple[str, list[dict]]]:
@@ -189,6 +212,25 @@ async def saved_ids(user_id: str, ids: list[str]) -> set[str]:
         )
     )
     return {r["edition_article_id"] for r in rows}
+
+
+async def saved_stories(user_id: str) -> list[dict]:
+    """The reader's saved stories with their headline, story and edition (newest save first)."""
+    client = deps.supabase_admin()
+    return await _db(
+        lambda: (
+            client.table("saved_articles")
+            .select(
+                "created_at,edition_article_id,"
+                "edition_articles(id,headline,summary,editions(edition_date,lang),"
+                "articles(source_name,image_url,url))"
+            )
+            .eq("user_id", user_id)
+            .order("created_at", desc=True)
+            .execute()
+            .data
+        )
+    )
 
 
 async def feedback_state(user_id: str, ids: list[str]) -> dict[str, set[str]]:

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ t('archive.title') }} · {{ paper_name }}{% endblock %}
+{% block frame_class %} frame-wide{% endblock %}
+{% block body %}
+<main>
+  <header class="page-hero">
+    <div class="topbar">
+      <a class="brand-mini" href="/paper/today"><img class="brand-logo" src="/static/logo-mark.png" alt="" width="30" height="30">{{ paper_name }}</a>
+    </div>
+    <h1>{{ t('archive.title') }}</h1>
+  </header>
+  <div class="page list-page">
+    {% if entries %}
+    <ul class="mini-grid">
+      {% for e in entries %}
+      <li class="mini-page card fade-up">
+        <p class="mini-mast">{{ paper_name }}</p>
+        <p class="mini-meta">{{ t('paper.no', n=e.latest.edition_no) }} · {{ e.label }}</p>
+        <h2 class="mini-lead">{{ e.latest.lead_headline or '—' }}</h2>
+        <p class="mini-lang">{{ lang_names.get(e.latest.lang, e.latest.lang) }}</p>
+        <div class="mini-actions">
+          <a class="pill is-active" href="/paper/{{ e.day }}">{{ t('archive.read') }}</a>
+          <a class="pill" href="/paper/{{ e.day }}/pdf" data-busy>PDF</a>
+        </div>
+        {% if e.older %}
+        <details class="mini-older">
+          <summary>{{ t('archive.older') }}</summary>
+          <ul>
+            {% for old in e.older %}
+            <li><a href="/paper/{{ e.day }}?v={{ old.version }}">{{ t('archive.version', n=old.version) }}</a>
+              {% if old.lead_headline %}<span class="muted"> · {{ old.lead_headline }}</span>{% endif %}</li>
+            {% endfor %}
+          </ul>
+        </details>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="card muted">{{ t('archive.empty') }}</p>
+    {% endif %}
+    {% if dev %}{% include "_dev_time_travel.html" %}{% endif %}
+  </div>
+</main>
+{% endblock %}
+{% block bottom_nav %}{% include "_bottom_nav.html" %}{% endblock %}
+{% block scripts %}<script src="/static/home.js?v={{ asset_v }}" defer></script>{% endblock %}

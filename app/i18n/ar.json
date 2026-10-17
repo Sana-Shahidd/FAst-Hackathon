@@ -133,5 +133,10 @@
  "common.close": "إغلاق",
  "home.menu": "المزيد من الخيارات",
  "home.no_results": "لا توجد أخبار تطابق بحثك.",
- "paper.pdf_busy": "يتم الآن طباعة ملف PDF الخاص بك. حاول مرة أخرى بعد دقيقة."
+ "paper.pdf_busy": "يتم الآن طباعة ملف PDF الخاص بك. حاول مرة أخرى بعد دقيقة.",
+ "paper.regenerate": "اطبع نسخة جديدة",
+ "archive.version": "النسخة {n}",
+ "archive.older": "النسخ السابقة",
+ "archive.empty": "لا توجد صحف سابقة بعد.",
+ "dev.time_travel": "Dev: print tomorrow's paper"
 }
