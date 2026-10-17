@@ -26,6 +26,7 @@ web or download a newspaper-style PDF, in 8 languages, and it learns from what y
 | `07_DESIGN.md` | any template or CSS |
 | `08_BUILD_PLAN.md` | what to do next (9-hour plan) |
 | `09_SETUP_TEST_DEMO.md` | setup, tests, demo script, Loom |
+| `PROGRESS.md` | **current build status, blockers and next steps (read first when resuming)** |
 | `DECISIONS.md` | log of choices made during the build |
 | `../.claude/agents/shipper.md` | test gate: ship one tested feature per push |
 | `../.claude/agents/deployer.md` | deploy frontend + backend (one service) and smoke-test it |
