@@ -5,7 +5,7 @@
   <section class="hero-body">
     <div class="auth-card">
       <h1>{{ paper_name }}</h1>
-      <p class="alert" role="alert">{{ t('auth.error.generic') }}</p>
+      <p class="alert" role="alert">{{ t(message_key or 'auth.error.generic') }}</p>
       <a class="btn btn-navy btn-block" href="/">{{ t('nav.home') }}</a>
     </div>
   </section>

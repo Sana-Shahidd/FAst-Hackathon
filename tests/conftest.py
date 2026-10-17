@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app import deps
 from app.config import settings
 from app.main import app
+from app.services import pdf
 
 TEST_PASSWORD = "it-Passw0rd!"
 
@@ -56,6 +57,16 @@ def use_test_supabase(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     _clear_supabase_cache()
     yield
     _clear_supabase_cache()
+
+
+@pytest.fixture(autouse=True)
+def no_browser_on_startup(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Chromium takes seconds to start; only the PDF tests need it (lazily, on the first PDF)."""
+
+    async def skip(application) -> None:
+        return None
+
+    monkeypatch.setattr(pdf, "start_on_startup", skip)
 
 
 @pytest.fixture(autouse=True)

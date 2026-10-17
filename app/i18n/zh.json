@@ -132,5 +132,6 @@
  "ob.skip": "跳过",
  "common.close": "关闭",
  "home.menu": "更多操作",
- "home.no_results": "没有符合搜索的新闻。"
+ "home.no_results": "没有符合搜索的新闻。",
+ "paper.pdf_busy": "你的 PDF 正在印刷中，请一分钟后再试。"
 }

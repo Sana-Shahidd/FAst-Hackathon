@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% block title %}{{ t('home.daily') }} {{ t('home.headlines') }} · {{ paper_name }}{% endblock %}
+{% block frame_class %} frame-wide{% endblock %}
 {% block body %}
 <main class="home" id="home">
   <header class="home-hero">
     <div class="topbar">
       <a class="round-btn avatar" href="/profile" aria-label="{{ t('nav.profile') }}">{{ (reader_name or '?')[:1]|upper }}</a>
-      <button type="button" class="round-btn" id="search-toggle" aria-label="{{ t('home.search') }}" aria-expanded="false" aria-controls="search-box">
-        <i data-lucide="search"></i>
-      </button>
+      <div class="topbar-actions">
+        <button type="button" class="round-btn" id="search-toggle" aria-label="{{ t('home.search') }}" aria-expanded="false" aria-controls="search-box">
+          <i data-lucide="search"></i>
+        </button>
+        <button type="button" class="round-btn" data-open-dialog="comfort" aria-label="{{ t('comfort.title') }}">
+          <i data-lucide="a-large-small"></i>
+        </button>
+      </div>
     </div>
     <div id="search-box" class="search-box" hidden>
       <input type="search" id="search-input" placeholder="{{ t('home.search') }}" aria-label="{{ t('home.search') }}" autocomplete="off">
@@ -85,8 +91,31 @@
     <p class="card muted">{{ t('empty.thin') }}</p>
     {% endif %}
     <p class="card muted" id="no-results" hidden>{{ t('home.no_results') }}</p>
+
+    <div class="paper-actions">
+      <a class="btn btn-navy" href="/paper/{{ day }}/print"><i data-lucide="newspaper"></i>{{ t('home.paper_view') }}</a>
+      <a class="btn btn-outline" href="/paper/{{ day }}/pdf" data-busy><i data-lucide="download"></i>{{ t('paper.download') }}</a>
+    </div>
   </div>
 </main>
+
+<dialog id="comfort" class="dialog">
+  <h2>{{ t('comfort.title') }}</h2>
+  <form hx-post="/settings/comfort" hx-trigger="change" hx-swap="none" class="comfort-form">
+    <div class="seg" role="radiogroup" aria-label="{{ t('comfort.title') }}">
+      {% for value, label in [('day', 'comfort.day'), ('night', 'comfort.night'), ('auto', 'comfort.auto')] %}
+      <label class="seg-item"><input type="radio" name="theme" value="{{ value }}" class="sr-only"{% if theme == value %} checked{% endif %}><span>{{ t(label) }}</span></label>
+      {% endfor %}
+    </div>
+    <p class="comfort-label">{{ t('comfort.size') }}</p>
+    <div class="seg" role="radiogroup" aria-label="{{ t('comfort.size') }}">
+      {% for value in ['S', 'M', 'L', 'XL'] %}
+      <label class="seg-item"><input type="radio" name="text_size" value="{{ value }}" class="sr-only"{% if text_size == value %} checked{% endif %}><span>{{ value }}</span></label>
+      {% endfor %}
+    </div>
+  </form>
+  <button type="button" class="btn btn-navy btn-block" data-close-dialog>{{ t('common.close') }}</button>
+</dialog>
 
 {% if ed.three_things %}
 <dialog id="three" class="dialog">

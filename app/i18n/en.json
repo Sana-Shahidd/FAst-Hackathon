@@ -132,5 +132,6 @@
  "ob.skip": "Skip",
  "common.close": "Close",
  "home.menu": "More actions",
- "home.no_results": "No stories match your search."
+ "home.no_results": "No stories match your search.",
+ "paper.pdf_busy": "Your PDF is being printed. Try again in a minute."
 }

@@ -132,5 +132,6 @@
  "ob.skip": "Omitir",
  "common.close": "Cerrar",
  "home.menu": "Más acciones",
- "home.no_results": "Ninguna noticia coincide con tu búsqueda."
+ "home.no_results": "Ninguna noticia coincide con tu búsqueda.",
+ "paper.pdf_busy": "Tu PDF se está imprimiendo. Inténtalo de nuevo en un minuto."
 }

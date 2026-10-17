@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="{{ lang }}" dir="{{ dir }}" data-text-size="{{ text_size }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ paper_name }} · {{ long_date }}</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="{{ fonts_url }}">
+  {% if inline_css %}
+  <style>{{ inline_css|safe }}</style>
+  {% else %}
+  <link rel="stylesheet" href="/static/paper.css">
+  <link rel="stylesheet" href="/static/print.css" media="print">
+  {% endif %}
+  {# after the stylesheets: paper.css declares English defaults for these variables #}
+  <style>:root { --paper-display: "{{ font_display }}"; --paper-body: "{{ font_body }}"; }</style>
+</head>
+<body class="{{ 'is-pdf' if pdf else 'is-web' }}">
+  {% if not pdf %}
+  <nav class="paper-bar" aria-label="{{ t('home.paper_view') }}">
+    <a class="paper-btn" href="/paper/{{ day }}">&larr; {{ t('nav.home') }}</a>
+    <a class="paper-btn paper-btn-solid" href="/paper/{{ day }}/pdf">{{ t('paper.download') }}</a>
+  </nav>
+  {% endif %}
+  {% include "_edition_body.html" %}
+</body>
+</html>

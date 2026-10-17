@@ -1,0 +1,78 @@
+{# The classic broadsheet (docs/07_DESIGN.md §5): Paper view and PDF share this markup. #}
+{% macro story(art, show_summary=True) %}
+<article class="item">
+  {% if art.articles.image_url %}
+  <img class="item-img" src="{{ art.articles.image_url }}" alt="{{ art.headline }}" referrerpolicy="no-referrer" onerror="this.remove()">
+  {% endif %}
+  <h4 class="item-head"><a href="{{ art.link }}">{{ art.headline }}</a></h4>
+  <p class="item-meta">{{ art.articles.source_name }}{% if art.age > 0 and art.age < 48 %} · {{ t('home.time_ago', n=art.age) }}{% endif %}</p>
+  {% if show_summary %}<p class="item-sum">{{ art.summary }}</p>{% endif %}
+</article>
+{% endmacro %}
+
+<main class="paper" id="paper">
+  <header class="mast">
+    <p class="mast-kicker">{{ t('paper.price') }}</p>
+    <h1 class="mast-title">{{ paper_name }}</h1>
+    <p class="dateline">
+      {{ t('paper.edition_of', name=reader_name) }} · {{ t('paper.no', n=ed.edition_no) }} · {{ long_date }}
+      {% if printed %} · {{ t('home.printed', time=printed, n=ed.sources_count or 0) }}{% endif %}
+    </p>
+    {% if favorite_names %}
+    <p class="from-sources">{{ t('home.sources') }}: {{ favorite_names|join(' · ') }}</p>
+    {% endif %}
+  </header>
+
+  {% if lead %}
+  <section class="front">
+    <article class="lead-story">
+      {% if lead.articles.image_url %}
+      <img class="lead-img" src="{{ lead.articles.image_url }}" alt="{{ ed.lead_headline or lead.headline }}" referrerpolicy="no-referrer" onerror="this.remove()">
+      {% endif %}
+      <h2 class="lead-head"><a href="{{ lead.link }}">{{ ed.lead_headline or lead.headline }}</a></h2>
+      <p class="lead-dek">{{ ed.lead_dek or lead.summary }}</p>
+      <p class="item-meta">{{ lead.articles.source_name }}</p>
+      {% if ed.lead_dek and lead.summary %}<p class="item-sum">{{ lead.summary }}</p>{% endif %}
+    </article>
+    <aside class="front-side">
+      {% if ed.three_things %}
+      <section class="three">
+        <h3>{{ t('paper.three_things') }}</h3>
+        <ol>{% for line in ed.three_things %}<li>{{ line }}</li>{% endfor %}</ol>
+      </section>
+      {% endif %}
+      {% if ed.editor_note %}
+      <section class="note">
+        <h3>{{ t('paper.editor_note') }}</h3>
+        <p>{{ ed.editor_note }}</p>
+      </section>
+      {% endif %}
+    </aside>
+  </section>
+  {% endif %}
+
+  {% if secondary %}
+  <section class="secondary">
+    {% for art in secondary %}{{ story(art) }}{% endfor %}
+  </section>
+  {% endif %}
+
+  {% for key, title, items in sections %}
+  <section class="paper-sec">
+    <h3 class="sec-label">{{ title }}</h3>
+    <div class="cols">
+      {% for art in items %}{{ story(art) }}{% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+
+  {% if not lead and not secondary and not sections %}
+  <p class="empty">{{ t('empty.thin') }}</p>
+  {% endif %}
+
+  <footer class="making">
+    <h3 class="sec-label">{{ t('paper.making_of') }}</h3>
+    <ul>{% for line in making_of %}<li>{{ line }}</li>{% endfor %}</ul>
+    <p class="making-puzzle">{{ t('puzzle.pdf_line') }}</p>
+  </footer>
+</main>

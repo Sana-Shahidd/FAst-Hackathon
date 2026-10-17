@@ -215,7 +215,7 @@ async def feedback_state(user_id: str, ids: list[str]) -> dict[str, set[str]]:
 
 async def record_signal(
     user_id: str,
-    edition_article_id: str,
+    edition_article_id: str | None,
     kind: str,
     value: float | None = None,
     *,

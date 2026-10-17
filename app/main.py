@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI, Request
 from fastapi.responses import (
@@ -24,12 +25,20 @@ from slowapi.errors import RateLimitExceeded
 
 from app import deps
 from app.config import settings
-from app.routers import auth, onboarding, paper, reader, signals
-from app.services import i18n
+from app.routers import auth, onboarding, paper, profile, reader, signals
+from app.services import i18n, pdf
 
 logger = logging.getLogger(__name__)
 
 health_router = APIRouter()
+
+
+@asynccontextmanager
+async def lifespan(application: FastAPI):
+    """One shared Chromium for the PDF renderer lives as long as the app (docs/03_TECH.md §9)."""
+    await pdf.start_on_startup(application)
+    yield
+    await pdf.stop_browser()
 
 
 def create_app() -> FastAPI:
@@ -37,6 +46,7 @@ def create_app() -> FastAPI:
     production = settings.APP_ENV == "production"
     application = FastAPI(
         title="Subah",
+        lifespan=lifespan,
         docs_url=None if production else "/docs",
         redoc_url=None,
         openapi_url=None if production else "/openapi.json",
@@ -53,6 +63,7 @@ def create_app() -> FastAPI:
     application.include_router(auth.router)
     application.include_router(onboarding.router)
     application.include_router(paper.router)
+    application.include_router(profile.router)
     application.include_router(reader.router)
     application.include_router(signals.router)
     return application

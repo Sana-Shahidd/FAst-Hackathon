@@ -75,6 +75,10 @@
       el.closest("dialog").close();
     } else if (el.hasAttribute("data-close-sheet")) {
       closeSheet();
+    } else if (el.hasAttribute("data-busy")) {
+      // the first PDF of a day is rendered on demand; show it is working, then re-enable the link
+      el.classList.add("is-loading");
+      setTimeout(function () { el.classList.remove("is-loading"); }, 25000);
     } else if (el.hasAttribute("data-copy")) {
       var url = new URL(el.dataset.copy, window.location.origin).href;
       if (navigator.clipboard) navigator.clipboard.writeText(url);

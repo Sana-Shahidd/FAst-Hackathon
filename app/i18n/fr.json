@@ -132,5 +132,6 @@
  "ob.skip": "Passer",
  "common.close": "Fermer",
  "home.menu": "Plus d'actions",
- "home.no_results": "Aucun article ne correspond à votre recherche."
+ "home.no_results": "Aucun article ne correspond à votre recherche.",
+ "paper.pdf_busy": "Votre PDF est en cours d'impression. Réessayez dans une minute."
 }

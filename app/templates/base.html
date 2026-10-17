@@ -16,7 +16,7 @@
   <script src="/static/app.js" defer></script>
 </head>
 <body hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'>
-  <div class="frame">
+  <div class="frame{% block frame_class %}{% endblock %}">
     {% block body %}{% endblock %}
   </div>
   {% block bottom_nav %}{% endblock %}

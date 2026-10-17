@@ -1,0 +1,20 @@
+/* Subah — print rules for the PDF (A3 broadsheet, 5 columns). Playwright also passes format/margins. */
+@page { size: A3; margin: 12mm 12mm 14mm 12mm; }
+@media print {
+  html { --paper-size: 10pt; }
+  html[data-text-size="S"] { --paper-size: 9pt; }
+  html[data-text-size="M"] { --paper-size: 10pt; }
+  html[data-text-size="L"] { --paper-size: 11.5pt; }
+  html[data-text-size="XL"] { --paper-size: 13pt; }
+  body { background: #fff; }
+  .paper-bar { display: none; }
+  .paper { max-inline-size: none; padding: 0; }
+  .mast-title { font-size: 96px; }
+  .front { grid-template-columns: 3fr 2fr; gap: 8mm; }
+  .secondary { grid-template-columns: repeat(3, 1fr); }
+  .cols { column-count: 5; column-gap: 7mm; }
+  .sec-label, .item-head { break-after: avoid; }
+  .item, .three, .note, .lead-story { break-inside: avoid; }
+  .making { break-before: page; }
+  a { color: inherit; text-decoration: none; }
+}
