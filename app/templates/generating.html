@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ t('gen.printing') }} · {{ paper_name }}{% endblock %}
+{% block body %}
+<main class="hero-screen printing">
+  <header class="topbar"><span class="brand-mini">{{ paper_name }}</span></header>
+  <section class="hero-body">
+    <h1 class="masthead drop" aria-label="{{ paper_name }}">
+      {% for ch in paper_name %}<span style="--i: {{ loop.index0 }}" aria-hidden="true">{{ ch }}</span>{% endfor %}
+    </h1>
+    <p class="tagline">{{ t('gen.printing') }}</p>
+    <ul class="steps" id="steps" role="status" aria-live="polite"
+        hx-get="/paper/status" hx-trigger="load, every 1s" hx-swap="innerHTML"></ul>
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% for s in steps %}
+<li class="step step-{{ s.kind }}">
+  <i data-lucide="{{ 'triangle-alert' if s.kind in ('error', 'fallback') else 'check' if s.kind == 'finished' else 'newspaper' }}"></i>
+  <span>{{ s.message }}</span>
+</li>
+{% endfor %}
+{% if state == 'generating' or state == 'waiting' %}
+<li class="step step-working"><i data-lucide="loader-circle"></i><span>…</span></li>
+{% elif state == 'failed' %}
+<li class="step-failed">
+  <p class="alert" role="alert">{{ t('empty.thin') }}</p>
+  <form method="post" action="/paper/generate">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="regenerate" value="1">
+    <button class="btn btn-light btn-block" type="submit">{{ t('paper.yes') }} · {{ t('gen.printing') }}</button>
+  </form>
+</li>
+{% endif %}

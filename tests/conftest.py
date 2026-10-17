@@ -145,15 +145,39 @@ def post_form() -> Callable[..., object]:
 
 
 @pytest.fixture
-def onboarded_user() -> None:
-    """User with a profile, 5 interests, 2 favorite sources and 1 muted keyword."""
-    raise NotImplementedError("F-02: onboarded user fixture arrives in T-05")
+def onboarded_user(make_user, client: TestClient, post_form) -> TestUser:
+    """User with a profile, 3 interests, 1 favorite source, and 1 muted keyword."""
+    import json
+
+    reader = make_user("Test Reader")
+    login = post_form(client, "/login", email=reader.email, password=reader.password)
+    assert login.status_code == 303, "onboarded_user could not log in"
+    form = {
+        "edition_lang": "en",
+        "source_langs": ["en"],
+        "topics": ["ai", "pakistan", "climate"],
+        "topic_level_ai": "3",
+        "topic_level_pakistan": "2",
+        "topic_level_climate": "2",
+        "taste": json.dumps([]),
+        "custom_interests": json.dumps([]),
+        "favorite_sources": json.dumps(["bbc"]),
+        "custom_feeds": json.dumps([]),
+        "muted_keywords": json.dumps(["cricket"]),
+        "city": "Lahore",
+        "timezone": "Asia/Karachi",
+        "reading_minutes": "10",
+        "notify": "0",
+    }
+    result = post_form(client, "/onboarding", **form)
+    assert result.status_code == 303, f"onboarding failed: {result.text[:200]}"
+    return reader
 
 
 @pytest.fixture
 def edition() -> None:
     """Edition generated with fake agent outputs and mocked feeds."""
-    raise NotImplementedError("F-05: edition fixture arrives with the pipeline in T-06")
+    raise NotImplementedError("F-07: edition fixture is populated by T-07")
 
 
 def rss(titles: list[str], source: str = "Test Wire") -> str:
@@ -189,6 +213,53 @@ def feeds_mock() -> Iterator[respx.MockRouter]:
 
 
 @pytest.fixture
-def fake_agents() -> None:
-    """Fixed CuratorOut/EditorOut/LearnerOut/ProfilerOut, or None to force fallbacks."""
-    raise NotImplementedError("F-05: fake_agents fixture arrives with agents in T-02")
+def fake_agents():
+    """Async callable suitable for monkeypatching `app.agents.runner.run_agent`.
+
+    Parses candidate IDs from the curator/editor prompt and returns valid typed outputs.
+    Returns `None` for unknown agent keys (triggers deterministic fallbacks).
+    """
+    import re as _re
+
+    from app.models import CuratorOut, EditorOut, Pick, WrittenArticle
+
+    async def _run_agent(key, factory, agent_input, edition_id, **_):
+        if key == "curator":
+            ids = _re.findall(r"<article>([a-f0-9]{12})", agent_input)
+            n_match = _re.search(r"reading_time: (\d+) articles", agent_input)
+            n = int(n_match.group(1)) if n_match else 6
+            picks = [
+                Pick(
+                    candidate_id=cid,
+                    section="world",
+                    importance=10 if i == 0 else 5,
+                    reason="test pick",
+                )
+                for i, cid in enumerate(ids[:n])
+            ]
+            return CuratorOut(picks=picks, notes="fake curator")
+        if key == "editor":
+            ids = _re.findall(r'<article id="([a-f0-9]{12})"', agent_input)
+            articles = [
+                WrittenArticle(
+                    candidate_id=cid,
+                    headline=f"Test headline {cid[:6]}",
+                    summary="A test summary for this article today.",
+                    why="Because you follow AI",
+                )
+                for cid in ids
+            ]
+            n = len(ids)
+            three = [f"Fact {i + 1} from today's paper" for i in range(3)]
+            return EditorOut(
+                lead_headline="Test lead headline",
+                lead_dek="Test dek line for the lead story.",
+                articles=articles,
+                section_titles={},
+                three_things=three,
+                editor_note="Good morning, Test Reader!",
+                puzzle=[],
+            )
+        return None
+
+    return _run_agent

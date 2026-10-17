@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import re
 
-from agents import Agent, AgentOutputSchema, ModelSettings
+from agents import Agent, AgentOutputSchema
 
 from app.agents import runner
+from app.agents.llm import settings_for
 from app.models import ParsedInterest, ProfilerOut
 from app.services import feeds, i18n
 
@@ -32,7 +33,7 @@ def make_agent(model, lang: str) -> Agent:
         name="Profiler",
         instructions=INSTRUCTIONS.format(topic_labels=labels),
         model=model,
-        model_settings=ModelSettings(temperature=0.3),
+        model_settings=settings_for(model),
         output_type=AgentOutputSchema(ProfilerOut, strict_json_schema=False),
     )
 

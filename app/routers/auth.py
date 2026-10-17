@@ -12,6 +12,7 @@ from supabase_auth.errors import AuthApiError, AuthError
 
 from app import deps
 from app.deps import CurrentUser
+from app.services.onboarding import default_name
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -43,7 +44,7 @@ async def home_path(user_id: str) -> str:
 async def ensure_profile(user_id: str, email: str) -> None:
     """Create the `profiles` row for a new user (display name = email local part)."""
     client = deps.supabase_admin()
-    row = {"user_id": user_id, "display_name": (email.split("@")[0] or "Reader")[:40]}
+    row = {"user_id": user_id, "display_name": default_name(email)}
     await asyncio.to_thread(
         lambda: (
             client.table("profiles")

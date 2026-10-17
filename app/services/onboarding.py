@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import zoneinfo
 from datetime import UTC, datetime
 from typing import Any
@@ -29,6 +30,13 @@ MAX_SOURCE_LANGS = 3
 MAX_FAVORITES = 10
 TASTE_CARDS = 8
 TASTE_TIMEOUT_S = 5
+
+
+def default_name(email: str | None) -> str:
+    """A readable first name from an email address: `sana.shahid2712@x.com` -> `Sana`."""
+    local = (email or "").split("@")[0]
+    first = re.split(r"[._+\-0-9]+", local)[0] or local
+    return first.title()[:40] or "Reader"
 
 
 class OnboardingError(ValueError):
@@ -262,7 +270,7 @@ def _save(client: Any, user_id: str, data: OnboardingData, email: str | None) ->
         "timezone": data.timezone,
         "reading_minutes": data.reading_minutes,
         "notify": data.notify,
-        "display_name": data.display_name or (email or "Reader").split("@")[0][:40],
+        "display_name": data.display_name or default_name(email),
         "onboarded_at": datetime.now(
             UTC
         ).isoformat(),  # last: a failed save stays in onboarding

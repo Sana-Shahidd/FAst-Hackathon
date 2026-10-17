@@ -251,3 +251,18 @@ html[dir="rtl"] .switch:checked::after { transform: translateX(-22px); }
   .taste-skeleton { animation: pulse 1.2s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: .55; } }
 }
+
+/* ---- printing screen ---- */
+.printing .hero-body { justify-content: flex-start; padding-block-start: 12vh; }
+.masthead.drop span { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .masthead.drop span { opacity: 0; transform: translateY(-28px); animation: drop .5s ease-out forwards; animation-delay: calc(var(--i) * 90ms); }
+  @keyframes drop { to { opacity: 1; transform: none; } }
+  .step-working svg { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+}
+.steps { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.step { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: blur(6px); font-size: .9rem; }
+.step svg { flex: none; inline-size: 18px; block-size: 18px; }
+.step-fallback, .step-error { background: rgba(255, 255, 255, .22); }
+.step-failed { list-style: none; display: flex; flex-direction: column; gap: 12px; }

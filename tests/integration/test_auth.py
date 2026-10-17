@@ -10,6 +10,7 @@ from supabase_auth.errors import AuthError
 
 from app import deps
 from app.services import i18n
+from app.services.onboarding import default_name
 
 pytestmark = pytest.mark.integration
 
@@ -41,10 +42,10 @@ def test_signup_creates_the_account_profile_and_session(
     assert response.status_code == 303, response.text[:300]
     assert response.headers["location"] == "/onboarding"
     assert {"sb_access", "sb_refresh"} <= cookie_names(response)
-    local_part = new_email.split("@")[0]
+    expected = default_name(new_email)
     rows = admin.table("profiles").select("display_name,onboarded_at").execute().data
     assert any(
-        r["display_name"] == local_part[:40] and r["onboarded_at"] is None for r in rows
+        r["display_name"] == expected and r["onboarded_at"] is None for r in rows
     )
 
 
@@ -129,8 +130,9 @@ def test_a_logged_in_session_passes_require_user(
     reader = make_user()
     app_client_no_raise.cookies.set("sb_access", reader.access_token)
     response = app_client_no_raise.get("/paper/today", follow_redirects=False)
-    # past require_user, into the not-yet-built page: a friendly 500, never a redirect
-    assert response.status_code == 500
+    # past require_user -> not onboarded -> redirects to /onboarding, never to /login
+    assert response.status_code == 303
+    assert response.headers["location"] == "/onboarding"
 
 
 def test_an_expired_access_token_is_renewed_with_the_refresh_token(

@@ -31,6 +31,13 @@ LANG_COOKIE = "lang"
 ACCESS_MAX_AGE = 60 * 60
 REFRESH_MAX_AGE = 60 * 60 * 24 * 30
 
+
+def user_key(request: Request) -> str:
+    """Rate-limit key per signed-in reader (their refresh cookie), else per IP."""
+    token = request.cookies.get(REFRESH_COOKIE)
+    return sha256(token.encode()).hexdigest() if token else get_remote_address(request)
+
+
 limiter = Limiter(key_func=get_remote_address)
 templates = Jinja2Templates(directory=str(i18n.APP_DIR / "templates"))
 

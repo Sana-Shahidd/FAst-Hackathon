@@ -24,6 +24,8 @@ if git diff --cached -U0 | grep -E '^\+' | grep -E 'eyJ[A-Za-z0-9_-]{30,}\.|gsk_
 
 echo "▶ 5/5 commit + push ($BRANCH)"
 if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
-git commit -q -m "$TASK: $SUMMARY"
+git commit -q -m "$TASK: $SUMMARY
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
 git push -q origin "$BRANCH"
 echo "✓ shipped $(git rev-parse --short HEAD) to $BRANCH"

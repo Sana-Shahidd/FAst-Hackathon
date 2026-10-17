@@ -161,7 +161,7 @@ def test_signup_creates_the_account_profile_and_session(
     assert response.status_code == 303
     assert response.headers["location"] == "/onboarding"
     assert "reader@example.com" in world.users  # trimmed and lower-cased
-    assert world.upserts == [{"user_id": "user-1", "display_name": "reader"}]
+    assert world.upserts == [{"user_id": "user-1", "display_name": "Reader"}]
     cookies = {c.split("=")[0]: c for c in cookie_headers(response)}
     for name in ("sb_access", "sb_refresh"):
         assert "httponly" in cookies[name].lower()
@@ -296,9 +296,9 @@ def test_a_valid_session_reaches_protected_routes(world: World) -> None:
     browser = TestClient(app, raise_server_exceptions=False)
     browser.cookies.set("sb_access", session.access_token)
     response = browser.get("/paper/today", follow_redirects=False)
-    # Authenticated: it got past require_user into the not-yet-built page (500, not 303).
-    assert response.status_code == 500
-    assert i18n.t("auth.error.generic", "en") in response.text
+    # Authenticated: it got past require_user -> no profile -> redirects to /onboarding.
+    assert response.status_code == 303
+    assert response.headers["location"] == "/onboarding"
 
 
 def test_an_expired_access_token_is_renewed_from_the_refresh_token(
