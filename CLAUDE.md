@@ -1,0 +1,1 @@
+Read AGENTS.md and docs/00_README.md before doing anything. Follow docs/08_BUILD_PLAN.md task by task and commit after every task. Use only names defined in docs/. Reuse libraries listed in docs/03_TECH.md; never rebuild what a listed library does.

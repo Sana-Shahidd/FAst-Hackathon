@@ -1,0 +1,18 @@
+# Decisions log
+Format: `HH:MM — decision — reason`
+
+- prep — Server-rendered FastAPI + Jinja2 + HTMX, no SPA — one template powers web and PDF; fastest for 9 h solo.
+- prep — openai-agents SDK with typed outputs only (no tools), Gemini primary, Groq fallback, deterministic fallbacks — reliable on free tiers, ≤ 3 LLM calls per edition.
+- prep — 8 languages: en, ur, ar, hi, bn, es, fr, zh; UI strings pre-written; Google News per-language editions — brief's "room to explore" + strong local angle.
+- prep — PDF via Playwright Chromium — correct shaping for Nastaliq, Devanagari, Bengali, Chinese.
+- prep — App UI follows the reference mobile design in navy + maroon; Paper view and PDF stay a classic broadsheet (same HTML) — brief asks for newspaper-style PDF matching the web edition.
+- prep — Broadsheet only (no tabloid) — time.
+- prep — One Docker service on Render (frontend + backend), deployed by GitHub Actions only after unit + integration tests pass; shipper/deployer Claude Code subagents — one tested feature per push, judges see a clean history.
+- prep — Added F-17 puzzle, F-18 mutes, F-19 saved, F-20 comfort, F-21 push, F-22 read marks, F-23 favorite sources.
+- (add chosen model ids and verified feeds here)
+- T-01 — `/health` reports `db:false`/`pdf:false` until the Supabase client (T-02) and the shared Playwright browser (T-08) are attached to `app.state` — the probe must answer for the deploy gate, so it reports the truth instead of raising.
+- T-01 — `app/services/i18n.py` exposes `load_tables()`, `t(key, lang, **vars)`, `dir(lang)`, `full_date(value, lang)`, `languages()` (names added to `03_TECH.md` §3) — `t()` and `dir()` were the only names the docs fixed.
+- T-01 — `tests/conftest.py` prepends the repo root to `sys.path` — `pytest.ini` lives at the root while `conftest.py` is in `tests/`, so `import app` needs it when CI runs bare `pytest`.
+- T-01 — unfilled conftest fixtures (`user`, `onboarded_user`, `edition`, `feeds_mock`, `fake_agents`) raise `NotImplementedError("F-xx: …")` per AGENTS.md Rule 0.4 — no test can pass against a stub.
+- T-01 — local gate runs with `PATH="$PWD/.venv/shims:$PATH" bash scripts/ship.sh …` — this Windows box blocks the venv's `pytest.exe`/`ruff.exe` (Application Control) and bare `pytest`/`ruff` resolve to an unpinned Python 3.12 install, so `.venv/shims/{pytest,ruff}` (gitignored) call `python -m` with the pinned versions; CI on Linux needs none of this.
+- T-01 — `scripts/ship.sh` reads the branch with `git symbolic-ref --short HEAD` instead of `git rev-parse --abbrev-ref HEAD` — `rev-parse` exits 128 on an unborn branch, so `set -e` aborted the gate before the repo's first commit; the two are equivalent afterwards (approved by the user).

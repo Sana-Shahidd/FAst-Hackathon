@@ -1,0 +1,146 @@
+{
+ "en": [
+  {
+   "key": "bbc",
+   "name": "BBC News",
+   "domain": "bbc.com",
+   "feed_url": "https://feeds.bbci.co.uk/news/rss.xml",
+   "initials": "BBC",
+   "color": "#B80000"
+  },
+  {
+   "key": "aljazeera",
+   "name": "Al Jazeera",
+   "domain": "aljazeera.com",
+   "feed_url": "https://www.aljazeera.com/xml/rss/all.xml",
+   "initials": "AJ",
+   "color": "#C38A00"
+  },
+  {
+   "key": "dawn",
+   "name": "Dawn",
+   "domain": "dawn.com",
+   "feed_url": "https://www.dawn.com/feeds/home",
+   "initials": "D",
+   "color": "#1F3A60"
+  },
+  {
+   "key": "tribune",
+   "name": "The Express Tribune",
+   "domain": "tribune.com.pk",
+   "feed_url": "https://tribune.com.pk/feed/home",
+   "initials": "ET",
+   "color": "#C4161C"
+  },
+  {
+   "key": "guardian",
+   "name": "The Guardian",
+   "domain": "theguardian.com",
+   "feed_url": "https://www.theguardian.com/world/rss",
+   "initials": "G",
+   "color": "#052962"
+  },
+  {
+   "key": "npr",
+   "name": "NPR",
+   "domain": "npr.org",
+   "feed_url": "https://feeds.npr.org/1001/rss.xml",
+   "initials": "NPR",
+   "color": "#D62021"
+  },
+  {
+   "key": "techcrunch",
+   "name": "TechCrunch",
+   "domain": "techcrunch.com",
+   "feed_url": "https://techcrunch.com/feed/",
+   "initials": "TC",
+   "color": "#0A9E01"
+  },
+  {
+   "key": "verge",
+   "name": "The Verge",
+   "domain": "theverge.com",
+   "feed_url": "https://www.theverge.com/rss/index.xml",
+   "initials": "V",
+   "color": "#5200FF"
+  }
+ ],
+ "ur": [
+  {
+   "key": "bbc_urdu",
+   "name": "BBC اردو",
+   "domain": "bbc.com/urdu",
+   "feed_url": "https://feeds.bbci.co.uk/urdu/rss.xml",
+   "initials": "BBC",
+   "color": "#B80000"
+  }
+ ],
+ "ar": [
+  {
+   "key": "bbc_arabic",
+   "name": "BBC عربي",
+   "domain": "bbc.com/arabic",
+   "feed_url": "https://feeds.bbci.co.uk/arabic/rss.xml",
+   "initials": "BBC",
+   "color": "#B80000"
+  }
+ ],
+ "hi": [
+  {
+   "key": "bbc_hindi",
+   "name": "BBC हिंदी",
+   "domain": "bbc.com/hindi",
+   "feed_url": "https://feeds.bbci.co.uk/hindi/rss.xml",
+   "initials": "BBC",
+   "color": "#B80000"
+  }
+ ],
+ "bn": [
+  {
+   "key": "bbc_bangla",
+   "name": "BBC বাংলা",
+   "domain": "bbc.com/bengali",
+   "feed_url": "https://feeds.bbci.co.uk/bengali/rss.xml",
+   "initials": "BBC",
+   "color": "#B80000"
+  }
+ ],
+ "es": [
+  {
+   "key": "bbc_mundo",
+   "name": "BBC Mundo",
+   "domain": "bbc.com/mundo",
+   "feed_url": "https://feeds.bbci.co.uk/mundo/rss.xml",
+   "initials": "BBC",
+   "color": "#B80000"
+  }
+ ],
+ "fr": [
+  {
+   "key": "france24_fr",
+   "name": "France 24",
+   "domain": "france24.com",
+   "feed_url": "https://www.france24.com/fr/rss",
+   "initials": "F24",
+   "color": "#00A0E3"
+  },
+  {
+   "key": "lemonde",
+   "name": "Le Monde",
+   "domain": "lemonde.fr",
+   "feed_url": "https://www.lemonde.fr/rss/une.xml",
+   "initials": "LM",
+   "color": "#111111"
+  }
+ ],
+ "zh": [
+  {
+   "key": "bbc_zhongwen",
+   "name": "BBC 中文",
+   "domain": "bbc.com/zhongwen",
+   "feed_url": "https://feeds.bbci.co.uk/zhongwen/simp/rss.xml",
+   "initials": "BBC",
+   "color": "#B80000"
+  }
+ ]
+}

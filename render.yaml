@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: subah
+    runtime: docker
+    plan: free
+    autoDeploy: false          # only GitHub Actions deploys, after tests pass
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SESSION_COOKIE_SECURE
+        value: "true"
+      - key: PUBLIC_BASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: PROFILER_MODEL
+        sync: false
+      - key: CURATOR_MODEL
+        sync: false
+      - key: EDITOR_MODEL
+        sync: false
+      - key: LEARNER_MODEL
+        sync: false
+      - key: FALLBACK_MODEL
+        sync: false
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: VAPID_SUBJECT
+        sync: false

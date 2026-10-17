@@ -1,0 +1,54 @@
+name: ci
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m playwright install --with-deps chromium
+      - name: lint
+        run: |
+          ruff check app tests
+          ruff format --check app tests
+      - name: unit tests
+        run: pytest -m unit -q
+      - name: integration tests
+        env:
+          APP_ENV: test
+          SUPABASE_URL: ${{ secrets.TEST_SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
+          SECRET_KEY: ci-only-secret-key-not-used-in-production
+          PUBLIC_BASE_URL: http://testserver
+        run: pytest -m integration -q
+
+  deploy:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: trigger Render deploy and wait for this commit
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          RENDER_APP_URL: ${{ secrets.RENDER_APP_URL }}
+        run: bash scripts/deploy.sh "${{ github.sha }}"
+      - name: smoke test frontend + backend
+        env:
+          SMOKE_EMAIL: ${{ secrets.SMOKE_EMAIL }}
+          SMOKE_PASSWORD: ${{ secrets.SMOKE_PASSWORD }}
+        run: bash scripts/smoke.sh "${{ secrets.RENDER_APP_URL }}"

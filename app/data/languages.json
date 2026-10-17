@@ -1,0 +1,122 @@
+{
+ "en": {
+  "name": "English",
+  "native": "English",
+  "dir": "ltr",
+  "babel": "en",
+  "gn": {
+   "hl": "en-US",
+   "gl": "US",
+   "ceid": "US:en"
+  },
+  "font_display": "DM Serif Display",
+  "font_body": "Source Serif 4",
+  "speech": "en-US",
+  "font_ui": "Inter"
+ },
+ "ur": {
+  "name": "Urdu",
+  "native": "اردو",
+  "dir": "rtl",
+  "babel": "ur",
+  "gn": {
+   "hl": "ur",
+   "gl": "PK",
+   "ceid": "PK:ur"
+  },
+  "font_display": "Noto Nastaliq Urdu",
+  "font_body": "Noto Nastaliq Urdu",
+  "speech": "ur-PK",
+  "font_ui": "Noto Nastaliq Urdu"
+ },
+ "ar": {
+  "name": "Arabic",
+  "native": "العربية",
+  "dir": "rtl",
+  "babel": "ar",
+  "gn": {
+   "hl": "ar",
+   "gl": "EG",
+   "ceid": "EG:ar"
+  },
+  "font_display": "Noto Naskh Arabic",
+  "font_body": "Noto Naskh Arabic",
+  "speech": "ar-EG",
+  "font_ui": "Noto Sans Arabic"
+ },
+ "hi": {
+  "name": "Hindi",
+  "native": "हिन्दी",
+  "dir": "ltr",
+  "babel": "hi",
+  "gn": {
+   "hl": "hi",
+   "gl": "IN",
+   "ceid": "IN:hi"
+  },
+  "font_display": "Noto Serif Devanagari",
+  "font_body": "Noto Serif Devanagari",
+  "speech": "hi-IN",
+  "font_ui": "Noto Sans Devanagari"
+ },
+ "bn": {
+  "name": "Bengali",
+  "native": "বাংলা",
+  "dir": "ltr",
+  "babel": "bn",
+  "gn": {
+   "hl": "bn",
+   "gl": "BD",
+   "ceid": "BD:bn"
+  },
+  "font_display": "Noto Serif Bengali",
+  "font_body": "Noto Serif Bengali",
+  "speech": "bn-BD",
+  "font_ui": "Noto Sans Bengali"
+ },
+ "es": {
+  "name": "Spanish",
+  "native": "Español",
+  "dir": "ltr",
+  "babel": "es",
+  "gn": {
+   "hl": "es-419",
+   "gl": "MX",
+   "ceid": "MX:es-419"
+  },
+  "font_display": "DM Serif Display",
+  "font_body": "Source Serif 4",
+  "speech": "es-MX",
+  "font_ui": "Inter"
+ },
+ "fr": {
+  "name": "French",
+  "native": "Français",
+  "dir": "ltr",
+  "babel": "fr",
+  "gn": {
+   "hl": "fr",
+   "gl": "FR",
+   "ceid": "FR:fr"
+  },
+  "font_display": "DM Serif Display",
+  "font_body": "Source Serif 4",
+  "speech": "fr-FR",
+  "font_ui": "Inter"
+ },
+ "zh": {
+  "name": "Chinese",
+  "native": "中文",
+  "dir": "ltr",
+  "babel": "zh_Hans",
+  "gn": {
+   "hl": "zh-CN",
+   "gl": "CN",
+   "ceid": "CN:zh-Hans"
+  },
+  "font_display": "Noto Serif SC",
+  "font_body": "Noto Serif SC",
+  "speech": "zh-CN",
+  "font_ui": "Noto Sans SC"
+ }
+}

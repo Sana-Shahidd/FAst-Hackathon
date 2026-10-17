@@ -1,0 +1,330 @@
+{
+ "world": {
+  "emoji": "🌍",
+  "query": "world news",
+  "query_local": {},
+  "icon": "globe"
+ },
+ "pakistan": {
+  "emoji": "🇵🇰",
+  "query": "Pakistan",
+  "query_local": {
+   "ur": "پاکستان",
+   "ar": "باكستان",
+   "hi": "पाकिस्तान",
+   "bn": "পাকিস্তান",
+   "es": "Pakistán",
+   "fr": "Pakistan",
+   "zh": "巴基斯坦"
+  },
+  "icon": "flag"
+ },
+ "south_asia": {
+  "emoji": "🗺️",
+  "query": "\"South Asia\" OR India OR Bangladesh OR \"Sri Lanka\" OR Nepal",
+  "query_local": {
+   "ur": "جنوبی ایشیا",
+   "ar": "جنوب آسيا",
+   "hi": "दक्षिण एशिया",
+   "bn": "দক্ষিণ এশিয়া",
+   "es": "Sur de Asia",
+   "fr": "Asie du Sud",
+   "zh": "南亚"
+  },
+  "icon": "map"
+ },
+ "middle_east": {
+  "emoji": "🕌",
+  "query": "\"Middle East\"",
+  "query_local": {
+   "ur": "مشرق وسطیٰ",
+   "ar": "الشرق الأوسط",
+   "hi": "मध्य पूर्व",
+   "bn": "মধ্যপ্রাচ্য",
+   "es": "Oriente Medio",
+   "fr": "Moyen-Orient",
+   "zh": "中东"
+  },
+  "icon": "landmark"
+ },
+ "us_politics": {
+  "emoji": "🇺🇸",
+  "query": "\"US politics\" OR Congress OR \"White House\"",
+  "query_local": {
+   "ur": "امریکی سیاست",
+   "ar": "السياسة الأمريكية",
+   "hi": "अमेरिकी राजनीति",
+   "bn": "মার্কিন রাজনীতি",
+   "es": "Política de EE. UU.",
+   "fr": "Politique américaine",
+   "zh": "美国政治"
+  },
+  "icon": "vote"
+ },
+ "business": {
+  "emoji": "💼",
+  "query": "business",
+  "query_local": {
+   "ur": "کاروبار",
+   "ar": "الأعمال",
+   "hi": "व्यापार",
+   "bn": "ব্যবসা",
+   "es": "Negocios",
+   "fr": "Économie",
+   "zh": "商业"
+  },
+  "icon": "briefcase"
+ },
+ "markets": {
+  "emoji": "📈",
+  "query": "stocks OR markets OR economy",
+  "query_local": {
+   "ur": "منڈیاں",
+   "ar": "الأسواق",
+   "hi": "बाज़ार",
+   "bn": "বাজার",
+   "es": "Mercados",
+   "fr": "Marchés",
+   "zh": "市场"
+  },
+  "icon": "trending-up"
+ },
+ "startups": {
+  "emoji": "🚀",
+  "query": "startup OR \"venture capital\" OR funding round",
+  "query_local": {
+   "ur": "اسٹارٹ اپس",
+   "ar": "الشركات الناشئة",
+   "hi": "स्टार्टअप",
+   "bn": "স্টার্টআপ",
+   "es": "Startups",
+   "fr": "Startups",
+   "zh": "创业"
+  },
+  "icon": "rocket"
+ },
+ "technology": {
+  "emoji": "💻",
+  "query": "technology",
+  "query_local": {
+   "ur": "ٹیکنالوجی",
+   "ar": "التكنولوجيا",
+   "hi": "तकनीक",
+   "bn": "প্রযুক্তি",
+   "es": "Tecnología",
+   "fr": "Technologie",
+   "zh": "科技"
+  },
+  "icon": "cpu"
+ },
+ "ai": {
+  "emoji": "🤖",
+  "query": "\"artificial intelligence\" OR \"AI model\"",
+  "query_local": {
+   "ur": "مصنوعی ذہانت",
+   "ar": "الذكاء الاصطناعي",
+   "hi": "एआई",
+   "bn": "কৃত্রিম বুদ্ধিমত্তা",
+   "es": "IA",
+   "fr": "IA",
+   "zh": "人工智能"
+  },
+  "icon": "sparkles"
+ },
+ "science": {
+  "emoji": "🔬",
+  "query": "science research",
+  "query_local": {
+   "ur": "سائنس",
+   "ar": "العلوم",
+   "hi": "विज्ञान",
+   "bn": "বিজ্ঞান",
+   "es": "Ciencia",
+   "fr": "Science",
+   "zh": "科学"
+  },
+  "icon": "flask-conical"
+ },
+ "space": {
+  "emoji": "🛰️",
+  "query": "space OR NASA OR rocket launch",
+  "query_local": {
+   "ur": "خلا",
+   "ar": "الفضاء",
+   "hi": "अंतरिक्ष",
+   "bn": "মহাকাশ",
+   "es": "Espacio",
+   "fr": "Espace",
+   "zh": "太空"
+  },
+  "icon": "orbit"
+ },
+ "health": {
+  "emoji": "🩺",
+  "query": "health",
+  "query_local": {
+   "ur": "صحت",
+   "ar": "الصحة",
+   "hi": "स्वास्थ्य",
+   "bn": "স্বাস্থ্য",
+   "es": "Salud",
+   "fr": "Santé",
+   "zh": "健康"
+  },
+  "icon": "heart-pulse"
+ },
+ "climate": {
+  "emoji": "🌱",
+  "query": "climate OR \"climate change\"",
+  "query_local": {
+   "ur": "موسمیات",
+   "ar": "المناخ",
+   "hi": "जलवायु",
+   "bn": "জলবায়ু",
+   "es": "Clima",
+   "fr": "Climat",
+   "zh": "气候"
+  },
+  "icon": "leaf"
+ },
+ "sports_cricket": {
+  "emoji": "🏏",
+  "query": "cricket",
+  "query_local": {
+   "ur": "کرکٹ",
+   "ar": "الكريكيت",
+   "hi": "क्रिकेट",
+   "bn": "ক্রিকেট",
+   "es": "Críquet",
+   "fr": "Cricket",
+   "zh": "板球"
+  },
+  "icon": "trophy"
+ },
+ "sports_football": {
+  "emoji": "⚽",
+  "query": "football OR soccer",
+  "query_local": {
+   "ur": "فٹ بال",
+   "ar": "كرة القدم",
+   "hi": "फ़ुटबॉल",
+   "bn": "ফুটবল",
+   "es": "Fútbol",
+   "fr": "Football",
+   "zh": "足球"
+  },
+  "icon": "volleyball"
+ },
+ "f1": {
+  "emoji": "🏎️",
+  "query": "\"Formula 1\" OR F1",
+  "query_local": {
+   "ur": "فارمولا ون",
+   "ar": "الفورمولا 1",
+   "hi": "फ़ॉर्मूला 1",
+   "bn": "ফর্মুলা ওয়ান",
+   "es": "Fórmula 1",
+   "fr": "Formule 1",
+   "zh": "一级方程式"
+  },
+  "icon": "flag-triangle-right"
+ },
+ "entertainment": {
+  "emoji": "🎭",
+  "query": "entertainment",
+  "query_local": {
+   "ur": "تفریح",
+   "ar": "الترفيه",
+   "hi": "मनोरंजन",
+   "bn": "বিনোদন",
+   "es": "Entretenimiento",
+   "fr": "Divertissement",
+   "zh": "娱乐"
+  },
+  "icon": "clapperboard"
+ },
+ "film_tv": {
+  "emoji": "🎬",
+  "query": "movie OR film OR \"TV series\"",
+  "query_local": {
+   "ur": "فلم اور ٹی وی",
+   "ar": "السينما والتلفزيون",
+   "hi": "फ़िल्म और टीवी",
+   "bn": "সিনেমা ও টিভি",
+   "es": "Cine y TV",
+   "fr": "Cinéma et séries",
+   "zh": "影视"
+  },
+  "icon": "tv"
+ },
+ "music": {
+  "emoji": "🎵",
+  "query": "music",
+  "query_local": {
+   "ur": "موسیقی",
+   "ar": "الموسيقى",
+   "hi": "संगीत",
+   "bn": "সংগীত",
+   "es": "Música",
+   "fr": "Musique",
+   "zh": "音乐"
+  },
+  "icon": "music"
+ },
+ "books": {
+  "emoji": "📚",
+  "query": "books OR novel OR author",
+  "query_local": {
+   "ur": "کتابیں",
+   "ar": "الكتب",
+   "hi": "किताबें",
+   "bn": "বই",
+   "es": "Libros",
+   "fr": "Livres",
+   "zh": "图书"
+  },
+  "icon": "book-open"
+ },
+ "gaming": {
+  "emoji": "🎮",
+  "query": "\"video games\" OR gaming",
+  "query_local": {
+   "ur": "گیمنگ",
+   "ar": "الألعاب",
+   "hi": "गेमिंग",
+   "bn": "গেমিং",
+   "es": "Videojuegos",
+   "fr": "Jeux vidéo",
+   "zh": "游戏"
+  },
+  "icon": "gamepad-2"
+ },
+ "food": {
+  "emoji": "🍲",
+  "query": "food OR restaurant OR recipe",
+  "query_local": {
+   "ur": "کھانا",
+   "ar": "الطعام",
+   "hi": "खाना",
+   "bn": "খাবার",
+   "es": "Comida",
+   "fr": "Cuisine",
+   "zh": "美食"
+  },
+  "icon": "utensils"
+ },
+ "travel": {
+  "emoji": "✈️",
+  "query": "travel OR tourism",
+  "query_local": {
+   "ur": "سفر",
+   "ar": "السفر",
+   "hi": "यात्रा",
+   "bn": "ভ্রমণ",
+   "es": "Viajes",
+   "fr": "Voyage",
+   "zh": "旅行"
+  },
+  "icon": "plane"
+ }
+}
