@@ -1,6 +1,6 @@
 # PROGRESS — read this first if you are picking the project up mid-build
 
-Last updated: 2026-10-17 ~12:15 (local). Demo deadline: **8 pm today**. Repo:
+Last updated: 2026-10-17 ~12:50 (local). Demo deadline: **8 pm today**. Repo:
 https://github.com/Sana-Shahidd/FAst-Hackathon (branch `main`). Working dir:
 `C:\Users\mobee\Downloads\subah-docs\subah`.
 
@@ -8,14 +8,14 @@ If you are an AI coding tool taking over: read `AGENTS.md`, `CLAUDE.md`, `docs/0
 file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). Follow
 `docs/08_BUILD_PLAN.md` task by task; never invent names that are not in `docs/`.
 
-## Overall: about 18% of the 9-hour plan done (T-01…T-03 complete, T-04 half)
+## Overall: about 20% of the 9-hour plan done (T-01…T-04 complete)
 
 | Task | What | State | Commit |
 |---|---|---|---|
 | T-01 | Repo, `/health`, i18n service, CI/Docker files | **Done** (CI/Render deploy never confirmed green, see Deploy) | `8ec860e`, `b446dcf` |
 | T-02 | `config.py`, `agents/llm.py`, `runner.py`, `smoke.py`, VAPID script | **Done**, `python -m app.agents.smoke` ok for all models | `66c828e` (+ model ids pending commit) |
 | T-03 | Feeds, mute filter, source catalog, custom feed validation, `feeds.json` | **Done**, live Check passed (261 en / 195 ur candidates) | `9c5904d` |
-| T-04 | Layout, language/RTL, CSRF, sessions, landing/login/signup | **Part 1 done**; **part 2 blocked** (needs Supabase) | `ccc7ed0` |
+| T-04 | Layout, language/RTL, CSRF, sessions, landing/login/signup, real-DB auth tests | **Done** (part 1 + part 2) | `ccc7ed0` + part 2 commit |
 | T-05 | Onboarding (5 steps, Profiler agent, `POST /onboarding`) | Not started | |
 | T-06 | Edition pipeline (Curator, Editor, fallbacks, puzzle items, layout) | Not started | |
 | T-07 | Home view, article sheet, `/r/{id}`, signals, read marks, save | Not started | |
@@ -31,7 +31,7 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 **Minimum for a believable 8 pm demo:** T-04 part 2 → T-05 → T-06 → T-07 (sign up, onboard, get a real
 paper, read it). Then T-08 (PDF), T-09 (archive), T-10 (learning). Cut order is in `08_BUILD_PLAN.md`.
 
-## What exists now (all on `main`, 72 unit + 40 integration tests green)
+## What exists now (all on `main`, 72 unit + 55 integration tests green; integration run ≈ 65 s, it hits real Supabase)
 
 - `app/main.py` (`create_app()` factory, `/health` with a real DB check), `app/config.py`, `app/deps.py`
   (Supabase clients, `render()`, CSRF, cookies + refresh, `require_user`, slowapi limiter),
@@ -45,18 +45,17 @@ paper, read it). Then T-08 (PDF), T-09 (archive), T-10 (learning). Cut order is 
   role tokens `--primary/--link/--alert-ink`), `app.js`, `favicon.svg`.
 - Data: `app/data/feeds.json` (verified live), 128 i18n keys × 8 languages (7 added in T-04).
 
-## Blockers needing the human (nothing here can be done by the coding tool)
+## Blockers needing the human
 
-1. **Supabase project `yjnmfpwrwzhqqgmswrbe`** (URL + publishable key are in `.env`):
-   - run `supabase/schema.sql` in the SQL editor (currently **no tables exist**);
-   - Authentication → Providers → Email: turn **"Confirm email" OFF** (currently on, so signups return no session);
-   - Project Settings → API Keys: copy the **secret / service-role key** into `SUPABASE_SERVICE_ROLE_KEY`
-     **and** `TEST_SUPABASE_SERVICE_ROLE_KEY` in `.env`. (The test keys currently point at the same project;
-     create a separate test project later if time allows.)
+1. **Supabase: done.** Project `yjnmfpwrwzhqqgmswrbe` has the schema applied, "Confirm email" OFF, and all
+   three keys in `.env` (the same project serves as prod and test for now; tests delete the `it-…@subah.test`
+   users they create, verified: zero left over). Create a separate test project later if time allows.
 2. **Render** deploy: unconfirmed. The first image failed (`playwright/python:v1.64.0-noble` does not exist);
    fixed by pinning 1.63.0 in `b446dcf`. The `onrender.com` URL was never confirmed (`subah.onrender.com`
-   is someone else's Express app). Deployment is parked by the user's choice.
-3. A Gemini key and a Groq key were pasted into the chat; consider rotating them after the demo.
+   is someone else's Express app). Deployment is parked by the user's choice. When resuming: set every
+   env var from `.env.example` on Render (incl. `SECRET_KEY`, the Supabase keys, the model ids below), and the
+   GitHub secrets listed in `docs/09_SETUP_TEST_DEMO.md` §2.1.
+3. API keys (Gemini, Groq, Supabase secret) were pasted into chat; rotate them after the demo.
 
 ## Environment & workflow gotchas (Windows, this machine)
 
@@ -86,12 +85,11 @@ paper, read it). Then T-08 (PDF), T-09 (archive), T-10 (learning). Cut order is 
 
 ## Next steps, in order
 
-1. (Human) finish the Supabase blockers above, then tell the tool "Supabase is ready".
-2. Ship T-04 part 2: write `tests/integration/test_auth.py` (signup → profile row; login sets cookies; logout
-   clears; wrong-password message) and `test_auth_scope.py` skeleton with the real `it-<uuid>@subah.test`
-   user fixture (`auth.admin.create_user(..., email_confirm=True)`, deleted in teardown); fill the `user`
-   fixture in `tests/conftest.py`.
-3. T-05 onboarding → T-06 edition pipeline → T-07 home view (see `08_BUILD_PLAN.md`, `05_ROUTES.md`,
-   `06_AGENTS.md`, `07_DESIGN.md`). `ProfilerOut`/`CuratorOut`/`EditorOut`/`LearnerOut` go in `app/models.py`
-   exactly as in `06_AGENTS.md` §3.
+1. **T-05 onboarding** (`08_BUILD_PLAN.md`, `05_ROUTES.md` onboarding table, `02_PRD.md` F-02, `06_AGENTS.md` §4
+   Profiler, `07_DESIGN.md` §3.3): `routers/onboarding.py`, `agents/profiler.py` (+ code fallback),
+   `ProfilerOut`/`ParsedInterest` in `app/models.py`, templates `onboarding.html` + `_ob_step1..5.html` +
+   `_taste_card.html`, `POST /onboarding` writing profiles/interests/favorite_sources/muted_keywords.
+   Tests: `unit/test_profiler_fallback.py`, `integration/test_onboarding.py`; fill the `onboarded_user` fixture.
+2. **T-06 edition pipeline**, **T-07 home view** (these three = the minimum believable demo).
+3. Then T-08 PDF, T-09 archive/saved, T-10 learning, T-11 puzzle, T-12 comfort/push/scheduler, T-13 extras.
 4. Keep `docs/DECISIONS.md` and this file updated after every shipped task.
