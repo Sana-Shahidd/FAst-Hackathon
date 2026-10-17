@@ -12,9 +12,12 @@ import sys
 import uuid
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
+from email.utils import formatdate
 from pathlib import Path
 
+import httpx
 import pytest
+import respx
 from fastapi.testclient import TestClient
 
 # `pytest.ini` is at the repo root while this file is in `tests/`, so a bare `pytest`
@@ -153,10 +156,36 @@ def edition() -> None:
     raise NotImplementedError("F-05: edition fixture arrives with the pipeline in T-06")
 
 
+def rss(titles: list[str], source: str = "Test Wire") -> str:
+    """A minimal RSS document with fresh items (published a few minutes ago)."""
+    stamp = formatdate(usegmt=True)
+    items = "".join(
+        f"<item><title>{t} - {source}</title><link>https://news.example.com/{uuid.uuid4().hex}</link>"
+        f"<pubDate>{stamp}</pubDate><source url='https://x.example'>{source}</source></item>"
+        for t in titles
+    )
+    return f"<?xml version='1.0'?><rss version='2.0'><channel><title>t</title>{items}</channel></rss>"
+
+
 @pytest.fixture
-def feeds_mock() -> None:
-    """respx router serving `tests/fixtures/*.xml` instead of real feeds."""
-    raise NotImplementedError("F-04: feeds_mock fixture arrives with feeds in T-03")
+def feeds_mock() -> Iterator[respx.MockRouter]:
+    """respx router: Supabase traffic passes through, Google News search is generated per query.
+
+    Every search returns 6 fresh stories with fully unique headlines (so the near-duplicate filter keeps them all). Add more routes
+    (curated feeds, custom feeds) on the yielded router.
+    """
+    host = httpx.URL(settings.SUPABASE_URL).host
+    with respx.mock(assert_all_called=False) as router:
+        router.route(host=host).pass_through()
+
+        def news_search(request: httpx.Request) -> httpx.Response:
+            titles = [
+                " ".join(uuid.uuid4().hex[:8] for _ in range(4)) for _ in range(6)
+            ]
+            return httpx.Response(200, text=rss(titles))
+
+        router.get("https://news.google.com/rss/search").mock(side_effect=news_search)
+        yield router
 
 
 @pytest.fixture

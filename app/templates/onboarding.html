@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ t('auth.signup') }} · {{ paper_name }}{% endblock %}
+{% block body %}
+<form id="ob-form" class="hero-screen ob" method="post" action="/onboarding" novalidate
+      data-steps="{{ steps }}"
+      data-step-label="{{ t('ob.step', n='__N__') }}"
+      data-next="{{ t('common.next') }}" data-finish="{{ t('ob.finish') }}"
+      data-min-msg="{{ t('ob.topics.min') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <input type="hidden" name="custom_interests" id="custom_interests" value="[]">
+  <input type="hidden" name="favorite_sources" id="favorite_sources" value="[]">
+  <input type="hidden" name="custom_feeds" id="custom_feeds" value="[]">
+  <input type="hidden" name="taste" id="taste_votes" value="[]">
+  <input type="hidden" name="muted_keywords" id="muted_keywords" value="[]">
+
+  <header class="topbar">
+    <button type="button" class="round-btn" id="ob-back" aria-label="{{ t('common.back') }}">
+      <i data-lucide="chevron-left"></i>
+    </button>
+    <ol class="dots" aria-hidden="true">
+      {% for n in range(1, steps + 1) %}<li class="dot{% if n == 1 %} is-active{% endif %}"></li>{% endfor %}
+    </ol>
+    <span class="brand-mini">{{ paper_name }}</span>
+  </header>
+
+  <p class="kicker" id="ob-kicker">{{ t('ob.step', n=1) }}</p>
+  <p class="alert" role="alert" id="ob-alert" {% if not error %}hidden{% endif %}>
+    {% if error %}{{ t(error) }}{% endif %}
+  </p>
+
+  <div class="ob-steps">
+    {% for n in range(1, steps + 1) %}
+    <section class="ob-step" data-step="{{ n }}" {% if n != 1 %}hidden{% endif %}>
+      {% include "_ob_step" ~ n ~ ".html" %}
+    </section>
+    {% endfor %}
+  </div>
+
+  <footer class="ob-footer">
+    <button type="button" class="btn btn-light btn-block" id="ob-next">{{ t('common.next') }}</button>
+  </footer>
+</form>
+{% endblock %}
+{% block scripts %}<script src="/static/onboarding.js" defer></script>{% endblock %}

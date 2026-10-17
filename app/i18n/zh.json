@@ -126,5 +126,8 @@
  "auth.error.generic": "出错了，请重试。",
  "auth.have_account": "已经有报纸了？",
  "auth.no_account": "初次使用 Subah？",
- "landing.pitch": "四位 AI 智能体每天清晨用你的语言，为你印出一份关于你所关心话题的新报纸。"
+ "landing.pitch": "四位 AI 智能体每天清晨用你的语言，为你印出一份关于你所关心话题的新报纸。",
+ "ob.timezone": "你的时区",
+ "ob.add": "添加",
+ "ob.skip": "跳过"
 }

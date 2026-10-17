@@ -1,0 +1,14 @@
+{% for c in cards %}
+<article class="taste-card" data-topic="{{ c.topic_key }}" {% if not loop.first %}hidden{% endif %}>
+  <span class="pill taste-topic">{{ t('topic.' ~ c.topic_key) }}</span>
+  <h2 class="taste-title">{{ c.title }}</h2>
+  <p class="muted">{{ c.source }}</p>
+  <div class="taste-actions">
+    <button type="button" class="round-btn taste-btn" data-vote="down" aria-label="👎">👎</button>
+    <button type="button" class="pill taste-skip" data-vote="skip">{{ t('ob.skip') }}</button>
+    <button type="button" class="round-btn taste-btn" data-vote="up" aria-label="👍">👍</button>
+  </div>
+</article>
+{% else %}
+<p class="taste-empty" data-empty>{{ t('empty.thin') }}</p>
+{% endfor %}

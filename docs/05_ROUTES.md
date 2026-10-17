@@ -13,6 +13,7 @@ hidden input + `HX-Request` header check; token = HMAC of session id with `SECRE
 | POST | `/logout` | user | redirect `/` | clear cookies, `auth.sign_out` |
 | GET | `/onboarding` | user | page with step 1 | |
 | GET | `/onboarding/step/{n}` | user | fragment `_ob_step{n}.html` | `n` 1–5; `?lang=` re-renders UI language live |
+| POST | `/onboarding/feed` | user | fragment: feed chip or error | form `url`; validates one pasted RSS/Atom link (public host, parses as a feed); returns a removable chip or `sources.invalid` |
 | POST | `/onboarding/parse` | user | fragment: interest chips | form `text` ≤ 200 → Profiler Agent; fallback: split by commas |
 | GET | `/onboarding/taste` | user | fragment: 8 `_taste_card.html` | `?topics=ai,startups&lang=ur`; quick fetch of 1 feed per topic (timeout 5 s) |
 | POST | `/onboarding` | user | redirect `/paper/generate?first=1` | whole onboarding form (§ below); upserts profile + interests + taste signals |

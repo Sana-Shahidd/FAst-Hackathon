@@ -126,5 +126,8 @@
  "auth.error.generic": "Une erreur s'est produite. Réessayez.",
  "auth.have_account": "Vous avez déjà un journal ?",
  "auth.no_account": "Nouveau sur Subah ?",
- "landing.pitch": "Quatre agents IA impriment chaque matin un journal inédit, dans votre langue, sur ce qui vous intéresse."
+ "landing.pitch": "Quatre agents IA impriment chaque matin un journal inédit, dans votre langue, sur ce qui vous intéresse.",
+ "ob.timezone": "Votre fuseau horaire",
+ "ob.add": "Ajouter",
+ "ob.skip": "Passer"
 }

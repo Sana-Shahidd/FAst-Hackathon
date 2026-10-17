@@ -1,0 +1,40 @@
+<h1 class="ob-title">{{ t('ob.topics.title') }}</h1>
+<p class="ob-hint">{{ t('ob.topics.min') }} · <span id="topic-count">0</span></p>
+<div class="topic-grid">
+  {% for c in topic_cards %}
+  <div class="topic-card" data-topic="{{ c.key }}">
+    <label class="topic-main">
+      <input type="checkbox" name="topics" value="{{ c.key }}" class="sr-only">
+      <span class="topic-check"><i data-lucide="circle-check"></i></span>
+      <span class="topic-icon"><i data-lucide="{{ c.icon }}"></i></span>
+      <span class="topic-title">{{ c.label }}</span>
+    </label>
+    <div class="level" role="group" aria-label="{{ c.label }}">
+      <input type="hidden" name="topic_level_{{ c.key }}" value="2">
+      {% for lvl in (1, 2, 3) %}
+      <button type="button" class="level-btn" data-level="{{ lvl }}" aria-pressed="{{ 'true' if lvl == 2 else 'false' }}">
+        {{ t('ob.level.' ~ lvl) }}
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<h2 class="ob-sub">{{ t('sources.title') }}</h2>
+<div class="source-row" id="source-row">
+  {% for o in catalog %}
+  <button type="button" class="source-dot" data-key="{{ o.key }}" aria-pressed="false"
+          style="--brand: {{ o.color }}" title="{{ o.name }}">
+    <span class="source-initials">{{ o.initials }}</span>
+    <span class="source-name">{{ o.name }}</span>
+  </button>
+  {% endfor %}
+</div>
+<div class="inline-form">
+  <input type="url" id="feed-url" name="url" inputmode="url" placeholder="https://… {{ t('sources.paste') }}"
+         aria-label="{{ t('sources.paste') }}">
+  <button type="button" class="pill" hx-post="/onboarding/feed" hx-include="#feed-url"
+          hx-target="#feed-chips" hx-swap="beforeend">{{ t('ob.add') }}</button>
+</div>
+<ul class="chip-list" id="feed-chips"></ul>

@@ -1,0 +1,35 @@
+<h1 class="ob-title">{{ t('ob.morning.title') }}</h1>
+<div class="stack">
+  <div class="field-light">
+    <label for="city">{{ t('ob.city') }}</label>
+    <input id="city" name="city" type="text" maxlength="60" autocomplete="address-level2">
+  </div>
+  <div class="field-light">
+    <label for="timezone">{{ t('ob.timezone') }}</label>
+    <input id="timezone" name="timezone" type="text" value="UTC" maxlength="64" autocomplete="off">
+  </div>
+  <div class="field-light">
+    <span class="field-label" id="reading-label">{{ t('ob.reading') }}</span>
+    <div class="seg" role="radiogroup" aria-labelledby="reading-label">
+      {% for minutes in reading_options %}
+      <label class="seg-item">
+        <input type="radio" name="reading_minutes" value="{{ minutes }}" class="sr-only"
+               {% if minutes == 10 %}checked{% endif %}>
+        <span>{{ t('ob.minutes', n=minutes) }}</span>
+      </label>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="field-light">
+    <label for="mute-input">{{ t('mute.title') }}</label>
+    <div class="inline-form">
+      <input type="text" id="mute-input" maxlength="40" autocomplete="off" placeholder="{{ t('mute.placeholder') }}">
+      <button type="button" class="pill" id="mute-add">{{ t('ob.add') }}</button>
+    </div>
+    <ul class="chip-list" id="mute-chips"></ul>
+  </div>
+  <label class="switch-row">
+    <span>{{ t('notify.toggle') }}</span>
+    <input type="checkbox" name="notify" value="1" class="switch">
+  </label>
+</div>

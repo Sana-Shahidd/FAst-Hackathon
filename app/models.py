@@ -86,3 +86,40 @@ class Candidate(BaseModel):
     def id(self) -> str:
         """Short id the Curator sees; the code validates every id it returns."""
         return self.url_hash[:12]
+
+
+class ParsedInterest(BaseModel):
+    label: str = Field(max_length=60)  # in the user's language
+    query: str = Field(max_length=200)  # Google News search query
+
+
+class ProfilerOut(BaseModel):
+    interests: list[ParsedInterest] = Field(max_length=5)
+
+
+class TopicChoice(BaseModel):
+    """A topic picked in onboarding step 2, with its "how much" weight."""
+
+    key: str
+    weight: float
+
+
+class OnboardingData(BaseModel):
+    """Validated `POST /onboarding` form (docs/05_ROUTES.md "Onboarding form fields")."""
+
+    edition_lang: str = "en"
+    source_langs: list[str] = Field(default_factory=list)
+    topics: list[TopicChoice]
+    custom_interests: list[ParsedInterest] = Field(default_factory=list)
+    taste: dict[str, float] = Field(default_factory=dict)  # topic key -> net vote delta
+    display_name: str | None = None
+    city: str | None = None
+    timezone: str = "UTC"
+    reading_minutes: int = 10
+    favorite_sources: list[str] = Field(default_factory=list)  # catalog keys
+    custom_feeds: list[str] = Field(default_factory=list)  # feed URLs (shape-checked)
+    custom_feed_names: dict[str, str] = Field(
+        default_factory=dict
+    )  # URL -> title, once validated
+    muted_keywords: list[str] = Field(default_factory=list)
+    notify: bool = False

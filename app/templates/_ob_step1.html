@@ -1,0 +1,22 @@
+<h1 class="ob-title">{{ t('ob.lang.title') }}</h1>
+<div class="tile-grid" role="radiogroup" aria-label="{{ t('ob.lang.title') }}">
+  {% for tile in language_tiles %}
+  <label class="tile">
+    <input type="radio" name="edition_lang" value="{{ tile.code }}" data-switch-lang
+           {% if tile.code == edition_lang %}checked{% endif %}>
+    <span class="tile-native" lang="{{ tile.code }}">{{ tile.native }}</span>
+    <span class="tile-sub">{{ tile.name }}</span>
+  </label>
+  {% endfor %}
+</div>
+<h2 class="ob-sub">{{ t('ob.lang.extra') }}</h2>
+<ul class="lang-chips">
+  {% for tile in language_tiles if tile.code != edition_lang %}
+  <li>
+    <label class="lang-chip check-chip">
+      <input type="checkbox" name="source_langs" value="{{ tile.code }}" class="sr-only">
+      <span lang="{{ tile.code }}">{{ tile.native }}</span>
+    </label>
+  </li>
+  {% endfor %}
+</ul>

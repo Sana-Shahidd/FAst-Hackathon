@@ -1,0 +1,8 @@
+{% if ok %}
+<li class="chip" data-url="{{ url }}">
+  <span>{{ title }}</span>
+  <button type="button" class="chip-x" aria-label="×"><i data-lucide="x"></i></button>
+</li>
+{% else %}
+<li class="chip-error" role="alert">{{ t('sources.invalid') }}</li>
+{% endif %}

@@ -1,0 +1,6 @@
+{% for i in interests %}
+<li class="chip" data-label="{{ i.label }}" data-query="{{ i.query }}">
+  <span>{{ i.label }}</span>
+  <button type="button" class="chip-x" aria-label="×"><i data-lucide="x"></i></button>
+</li>
+{% endfor %}

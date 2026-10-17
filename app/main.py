@@ -24,7 +24,7 @@ from slowapi.errors import RateLimitExceeded
 
 from app import deps
 from app.config import settings
-from app.routers import auth, paper
+from app.routers import auth, onboarding, paper
 from app.services import i18n
 
 logger = logging.getLogger(__name__)
@@ -51,6 +51,7 @@ def create_app() -> FastAPI:
     )
     application.include_router(health_router)
     application.include_router(auth.router)
+    application.include_router(onboarding.router)
     application.include_router(paper.router)
     return application
 

@@ -1,0 +1,9 @@
+<h1 class="ob-title">{{ t('ob.custom.title') }}</h1>
+<div class="inline-form">
+  <input type="text" id="custom-text" name="text" maxlength="200" autocomplete="off"
+         placeholder="{{ t('ob.custom.placeholder') }}" aria-label="{{ t('ob.custom.title') }}">
+  <button type="button" class="pill" id="parse-btn" hx-post="/onboarding/parse"
+          hx-include="#custom-text" hx-target="#interest-chips" hx-swap="innerHTML"
+          hx-indicator="#parse-btn">{{ t('ob.add') }}</button>
+</div>
+<ul class="chip-list" id="interest-chips"></ul>

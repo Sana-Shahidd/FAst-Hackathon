@@ -1,6 +1,6 @@
 # PROGRESS — read this first if you are picking the project up mid-build
 
-Last updated: 2026-10-17 ~12:50 (local). Demo deadline: **8 pm today**. Repo:
+Last updated: 2026-10-17 ~12:43 (local). Demo deadline: **8 pm today**. Repo:
 https://github.com/Sana-Shahidd/FAst-Hackathon (branch `main`). Working dir:
 `C:\Users\mobee\Downloads\subah-docs\subah`.
 
@@ -8,7 +8,7 @@ If you are an AI coding tool taking over: read `AGENTS.md`, `CLAUDE.md`, `docs/0
 file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). Follow
 `docs/08_BUILD_PLAN.md` task by task; never invent names that are not in `docs/`.
 
-## Overall: about 20% of the 9-hour plan done (T-01…T-04 complete)
+## Overall: about 32% of the 9-hour plan done (T-01…T-05 complete)
 
 | Task | What | State | Commit |
 |---|---|---|---|
@@ -16,7 +16,7 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 | T-02 | `config.py`, `agents/llm.py`, `runner.py`, `smoke.py`, VAPID script | **Done**, `python -m app.agents.smoke` ok for all models | `66c828e` (+ model ids pending commit) |
 | T-03 | Feeds, mute filter, source catalog, custom feed validation, `feeds.json` | **Done**, live Check passed (261 en / 195 ur candidates) | `9c5904d` |
 | T-04 | Layout, language/RTL, CSRF, sessions, landing/login/signup, real-DB auth tests | **Done** (part 1 + part 2) | `ccc7ed0` + part 2 commit |
-| T-05 | Onboarding (5 steps, Profiler agent, `POST /onboarding`) | Not started | |
+| T-05 | Onboarding (5 steps, Profiler agent, taste test, `POST /onboarding`) | **Done**, also verified by hand in a browser | T-05 commit |
 | T-06 | Edition pipeline (Curator, Editor, fallbacks, puzzle items, layout) | Not started | |
 | T-07 | Home view, article sheet, `/r/{id}`, signals, read marks, save | Not started | |
 | T-08 | Paper view + PDF (Playwright) | Not started | |
@@ -31,15 +31,18 @@ file, then `docs/DECISIONS.md` (every deviation from the docs is logged there). 
 **Minimum for a believable 8 pm demo:** T-04 part 2 → T-05 → T-06 → T-07 (sign up, onboard, get a real
 paper, read it). Then T-08 (PDF), T-09 (archive), T-10 (learning). Cut order is in `08_BUILD_PLAN.md`.
 
-## What exists now (all on `main`, 72 unit + 55 integration tests green; integration run ≈ 65 s, it hits real Supabase)
+## What exists now (all on `main`; unit ≈ 95 tests, integration ≈ 80 tests green; the integration run takes ≈ 3 min because it hits real Supabase)
 
 - `app/main.py` (`create_app()` factory, `/health` with a real DB check), `app/config.py`, `app/deps.py`
   (Supabase clients, `render()`, CSRF, cookies + refresh, `require_user`, slowapi limiter),
   `app/models.py` (`Profile`, `Interest`, `FavoriteSource`, `FeedUrl`, `Candidate`).
 - `app/services/`: `i18n.py`, `feeds.py`, `mutes.py`, `sources.py`, `activity.py`.
 - `app/agents/`: `llm.py`, `runner.py` (`run_agent`: primary → fallback model → `None`), `smoke.py`.
-- `app/routers/auth.py` (landing, signup, login, logout) and `routers/paper.py` (placeholder:
-  `/paper/today` requires login then raises `NotImplementedError("F-07 …")`).
+- `app/routers/auth.py` (landing, signup, login, logout), `routers/onboarding.py` (5-step onboarding,
+  `/onboarding/parse|feed|taste|step/{n}`), and `routers/paper.py` (placeholder: `/paper/today` requires login
+  then raises `NotImplementedError("F-07 …")`; `/paper/generate` does not exist yet, so finishing onboarding
+  currently redirects to a 404 until T-06).
+- `app/agents/profiler.py` (Profiler agent + code fallback), `app/services/onboarding.py` (form validation, taste cards, save).
 - Templates: `base.html`, `landing.html`, `login.html`, `signup.html`, `_auth_form.html`,
   `_lang_chips.html`, `_bottom_nav.html`, `error.html`. Static: `app.css` (navy/maroon tokens, theme-aware
   role tokens `--primary/--link/--alert-ink`), `app.js`, `favicon.svg`.
@@ -85,11 +88,14 @@ paper, read it). Then T-08 (PDF), T-09 (archive), T-10 (learning). Cut order is 
 
 ## Next steps, in order
 
-1. **T-05 onboarding** (`08_BUILD_PLAN.md`, `05_ROUTES.md` onboarding table, `02_PRD.md` F-02, `06_AGENTS.md` §4
-   Profiler, `07_DESIGN.md` §3.3): `routers/onboarding.py`, `agents/profiler.py` (+ code fallback),
-   `ProfilerOut`/`ParsedInterest` in `app/models.py`, templates `onboarding.html` + `_ob_step1..5.html` +
-   `_taste_card.html`, `POST /onboarding` writing profiles/interests/favorite_sources/muted_keywords.
-   Tests: `unit/test_profiler_fallback.py`, `integration/test_onboarding.py`; fill the `onboarded_user` fixture.
-2. **T-06 edition pipeline**, **T-07 home view** (these three = the minimum believable demo).
+1. **T-06 edition pipeline** (`08_BUILD_PLAN.md`, `02_PRD.md` F-03…F-05 + F-17 puzzle items, `06_AGENTS.md` §5–6,
+   `04_DATA.md` editions/edition_articles/articles/puzzles): `services/edition.py` `generate_edition`, `services/layout.py`,
+   `agents/curator.py` + `agents/editor.py` (+ deterministic fallbacks, id validation), `services/puzzle.py` item builders,
+   `CuratorOut`/`EditorOut` etc. in `app/models.py` exactly as in `06_AGENTS.md` §3, routes `GET/POST /paper/generate`
+   and `GET /paper/status` (finishing onboarding redirects to `/paper/generate?first=1`). Reuse `feeds.build_feed_urls`
+   (+ `favorites`), `fetch_all_with_stats`, `filter_fresh`, `dedupe`, `mutes.filter_muted`, `runner.run_agent`,
+   `activity.log`. Tests: `unit/test_curator_fallback.py`, `test_agent_validation.py`, `test_puzzle.py`,
+   `integration/test_generate_edition.py`; fill the `edition`, `fake_agents`, `onboarded_user` fixtures in `tests/conftest.py`.
+2. **T-07 home view** (`07_DESIGN.md` §3.1–3.2, `/r/{id}`, signals, read marks, save) = the screen judges look at.
 3. Then T-08 PDF, T-09 archive/saved, T-10 learning, T-11 puzzle, T-12 comfort/push/scheduler, T-13 extras.
 4. Keep `docs/DECISIONS.md` and this file updated after every shipped task.

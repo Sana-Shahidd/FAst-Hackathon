@@ -126,5 +126,8 @@
  "auth.error.generic": "Something went wrong. Please try again.",
  "auth.have_account": "Already have a paper?",
  "auth.no_account": "New to Subah?",
- "landing.pitch": "Four AI agents print you a fresh newspaper every morning — in your language, about what you care about."
+ "landing.pitch": "Four AI agents print you a fresh newspaper every morning — in your language, about what you care about.",
+ "ob.timezone": "Your timezone",
+ "ob.add": "Add",
+ "ob.skip": "Skip"
 }
